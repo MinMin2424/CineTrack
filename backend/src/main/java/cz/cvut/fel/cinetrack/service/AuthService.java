@@ -15,11 +15,14 @@ import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;
 import cz.cvut.fel.cinetrack.repository.UserRepository;
 import cz.cvut.fel.cinetrack.security.AuthenticationResponse;
 import cz.cvut.fel.cinetrack.security.JwtService;
+import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.utils.UserValidator;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 public class AuthService {
@@ -54,7 +57,7 @@ public class AuthService {
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
         userValidator.validateLoginRequest(loginRequest);
-        User user = userRepository.findByEmail(loginRequest.getEmail())
+        User user = userRepository.findByEmailAndNotDeleted(loginRequest.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(
                         ValidationMessage.USER_NOT_FOUND.getFormattedMessage(loginRequest.getEmail())
                 ));
@@ -68,16 +71,29 @@ public class AuthService {
         return new AuthenticationResponse(token);
     }
 
+    public void logout() {
+        User currentUser = SecurityUtils.getCurrentUser();
+        currentUser.setLogoutDate(LocalDateTime.now());
+        userRepository.save(currentUser);
+        SecurityContextHolder.clearContext();
+    }
+
     private void validateUniqueness(RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            throw new UsernameAlreadyExistsException(
-                    ValidationMessage.USERNAME_ALREADY_EXISTS.getFormattedMessage(registerRequest.getUsername())
-            );
+        Optional<User> existingUsername = userRepository.findByUsername(registerRequest.getUsername());
+        if (existingUsername.isPresent()) {
+            if (!existingUsername.get().isDeleted()) {
+                throw new UsernameAlreadyExistsException(
+                        ValidationMessage.USERNAME_ALREADY_EXISTS.getFormattedMessage(registerRequest.getUsername())
+                );
+            }
         }
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new EmailAlreadyExistsException(
-                    ValidationMessage.EMAIL_ALREADY_EXISTS.getFormattedMessage(registerRequest.getEmail())
-            );
+        Optional<User> existingEmail = userRepository.findByEmail(registerRequest.getEmail());
+        if (existingEmail.isPresent()) {
+            if (!existingEmail.get().isDeleted()) {
+                throw new EmailAlreadyExistsException(
+                        ValidationMessage.EMAIL_ALREADY_EXISTS.getFormattedMessage(registerRequest.getEmail())
+                );
+            }
         }
     }
 

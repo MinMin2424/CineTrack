@@ -28,7 +28,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(name = "firstname", nullable = false)
@@ -37,7 +37,7 @@ public class User {
     @Column(name = "lastname", nullable = false)
     private String lastname;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "avatar", nullable = false)
@@ -54,6 +54,15 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
+    @Column(name = "deletion_date", nullable = true)
+    private LocalDateTime deletionDate;
+
+    @Column(name = "logout_date", nullable = true)
+    private LocalDateTime logoutDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Series> seriesList = new ArrayList<>();
@@ -161,6 +170,30 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public LocalDateTime getDeletionDate() {
+        return deletionDate;
+    }
+
+    public void setDeletionDate(LocalDateTime deletionDate) {
+        this.deletionDate = deletionDate;
+    }
+
+    public LocalDateTime getLogoutDate() {
+        return logoutDate;
+    }
+
+    public void setLogoutDate(LocalDateTime logoutDate) {
+        this.logoutDate = logoutDate;
     }
 
     public List<Series> getSeriesList() {

@@ -14,6 +14,7 @@ import cz.cvut.fel.cinetrack.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +61,13 @@ public class UserController {
             @Valid @RequestBody ChangeUserAvatarRequest changeUserAvatarRequest
     ) {
         userService.changeUserAvatar(changeUserAvatarRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteUser() {
+        userService.deleteCurrentUser();
         return ResponseEntity.ok().build();
     }
 }

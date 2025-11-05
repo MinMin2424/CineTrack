@@ -9,6 +9,7 @@ import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
 import cz.cvut.fel.cinetrack.security.AuthenticationResponse;
 import cz.cvut.fel.cinetrack.service.AuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @PostMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> logout() {
+        authService.logout();
+        return ResponseEntity.ok().build();
     }
 }

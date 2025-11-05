@@ -10,6 +10,7 @@ import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequest;
 import cz.cvut.fel.cinetrack.dto.user.response.CombinedUserProfile;
 import cz.cvut.fel.cinetrack.dto.user.response.UserProfileHeaderResponse;
 import cz.cvut.fel.cinetrack.dto.user.response.UserProfileResponse;
+import cz.cvut.fel.cinetrack.exception.UserNotFoundException;
 import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.EmailAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.UsernameAlreadyExistsException;
 import cz.cvut.fel.cinetrack.model.User;
@@ -39,7 +40,7 @@ public class UserService {
     }
 
     public UserProfileResponse getCurrentUserProfile() {
-        User currentUser = SecurityUtils.getCurrentUser();
+        User currentUser = getCurrentUserNotDeleted();
         return new UserProfileResponse(
                 currentUser.getUsername(),
                 currentUser.getFirstname(),
@@ -49,7 +50,7 @@ public class UserService {
     }
 
     public UserProfileHeaderResponse getCurrentUserProfileHeader() {
-        User currentUser = SecurityUtils.getCurrentUser();
+        User currentUser = getCurrentUserNotDeleted();
         return new UserProfileHeaderResponse(
                 "@" + currentUser.getUsername(),
                 currentUser.getFirstname(),
@@ -67,7 +68,7 @@ public class UserService {
     }
 
     public UserProfileResponse editUserProfile(EditUserProfileRequest request) {
-        User currentUser = SecurityUtils.getCurrentUser();
+        User currentUser = getCurrentUserNotDeleted();
         userValidator.validateEditProfileData(request);
         validateUniqueness(request, currentUser.getId());
 
@@ -87,7 +88,7 @@ public class UserService {
     }
 
     public void changeUserPassword(ChangeUserPasswordRequest request) {
-        User currentUser = SecurityUtils.getCurrentUser();
+        User currentUser = getCurrentUserNotDeleted();
         userValidator.validateUserPassword(request);
         currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
         currentUser.setModified(LocalDateTime.now());
@@ -95,26 +96,43 @@ public class UserService {
     }
 
     public void changeUserAvatar(ChangeUserAvatarRequest request) {
-        User currentUser = SecurityUtils.getCurrentUser();
+        User currentUser = getCurrentUserNotDeleted();
         userValidator.validateUserAvatar(request);
         currentUser.setAvatar(request.getAvatar());
         currentUser.setModified(LocalDateTime.now());
         userRepository.save(currentUser);
     }
 
+    public void deleteCurrentUser() {
+        User currentUser = getCurrentUserNotDeleted();
+        currentUser.setDeleted(true);
+        currentUser.setDeletionDate(LocalDateTime.now());
+        userRepository.save(currentUser);
+    }
+
     private void validateUniqueness(EditUserProfileRequest request, Long currentUserId) {
         Optional<User> existingUserByUsername = userRepository.findByUsername(request.getUsername());
         if (existingUserByUsername.isPresent() && !existingUserByUsername.get().getId().equals(currentUserId)) {
-            throw new UsernameAlreadyExistsException(
-                    ValidationMessage.USERNAME_ALREADY_EXISTS.getFormattedMessage(request.getUsername())
-            );
+            if (!existingUserByUsername.get().isDeleted()) {
+                throw new UsernameAlreadyExistsException(
+                        ValidationMessage.USERNAME_ALREADY_EXISTS.getFormattedMessage(request.getUsername())
+                );
+            }
         }
         Optional<User> existingUserByEmail = userRepository.findByEmail(request.getEmail());
         if (existingUserByEmail.isPresent() && !existingUserByEmail.get().getId().equals(currentUserId)) {
-            throw new EmailAlreadyExistsException(
-                    ValidationMessage.EMAIL_ALREADY_EXISTS.getFormattedMessage(request.getEmail())
-            );
+            if (!existingUserByEmail.get().isDeleted()) {
+                throw new EmailAlreadyExistsException(
+                        ValidationMessage.EMAIL_ALREADY_EXISTS.getFormattedMessage(request.getEmail())
+                );
+            }
         }
+    }
+
+    private User getCurrentUserNotDeleted() {
+        User currentUser = SecurityUtils.getCurrentUser();
+        return userRepository.findByEmailAndNotDeleted(currentUser.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found or account is deleted!"));
     }
 
 }
