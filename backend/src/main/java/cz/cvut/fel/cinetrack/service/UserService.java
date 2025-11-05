@@ -20,6 +20,7 @@ import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.utils.UserValidator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -39,6 +40,7 @@ public class UserService {
         this.userValidator = userValidator;
     }
 
+    @Transactional
     public UserProfileResponse getCurrentUserProfile() {
         User currentUser = getCurrentUserNotDeleted();
         return new UserProfileResponse(
@@ -49,6 +51,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public UserProfileHeaderResponse getCurrentUserProfileHeader() {
         User currentUser = getCurrentUserNotDeleted();
         return new UserProfileHeaderResponse(
@@ -60,6 +63,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public CombinedUserProfile getCombinedUserProfile() {
         return new CombinedUserProfile(
                 getCurrentUserProfile(),
@@ -67,6 +71,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     public UserProfileResponse editUserProfile(EditUserProfileRequest request) {
         User currentUser = getCurrentUserNotDeleted();
         userValidator.validateEditProfileData(request);
@@ -76,7 +81,7 @@ public class UserService {
         currentUser.setFirstname(request.getFirstname());
         currentUser.setLastname(request.getLastname());
         currentUser.setEmail(request.getEmail());
-        currentUser.setModified(LocalDateTime.now());
+        currentUser.setLastModified(LocalDateTime.now());
 
         User updatedUser = userRepository.save(currentUser);
         return new UserProfileResponse(
@@ -87,22 +92,25 @@ public class UserService {
         );
     }
 
+    @Transactional
     public void changeUserPassword(ChangeUserPasswordRequest request) {
         User currentUser = getCurrentUserNotDeleted();
         userValidator.validateUserPassword(request);
         currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        currentUser.setModified(LocalDateTime.now());
+        currentUser.setLastModified(LocalDateTime.now());
         userRepository.save(currentUser);
     }
 
+    @Transactional
     public void changeUserAvatar(ChangeUserAvatarRequest request) {
         User currentUser = getCurrentUserNotDeleted();
         userValidator.validateUserAvatar(request);
         currentUser.setAvatar(request.getAvatar());
-        currentUser.setModified(LocalDateTime.now());
+        currentUser.setLastModified(LocalDateTime.now());
         userRepository.save(currentUser);
     }
 
+    @Transactional
     public void deleteCurrentUser() {
         User currentUser = getCurrentUserNotDeleted();
         currentUser.setDeleted(true);

@@ -49,8 +49,8 @@ public class User {
     @Column(name = "last_login", nullable = true)
     private LocalDateTime lastLogin;
 
-    @Column(name = "modified", nullable = true)
-    private LocalDateTime modified;
+    @Column(name = "last_modified", nullable = true)
+    private LocalDateTime lastModified;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -156,12 +156,12 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public LocalDateTime getModified() {
-        return modified;
+    public LocalDateTime getLastModified() {
+        return lastModified;
     }
 
-    public void setModified(LocalDateTime modified) {
-        this.modified = modified;
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
     }
 
     public String getPassword() {

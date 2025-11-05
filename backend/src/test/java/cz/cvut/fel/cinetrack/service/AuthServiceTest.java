@@ -29,8 +29,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -38,6 +40,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
+@ComponentScan(basePackages = "cz.cvut.fel.cinetrack")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AuthServiceTest {
 
@@ -62,15 +66,15 @@ public class AuthServiceTest {
     @BeforeEach
     void setUp() {
         validRegisterRequest = new RegisterRequest(
-                "testUser",
-                "Mina",
-                "Tranová",
-                "mina.tranova@test.cz",
+                "testUsername",
+                "testFirstName",
+                "testLastName",
+                "test@test.cz",
                 "Test01"
         );
 
         validLoginRequest = new LoginRequest(
-                "mina.tranova@test.cz",
+                "test@test.cz",
                 "Test01"
         );
     }
@@ -85,12 +89,12 @@ public class AuthServiceTest {
         assertNotNull(response.getToken());
         assertTrue(jwtService.isTokenValid(response.getToken()));
 
-        Optional<User> savedUser = userRepository.findByEmail("mina.tranova@test.cz");
+        Optional<User> savedUser = userRepository.findByEmail("test@test.cz");
 
         assertTrue(savedUser.isPresent());
-        assertEquals("testUser", savedUser.get().getUsername());
-        assertEquals("Mina", savedUser.get().getFirstname());
-        assertEquals("Tranová", savedUser.get().getLastname());
+        assertEquals("testUsername", savedUser.get().getUsername());
+        assertEquals("testFirstName", savedUser.get().getFirstname());
+        assertEquals("testLastName", savedUser.get().getLastname());
         assertTrue(passwordEncoder.matches("Test01", savedUser.get().getPassword()));
         assertNotNull(savedUser.get().getAvatar());
     }
@@ -100,7 +104,7 @@ public class AuthServiceTest {
         authService.register(validRegisterRequest);
 
         RegisterRequest duplicateRequest = new RegisterRequest(
-                "testUser",
+                "testUsername",
                 "John",
                 "Smith",
                 "test@test.cz",
@@ -111,7 +115,7 @@ public class AuthServiceTest {
                 UsernameAlreadyExistsException.class,
                 () -> authService.register(duplicateRequest)
         );
-        assertEquals("User with this username: testUser already exists!", e.getMessage());
+        assertEquals("User with this username: testUsername already exists!", e.getMessage());
     }
 
     @Test
@@ -119,10 +123,10 @@ public class AuthServiceTest {
         authService.register(validRegisterRequest);
 
         RegisterRequest duplicateRequest = new RegisterRequest(
-                "testUser2",
+                "testUsername2",
                 "John",
                 "Smith",
-                "mina.tranova@test.cz",
+                "test@test.cz",
                 "Test01"
         );
 
@@ -130,7 +134,7 @@ public class AuthServiceTest {
                 EmailAlreadyExistsException.class,
                 () -> authService.register(duplicateRequest)
         );
-        assertEquals("User with this email: mina.tranova@test.cz already exists!", e.getMessage());
+        assertEquals("User with this email: test@test.cz already exists!", e.getMessage());
     }
 
     @Test
@@ -418,7 +422,7 @@ public class AuthServiceTest {
         assertNotNull(response.getToken());
         assertTrue(jwtService.isTokenValid(response.getToken()));
 
-        User user = userRepository.findByEmail("mina.tranova@test.cz")
+        User user = userRepository.findByEmail("test@test.cz")
                 .orElseThrow();
         assertNotNull(user.getLastLogin());
         assertTrue(user.getLastLogin().isAfter(beforeLogin) | user.getLastLogin().isEqual(beforeLogin));
@@ -453,21 +457,21 @@ public class AuthServiceTest {
     @Test
     void login_withNonExistenceEmail_shouldThrowException() {
         LoginRequest loginRequest = new LoginRequest(
-                "mina.tranova@test.cz",
+                "test@test.cz",
                 "Test01"
         );
         UserNotFoundException e = assertThrows(
                 UserNotFoundException.class,
                 () -> authService.login(loginRequest)
         );
-        assertEquals("User with this email: mina.tranova@test.cz not found!", e.getMessage());
+        assertEquals("User with this email: test@test.cz not found!", e.getMessage());
     }
 
     @Test
     void login_withWrongPassword_shouldThrowException() {
         authService.register(validRegisterRequest);
         LoginRequest loginRequest = new LoginRequest(
-                "mina.tranova@test.cz",
+                "test@test.cz",
                 "Test02"
         );
         InvalidCredentialException e = assertThrows(
@@ -481,8 +485,8 @@ public class AuthServiceTest {
     void login_withCorrectPasswordButDifferentCase_shouldThrowException() {
         authService.register(validRegisterRequest);
         LoginRequest loginRequest = new LoginRequest(
-                "mina.tranova@test.cz",
-                "TEST02"
+                "test@test.cz",
+                "tEST02"
         );
         InvalidCredentialException e = assertThrows(
                 InvalidCredentialException.class,

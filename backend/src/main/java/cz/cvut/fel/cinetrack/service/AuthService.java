@@ -19,6 +19,7 @@ import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.utils.UserValidator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class AuthService {
         this.userValidator = userValidator;
     }
 
+    @Transactional
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         userValidator.validateRegisterRequest(registerRequest);
         validateUniqueness(registerRequest);
@@ -55,6 +57,7 @@ public class AuthService {
         return new AuthenticationResponse(token);
     }
 
+    @Transactional
     public AuthenticationResponse login(LoginRequest loginRequest) {
         userValidator.validateLoginRequest(loginRequest);
         User user = userRepository.findByEmailAndNotDeleted(loginRequest.getEmail())
@@ -71,6 +74,7 @@ public class AuthService {
         return new AuthenticationResponse(token);
     }
 
+    @Transactional
     public void logout() {
         User currentUser = SecurityUtils.getCurrentUser();
         currentUser.setLogoutDate(LocalDateTime.now());

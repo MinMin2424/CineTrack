@@ -6,6 +6,7 @@ package cz.cvut.fel.cinetrack.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ public class AvatarService {
     private final Random random = new Random();
 
     @PostConstruct
+    @Transactional
     public void init() {
         loadAvailableAvatars();
     }
@@ -33,6 +35,7 @@ public class AvatarService {
         );
     }
 
+    @Transactional
     public String getRandomAvatar() {
         if (availableAvatars.isEmpty()) {
             return "static/avatars/Avatar01.png";
@@ -40,10 +43,12 @@ public class AvatarService {
         return availableAvatars.get(random.nextInt(availableAvatars.size()));
     }
 
+    @Transactional
     public List<String> getAvailableAvatars() {
         return new ArrayList<>(availableAvatars);
     }
 
+    @Transactional
     public int getAvailableAvatarsSize() {
         return availableAvatars.size();
     }
