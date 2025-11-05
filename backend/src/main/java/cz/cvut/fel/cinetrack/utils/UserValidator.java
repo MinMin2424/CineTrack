@@ -4,9 +4,13 @@
 
 package cz.cvut.fel.cinetrack.utils;
 
-import cz.cvut.fel.cinetrack.dto.LoginRequest;
-import cz.cvut.fel.cinetrack.dto.RegisterRequest;
+import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
+import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequest;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequest;
+import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequest;
 import cz.cvut.fel.cinetrack.exception.PasswordNotStrongEnoughException;
+import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.AvatarCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.EmailCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.FirstnameCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.LastnameCannotBeNullException;
@@ -36,6 +40,22 @@ public class UserValidator {
         validateRequiredFields(loginRequest);
     }
 
+    public void validateEditProfileData(EditUserProfileRequest editUserProfileRequest) {
+        validateRequiredFields(editUserProfileRequest);
+        validateFieldFormats(editUserProfileRequest);
+        validateUsernameLength(editUserProfileRequest);
+        validateFirstnameLength(editUserProfileRequest);
+        validateLastnameLength(editUserProfileRequest);
+    }
+
+    public void validateUserPassword(ChangeUserPasswordRequest changeUserPasswordRequest) {
+        validatePasswordStrength(changeUserPasswordRequest);
+    }
+
+    public void validateUserAvatar(ChangeUserAvatarRequest changeUserAvatarRequest) {
+        validateAvatar(changeUserAvatarRequest);
+    }
+
     private void validateRequiredFields(RegisterRequest registerRequest) {
         if (registerRequest.getUsername() == null || registerRequest.getUsername().isEmpty()) {
             throw new UsernameCannotBeNullException(ValidationMessage.USERNAME_REQUIRED.getMessage());
@@ -63,11 +83,35 @@ public class UserValidator {
         }
     }
 
+    private void validateRequiredFields(EditUserProfileRequest editUserProfileRequest) {
+        if (editUserProfileRequest.getUsername() == null || editUserProfileRequest.getUsername().isEmpty()) {
+            throw new UsernameCannotBeNullException(ValidationMessage.USERNAME_REQUIRED.getMessage());
+        }
+        if (editUserProfileRequest.getFirstname() == null || editUserProfileRequest.getFirstname().isEmpty()) {
+            throw new FirstnameCannotBeNullException(ValidationMessage.FIRSTNAME_REQUIRED.getMessage());
+        }
+        if (editUserProfileRequest.getLastname() == null || editUserProfileRequest.getLastname().isEmpty()) {
+            throw new LastnameCannotBeNullException(ValidationMessage.LASTNAME_REQUIRED.getMessage());
+        }
+        if (editUserProfileRequest.getEmail() == null || editUserProfileRequest.getEmail().trim().isEmpty()) {
+            throw new EmailCannotBeNullException(ValidationMessage.EMAIL_REQUIRED.getMessage());
+        }
+    }
+
     private void validateFieldFormats(RegisterRequest registerRequest) {
         if (!isValidUsername(registerRequest.getUsername())) {
             throw new InvalidUsernameFormatException(ValidationMessage.USERNAME_INVALID_FORMAT.getMessage());
         }
         if (!isValidEmail(registerRequest.getEmail())) {
+            throw new InvalidEmailFormatException(ValidationMessage.EMAIL_INVALID_FORMAT.getMessage());
+        }
+    }
+
+    private void validateFieldFormats(EditUserProfileRequest editUserProfileRequest) {
+        if (!isValidUsername(editUserProfileRequest.getUsername())) {
+            throw new InvalidUsernameFormatException(ValidationMessage.USERNAME_INVALID_FORMAT.getMessage());
+        }
+        if (!isValidEmail(editUserProfileRequest.getEmail())) {
             throw new InvalidEmailFormatException(ValidationMessage.EMAIL_INVALID_FORMAT.getMessage());
         }
     }
@@ -78,14 +122,33 @@ public class UserValidator {
         }
     }
 
+    private void validateUsernameLength(EditUserProfileRequest editUserProfileRequest) {
+        if (editUserProfileRequest.getUsername().trim().length() < 5 || editUserProfileRequest.getUsername().trim().length() > 15) {
+            throw new InvalidUsernameLengthException(ValidationMessage.USERNAME_LENGTH.getMessage());
+        }
+    }
+
     private void validateFirstnameLength(RegisterRequest registerRequest) {
         if (registerRequest.getFirstname().trim().length() < 3 || registerRequest.getFirstname().trim().length() > 15) {
             throw new InvalidFirstnameLengthException(ValidationMessage.FIRSTNAME_LENGTH.getMessage());
         }
     }
 
+    private void validateFirstnameLength(EditUserProfileRequest editUserProfileRequest) {
+        if (editUserProfileRequest.getFirstname().trim().length() < 3 || editUserProfileRequest.getFirstname().trim().length() > 15) {
+            throw new InvalidFirstnameLengthException(ValidationMessage.FIRSTNAME_LENGTH.getMessage());
+        }
+    }
+
+
     private void validateLastnameLength(RegisterRequest registerRequest) {
         if (registerRequest.getLastname().trim().length() < 3 || registerRequest.getLastname().trim().length() > 15) {
+            throw new InvalidLastnameLengthException(ValidationMessage.LASTNAME_LENGTH.getMessage());
+        }
+    }
+
+    private void validateLastnameLength(EditUserProfileRequest editUserProfileRequest) {
+        if (editUserProfileRequest.getLastname().trim().length() < 3 || editUserProfileRequest.getLastname().trim().length() > 15) {
             throw new InvalidLastnameLengthException(ValidationMessage.LASTNAME_LENGTH.getMessage());
         }
     }
@@ -96,6 +159,24 @@ public class UserValidator {
         }
         if (!isPasswordStrong(registerRequest.getPassword())) {
             throw new PasswordNotStrongEnoughException(ValidationMessage.PASSWORD_WEAK.getMessage());
+        }
+    }
+
+    private void validatePasswordStrength(ChangeUserPasswordRequest changeUserPasswordRequest) {
+        if (changeUserPasswordRequest.getPassword() == null) {
+            throw new PasswordCannotBeNullException(ValidationMessage.PASSWORD_REQUIRED.getMessage());
+        }
+        if (changeUserPasswordRequest.getPassword().trim().length() < 6) {
+            throw new PasswordNotStrongEnoughException(ValidationMessage.PASSWORD_LENGTH.getMessage());
+        }
+        if (!isPasswordStrong(changeUserPasswordRequest.getPassword())) {
+            throw new PasswordNotStrongEnoughException(ValidationMessage.PASSWORD_WEAK.getMessage());
+        }
+    }
+
+    private void validateAvatar(ChangeUserAvatarRequest changeUserAvatarRequest) {
+        if (changeUserAvatarRequest.getAvatar() == null || changeUserAvatarRequest.getAvatar().trim().isEmpty()) {
+            throw new AvatarCannotBeNullException(ValidationMessage.AVATAR_REQUIRED.getMessage());
         }
     }
 

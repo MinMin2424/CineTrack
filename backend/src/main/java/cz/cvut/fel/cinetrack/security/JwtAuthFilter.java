@@ -50,7 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = extractToken(request);
-        if (StringUtils.hasText(token) && jwtService.isTokenValid(token)) {
+        /*if (StringUtils.hasText(token) && jwtService.isTokenValid(token)) {
             String email = jwtService.extractEmail(token);
             String role = jwtService.extractRole(token);
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
@@ -59,6 +59,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     userDetails, null, authorities
             );
             SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+        filterChain.doFilter(request, response);*/
+        if (StringUtils.hasText(token)) {
+            try {
+                if (jwtService.isTokenValid(token)) {
+                    String email = jwtService.extractEmail(token);
+                    String role = jwtService.extractRole(token);
+                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, authorities
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Invalid token");
+                    return;
+                }
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token validation failed");
+                return;
+            }
         }
         filterChain.doFilter(request, response);
     }

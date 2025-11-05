@@ -21,6 +21,8 @@ public enum ValidationMessage {
     EMAIL_INVALID_FORMAT("Email should be valid!"),
     EMAIL_ALREADY_EXISTS("User with this email: %s already exists!"),
 
+    AVATAR_REQUIRED("Avatar is required!"),
+
     PASSWORD_REQUIRED("Password is required!"),
     PASSWORD_LENGTH("Password must be at least 6 characters!"),
     PASSWORD_WEAK("Password is too weak. Must contain at least one uppercase letter, one lowercase letter, and one number!"),

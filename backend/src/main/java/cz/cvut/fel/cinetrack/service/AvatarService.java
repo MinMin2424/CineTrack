@@ -5,12 +5,8 @@
 package cz.cvut.fel.cinetrack.service;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

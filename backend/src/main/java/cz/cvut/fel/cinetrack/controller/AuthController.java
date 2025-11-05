@@ -4,8 +4,8 @@
 
 package cz.cvut.fel.cinetrack.controller;
 
-import cz.cvut.fel.cinetrack.dto.LoginRequest;
-import cz.cvut.fel.cinetrack.dto.RegisterRequest;
+import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
+import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
 import cz.cvut.fel.cinetrack.security.AuthenticationResponse;
 import cz.cvut.fel.cinetrack.service.AuthService;
 import org.springframework.http.ResponseEntity;

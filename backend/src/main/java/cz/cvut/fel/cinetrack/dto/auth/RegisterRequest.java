@@ -2,7 +2,7 @@
  * Created by minmin_tranova on 31.10.2025
  */
 
-package cz.cvut.fel.cinetrack.dto;
+package cz.cvut.fel.cinetrack.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

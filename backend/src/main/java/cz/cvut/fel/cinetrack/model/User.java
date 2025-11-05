@@ -18,12 +18,10 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-//@Getter @Setter
 public class User {
 
     @Id
@@ -50,6 +48,9 @@ public class User {
 
     @Column(name = "last_login", nullable = true)
     private LocalDateTime lastLogin;
+
+    @Column(name = "modified", nullable = true)
+    private LocalDateTime modified;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -144,6 +145,14 @@ public class User {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
     }
 
     public String getPassword() {

@@ -31,6 +31,7 @@ public class JwtService {
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "ROLE_USER");
+        claims.put("userId", user.getId());
         return Jwts.builder()
                 .claims(claims)
                 .subject(user.getEmail())
@@ -48,27 +49,31 @@ public class JwtService {
         return extractClaims(token, claims -> claims.get("role", String.class));
     }
 
+    public Long extractUserId(String token) {
+        return extractClaims(token, claims -> claims.get("userId", Long.class));
+    }
+
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
-    public boolean isTokenValid(String token) {
         try {
-            Jwts.parser()
+            return Jwts
+                    .parser()
                     .verifyWith(getSigningKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtException("Invalid JWT token");
+        }
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractAllClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;

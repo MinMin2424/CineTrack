@@ -4,8 +4,8 @@
 
 package cz.cvut.fel.cinetrack.service;
 
-import cz.cvut.fel.cinetrack.dto.LoginRequest;
-import cz.cvut.fel.cinetrack.dto.RegisterRequest;
+import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
+import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
 import cz.cvut.fel.cinetrack.exception.PasswordNotStrongEnoughException;
 import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.EmailAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.InvalidCredentialException;
@@ -61,8 +61,6 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAll();
-
         validRegisterRequest = new RegisterRequest(
                 "testUser",
                 "Mina",
@@ -492,6 +490,5 @@ public class AuthServiceTest {
         );
         assertEquals("Invalid credentials!", e.getMessage());
     }
-
 
 }
