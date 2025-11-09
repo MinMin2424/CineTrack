@@ -4,19 +4,22 @@
 
 package cz.cvut.fel.cinetrack.exception;
 
-import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.EmailAlreadyExistsException;
-import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.UsernameAlreadyExistsException;
-import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.AvatarCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.EmailCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.FirstnameCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.LastnameCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.PasswordCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.cannotBeNullExceptions.UsernameCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.invalidFormatExceptions.InvalidEmailFormatException;
-import cz.cvut.fel.cinetrack.exception.invalidFormatExceptions.InvalidFirstnameLengthException;
-import cz.cvut.fel.cinetrack.exception.invalidFormatExceptions.InvalidLastnameLengthException;
-import cz.cvut.fel.cinetrack.exception.invalidFormatExceptions.InvalidUsernameFormatException;
-import cz.cvut.fel.cinetrack.exception.invalidFormatExceptions.InvalidUsernameLengthException;
+import cz.cvut.fel.cinetrack.exception.existingData.AlreadyExistsException;
+import cz.cvut.fel.cinetrack.exception.existingData.EmailAlreadyExistsException;
+import cz.cvut.fel.cinetrack.exception.existingData.UsernameAlreadyExistsException;
+import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidFormatException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.AvatarCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.CannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.EmailCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.FirstnameCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.LastnameCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.PasswordCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.nonNullData.UsernameCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidEmailFormatException;
+import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidFirstnameLengthException;
+import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidLastnameLengthException;
+import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidUsernameFormatException;
+import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidUsernameLengthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -38,93 +41,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(errorBody);
     }
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(
-            EmailAlreadyExistsException ex
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleAlreadyExistsException(
+            AlreadyExistsException ex
     ) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handleUsernameAlreadyExistsException(
-            UsernameAlreadyExistsException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(AvatarCannotBeNullException.class)
-    public ResponseEntity<Map<String, String>> handleAvatarCannotBeNullException(
-            AvatarCannotBeNullException ex
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidFormatException(
+            InvalidFormatException ex
     ) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EmailCannotBeNullException.class)
-    public ResponseEntity<Map<String, String>> handleEmailCannotBeNullException(
-            EmailCannotBeNullException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(FirstnameCannotBeNullException.class)
-    public ResponseEntity<Map<String, String>> handleFirstnameCannotBeNullException(
-            FirstnameCannotBeNullException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(LastnameCannotBeNullException.class)
-    public ResponseEntity<Map<String, String>> handleLastnameCannotBeNullException(
-            LastnameCannotBeNullException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordCannotBeNullException.class)
-    public ResponseEntity<Map<String, String>> handlePasswordCannotBeNullException(
-            PasswordCannotBeNullException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UsernameCannotBeNullException.class)
-    public ResponseEntity<Map<String, String>> handleUsernameCannotBeNullException(
-            UsernameCannotBeNullException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidEmailFormatException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidEmailFormatException(
-            InvalidEmailFormatException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidFirstnameLengthException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidFirstnameLengthException(
-            InvalidFirstnameLengthException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidLastnameLengthException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidLastnameLengthException(
-            InvalidLastnameLengthException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidUsernameFormatException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidUsernameFormatException(
-            InvalidUsernameFormatException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidUsernameLengthException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidUsernameLengthException(
-            InvalidUsernameLengthException ex
+    @ExceptionHandler(CannotBeNullException.class)
+    public ResponseEntity<Map<String, String>> handleCannotBeNullException(
+            CannotBeNullException ex
     ) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }

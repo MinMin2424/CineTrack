@@ -6,10 +6,10 @@ package cz.cvut.fel.cinetrack.service;
 
 import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
 import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
-import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.EmailAlreadyExistsException;
+import cz.cvut.fel.cinetrack.exception.existingData.EmailAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.InvalidCredentialException;
 import cz.cvut.fel.cinetrack.exception.UserNotFoundException;
-import cz.cvut.fel.cinetrack.exception.alreadyExistsExceptions.UsernameAlreadyExistsException;
+import cz.cvut.fel.cinetrack.exception.existingData.UsernameAlreadyExistsException;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;
 import cz.cvut.fel.cinetrack.repository.UserRepository;
