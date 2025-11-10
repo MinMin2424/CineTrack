@@ -11,7 +11,9 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -41,6 +43,16 @@ public class JwtService {
                 .compact();
     }
 
+    public String refreshToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return Jwts.builder()
+                .claims(claims)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration()))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
     public String extractEmail(String token) {
         return extractClaims(token, Claims::getSubject);
     }
@@ -51,6 +63,14 @@ public class JwtService {
 
     public Long extractUserId(String token) {
         return extractClaims(token, claims -> claims.get("userId", Long.class));
+    }
+
+    public String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
@@ -77,6 +97,17 @@ public class JwtService {
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
+        }
+    }
+
+    public boolean isTokenExpiringSoon(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            Date expiration = claims.getExpiration();
+            long timeUntilExpiration = expiration.getTime() - System.currentTimeMillis();
+            return timeUntilExpiration <= 15 * 60 * 1000; // 15 min
+        } catch (JwtException | IllegalArgumentException e) {
+            return true;
         }
     }
 

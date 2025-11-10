@@ -43,6 +43,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (isPublicEndpoint(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         if (currentAuthentication != null && currentAuthentication.isAuthenticated()) {
             filterChain.doFilter(request, response);
@@ -72,6 +77,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             userDetails, null, authorities
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    if (jwtService.isTokenExpiringSoon(token)) {
+                        String newToken = jwtService.refreshToken(token);
+                        response.setHeader("X-New-Token", newToken);
+                        System.out.println("Token refreshed for user: " + email);
+                    }
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("Invalid token");
@@ -92,6 +102,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private boolean isPublicEndpoint(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth/") && !path.equals("/api/auth/refresh");
     }
 }
 
