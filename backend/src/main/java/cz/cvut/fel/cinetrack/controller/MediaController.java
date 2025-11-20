@@ -95,9 +95,8 @@ public class MediaController {
     ) {
         try {
             User user = SecurityUtils.getCurrentUser();
-            Series series = mediaService.createSeries(request, user.getId());
-            SeriesResponseDTO response = new SeriesResponseDTO(series);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            SeriesResponseDTO series = mediaService.createSeries(request, user.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(series);
         } catch (SeriesAlreadyExistsException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch(Exception e) {

@@ -8,12 +8,14 @@ import cz.cvut.fel.cinetrack.dto.media.EpisodeInfoDTO;
 import cz.cvut.fel.cinetrack.dto.media.MediaItemDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
+import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.SearchRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.SeasonInfoDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.InvalidMediaTypeException;
+import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
 import cz.cvut.fel.cinetrack.model.Episode;
@@ -119,7 +121,7 @@ public class MediaService {
         return new MovieResponseDTO(savedMovie);
     }
 
-    public Series createSeries(SeriesCreateRequestDTO seriesDTO, Long userId) {
+    public SeriesResponseDTO createSeries(SeriesCreateRequestDTO seriesDTO, Long userId) {
         validateStatusDates(
                 parseStatus(seriesDTO.getStatus()),
                 seriesDTO.getWatchStartDate(),
@@ -132,7 +134,7 @@ public class MediaService {
         mapSeriesDTOToEntity(seriesDTO, series, languageService, countryService, genreService);
         Series savedSeries = seriesRepository.save(series);
         createEpisodesForSeries(series, seriesDTO.getImdbID(), parseStringToInt(seriesDTO.getSeason()));
-        return savedSeries;
+        return new SeriesResponseDTO(savedSeries);
     }
 
     private void createEpisodesForSeries(Series series, String imdbId, int season) {
@@ -141,22 +143,11 @@ public class MediaService {
 
             List<Episode> episodes = new ArrayList<>();
             for (EpisodeInfoDTO episodeInfo : episodeInfos) {
-                Episode episode = new Episode();
-                episode.setTitle(episodeInfo.getTitle());
-                episode.setEpisode(episodeInfo.getEpisode());
-
-                if (series.getStatus() == StatusEnum.COMPLETED) {
-                    episode.setStatus(EpisodeStatusEnum.COMPLETED);
-                } else {
-                    episode.setStatus(EpisodeStatusEnum.NONE);
-                }
-
-                episode.setRating(0);
-                episode.setNotes("");
-                episode.setSeries(series);
+                Episode episode = createEpisode(episodeInfo, series);
                 episodes.add(episode);
             }
-            episodeRepository.saveAll(episodes);
+            List<Episode> savedEpisodes = episodeRepository.saveAll(episodes);
+            series.setEpisodeList(savedEpisodes);
 
             String dateString = episodeInfos.getFirst().getReleaseDate();
             LocalDate date = LocalDate.parse(dateString);
@@ -169,6 +160,23 @@ public class MediaService {
         } catch (Exception e) {
             createFallbackEpisodes(series, series.getEpisodes());
         }
+    }
+
+    private Episode createEpisode(EpisodeInfoDTO dto, Series series) {
+        Episode episode = new Episode();
+        episode.setTitle(dto.getTitle());
+        episode.setEpisode(dto.getEpisode());
+
+        if (series.getStatus() == StatusEnum.COMPLETED) {
+            episode.setStatus(EpisodeStatusEnum.COMPLETED);
+        } else {
+            episode.setStatus(EpisodeStatusEnum.NONE);
+        }
+
+        episode.setRating(0);
+        episode.setNotes("");
+        episode.setSeries(series);
+        return episode;
     }
 
     private void createFallbackEpisodes(Series series, int episodeCount) {
