@@ -12,11 +12,15 @@ public class EpisodeResponseDTO {
     private String title;
     private int episode;
     private EpisodeStatusEnum status;
+    private float rating;
+    private String notes;
 
     public EpisodeResponseDTO(Episode episode) {
         this.title = episode.getTitle();
         this.episode = episode.getEpisode();
         this.status = episode.getStatus();
+        this.rating = episode.getRating();
+        this.notes = episode.getNotes();
     }
 
     public String getTitle() {
@@ -41,5 +45,21 @@ public class EpisodeResponseDTO {
 
     public void setStatus(EpisodeStatusEnum status) {
         this.status = status;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

@@ -1,4 +1,4 @@
-package cz.cvut.fel.cinetrack.exception.media;
+package cz.cvut.fel.cinetrack.exception.media.notFoundObj;
 
 import cz.cvut.fel.cinetrack.exception.NotFoundException;
 

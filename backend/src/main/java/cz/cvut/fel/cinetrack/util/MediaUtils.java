@@ -4,6 +4,7 @@
 
 package cz.cvut.fel.cinetrack.util;
 
+import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 
 import java.util.ArrayList;
@@ -72,6 +73,17 @@ public class MediaUtils {
             case "dropped" -> StatusEnum.DROPPED;
             case "paused" -> StatusEnum.PAUSED;
             default -> null;
+        };
+    }
+
+    public static EpisodeStatusEnum parseEpisodeStatus(String input) {
+        return switch(input) {
+            case "completed" -> EpisodeStatusEnum.COMPLETED;
+            case "watching" -> EpisodeStatusEnum.WATCHING;
+            case "plan to watch" -> EpisodeStatusEnum.PLAN_TO_WATCH;
+            case "dropped" -> EpisodeStatusEnum.DROPPED;
+            case "paused" -> EpisodeStatusEnum.PAUSED;
+            default -> EpisodeStatusEnum.NONE;
         };
     }
 }

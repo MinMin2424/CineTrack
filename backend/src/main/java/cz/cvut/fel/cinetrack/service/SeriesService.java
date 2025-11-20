@@ -7,7 +7,7 @@ package cz.cvut.fel.cinetrack.service;
 import cz.cvut.fel.cinetrack.dto.media.request.ChangeStatusRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.EditMediaRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
-import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
+import cz.cvut.fel.cinetrack.exception.media.notFoundObj.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.model.Series;
 import cz.cvut.fel.cinetrack.repository.SeriesRepository;
 import org.springframework.stereotype.Service;

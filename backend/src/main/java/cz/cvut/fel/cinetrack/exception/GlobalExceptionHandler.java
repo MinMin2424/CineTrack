@@ -4,11 +4,8 @@
 
 package cz.cvut.fel.cinetrack.exception;
 
-import cz.cvut.fel.cinetrack.exception.media.MediaNotFoundException;
 import cz.cvut.fel.cinetrack.exception.media.RequestFailedException;
-import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.exception.user.PasswordNotStrongEnoughException;
-import cz.cvut.fel.cinetrack.exception.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;

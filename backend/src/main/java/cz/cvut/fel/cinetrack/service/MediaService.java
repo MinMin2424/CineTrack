@@ -15,7 +15,6 @@ import cz.cvut.fel.cinetrack.dto.media.SeasonInfoDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.InvalidMediaTypeException;
-import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
 import cz.cvut.fel.cinetrack.model.Episode;

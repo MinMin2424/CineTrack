@@ -1,0 +1,9 @@
+package cz.cvut.fel.cinetrack.exception.media.notFoundObj;
+
+import cz.cvut.fel.cinetrack.exception.NotFoundException;
+
+public class EpisodeNotFoundException extends NotFoundException {
+    public EpisodeNotFoundException(String message) {
+        super(message);
+    }
+}

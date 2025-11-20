@@ -7,7 +7,7 @@ package cz.cvut.fel.cinetrack.service;
 import cz.cvut.fel.cinetrack.dto.media.request.ChangeStatusRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.EditMediaRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
-import cz.cvut.fel.cinetrack.exception.media.MovieNotFoundException;
+import cz.cvut.fel.cinetrack.exception.media.notFoundObj.MovieNotFoundException;
 import cz.cvut.fel.cinetrack.model.Movie;
 import cz.cvut.fel.cinetrack.repository.MovieRepository;
 import org.springframework.security.access.AccessDeniedException;

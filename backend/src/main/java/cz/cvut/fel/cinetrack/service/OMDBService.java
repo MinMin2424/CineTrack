@@ -10,7 +10,7 @@ import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBEpisodeResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBSeasonResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.SeasonInfoDTO;
-import cz.cvut.fel.cinetrack.exception.media.MediaNotFoundException;
+import cz.cvut.fel.cinetrack.exception.media.notFoundObj.MediaNotFoundException;
 import cz.cvut.fel.cinetrack.exception.media.RequestFailedException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
