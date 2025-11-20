@@ -11,7 +11,6 @@ import cz.cvut.fel.cinetrack.exception.media.notFoundObj.EpisodeNotFoundExceptio
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.service.EpisodeService;
-import cz.cvut.fel.cinetrack.service.SeriesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +27,9 @@ import java.util.Map;
 @RequestMapping("/series/{seriesId}/episodes")
 public class EpisodeController {
 
-    private final SeriesService seriesService;
     private final EpisodeService episodeService;
 
-    public EpisodeController(SeriesService seriesService, EpisodeService episodeService) {
-        this.seriesService = seriesService;
+    public EpisodeController(EpisodeService episodeService) {
         this.episodeService = episodeService;
     }
 

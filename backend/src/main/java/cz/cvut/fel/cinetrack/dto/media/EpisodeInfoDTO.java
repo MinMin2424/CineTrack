@@ -4,11 +4,6 @@
 
 package cz.cvut.fel.cinetrack.dto.media;
 
-import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
-import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
-
-import java.time.LocalDate;
-
 public class EpisodeInfoDTO {
 
     private String title;

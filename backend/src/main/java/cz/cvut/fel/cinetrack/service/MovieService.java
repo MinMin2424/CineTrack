@@ -75,7 +75,7 @@ public class MovieService {
 
                     boolean hasAccess = movieRepository.existsByIdAndUserId(movieId, userId);
                     if (!hasAccess) {
-                        throw new AccessDeniedException(String.format("You do not have access to movie %s!", movieId));
+                        throw new AccessDeniedException(String.format("You do not have access to movie with id %s!", movieId));
                     }
 
                     return new MovieNotFoundException(String.format("Movie with id %s was deleted!", movieId));

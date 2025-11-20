@@ -4,17 +4,17 @@
 
 package cz.cvut.fel.cinetrack.dto.user.response;
 
-public class UserProfileResponse {
+public class UserProfileResponseDTO {
 
     private String username;
     private String firstname;
     private String lastname;
     private String email;
 
-    public UserProfileResponse(String username,
-                               String firstname,
-                               String lastname,
-                               String email) {
+    public UserProfileResponseDTO(String username,
+                                  String firstname,
+                                  String lastname,
+                                  String email) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;

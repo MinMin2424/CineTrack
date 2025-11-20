@@ -47,14 +47,14 @@ public class OMDBService {
         try {
             ResponseEntity<OMDBResponseDTO> response = restTemplate.getForEntity(url, OMDBResponseDTO.class);
             if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
-                throw new RequestFailedException("OMDB API request failed with status: " + response.getStatusCode());
+                throw new RequestFailedException(String.format("OMDB API request failed with status %s ", response.getStatusCode()));
             }
             OMDBResponseDTO responseBody = response.getBody();
             if (responseBody.getResponse() != null && "False".equalsIgnoreCase(responseBody.getResponse())) {
-                throw new MediaNotFoundException("Media not found: " + title);
+                throw new MediaNotFoundException(String.format("Media with title %s not found!", title));
             }
             if (responseBody.getImdbID() == null) {
-                throw new MediaNotFoundException("Media not found: " + title);
+                throw new MediaNotFoundException(String.format("Media with title %s not found!", title));
             }
             return responseBody;
         } catch (HttpClientErrorException | HttpServerErrorException e) {

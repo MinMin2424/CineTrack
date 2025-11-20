@@ -32,8 +32,7 @@ public class SeriesService {
     }
 
     public SeriesResponseDTO getSeriesById(Long seriesId, Long userId) {
-        Series series = seriesRepository.findByIdAndUserId(seriesId, userId)
-                .orElseThrow(() -> new SeriesNotFoundException("Series with id: " + seriesId + " not found or you do not have access to this series!"));
+        Series series = checkSeriesExistence(seriesId, userId);
         return new SeriesResponseDTO(series);
     }
 
@@ -76,7 +75,7 @@ public class SeriesService {
 
                     boolean hasAccess = seriesRepository.existsByIdAndUserId(seriesId, userId);
                     if (!hasAccess) {
-                        throw new AccessDeniedException(String.format("You do not have access to series %s!", seriesId));
+                        throw new AccessDeniedException(String.format("You do not have access to series with id %s!", seriesId));
                     }
 
                     throw new SeriesNotFoundException(String.format("Series with id %s was deleted!", seriesId));

@@ -5,7 +5,6 @@
 package cz.cvut.fel.cinetrack.dto.media.response;
 
 import cz.cvut.fel.cinetrack.model.Country;
-import cz.cvut.fel.cinetrack.model.Episode;
 import cz.cvut.fel.cinetrack.model.Genre;
 import cz.cvut.fel.cinetrack.model.Language;
 import cz.cvut.fel.cinetrack.model.Series;

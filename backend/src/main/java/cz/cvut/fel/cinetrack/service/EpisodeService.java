@@ -58,10 +58,10 @@ public class EpisodeService {
 
     public List<EpisodeResponseDTO> getEpisodesBySeriesId(Long seriesId, Long userId) {
         if (!seriesRepository.existsById(seriesId)) {
-            throw new SeriesNotFoundException("Series not found");
+            throw new SeriesNotFoundException(String.format("Series with id %s not found!", seriesId));
         }
         Series series = seriesRepository.findByIdAndUserIdAndNotDeleted(seriesId, userId)
-                .orElseThrow(() -> new AccessDeniedException("You do not have access to this series!"));
+                .orElseThrow(() -> new AccessDeniedException(String.format("You do not have access to series with id %s!", seriesId)));
         List<Episode> episodes = episodeRepository.findBySeriesIdOrderByEpisode(seriesId);
         return episodes.stream()
                 .map(EpisodeResponseDTO::new)
@@ -70,11 +70,11 @@ public class EpisodeService {
 
     private Episode checkEpisodeExistence(Long seriesId, int episodeNumber, Long userId) {
         if (!seriesRepository.existsById(seriesId)) {
-            throw new SeriesNotFoundException("Series not found!");
+            throw new SeriesNotFoundException(String.format("Series with id %s not found!", seriesId));
         }
         Series series = seriesRepository.findByIdAndUserIdAndNotDeleted(seriesId, userId)
-                .orElseThrow(() -> new AccessDeniedException("You do not have access to series " + seriesId + "!"));
+                .orElseThrow(() -> new AccessDeniedException(String.format("You do not have access to series with id %s!", seriesId)));
         return episodeRepository.findBySeriesIdAndEpisode(seriesId, episodeNumber)
-                .orElseThrow(() -> new EpisodeNotFoundException(String.format("Episode %d not found in series!", episodeNumber)));
+                .orElseThrow(() -> new EpisodeNotFoundException(String.format("Episode %d not found in series with id %s!", episodeNumber, seriesId)));
     }
 }

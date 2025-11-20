@@ -6,9 +6,9 @@ package cz.cvut.fel.cinetrack.validator;
 
 import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
 import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequest;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequestDTO;
 import cz.cvut.fel.cinetrack.exception.user.PasswordNotStrongEnoughException;
 import cz.cvut.fel.cinetrack.exception.user.nonNullData.AvatarCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.user.nonNullData.EmailCannotBeNullException;
@@ -43,7 +43,7 @@ public class UserValidator {
         validateRequiredFields(loginRequest);
     }
 
-    public void validateEditProfileData(EditUserProfileRequest editUserProfileRequest) {
+    public void validateEditProfileData(EditUserProfileRequestDTO editUserProfileRequest) {
         validateRequiredFields(editUserProfileRequest.getUsername(),
                                 editUserProfileRequest.getFirstname(),
                                 editUserProfileRequest.getLastname(),
@@ -54,12 +54,12 @@ public class UserValidator {
         validateLastnameLength(editUserProfileRequest.getLastname());
     }
 
-    public void validateUserPassword(ChangeUserPasswordRequest changeUserPasswordRequest) {
-        validatePasswordStrength(changeUserPasswordRequest.getPassword());
+    public void validateUserPassword(ChangeUserPasswordRequestDTO changeUserPasswordRequestDTO) {
+        validatePasswordStrength(changeUserPasswordRequestDTO.getPassword());
     }
 
-    public void validateUserAvatar(ChangeUserAvatarRequest changeUserAvatarRequest) {
-        validateAvatar(changeUserAvatarRequest);
+    public void validateUserAvatar(ChangeUserAvatarRequestDTO changeUserAvatarRequestDTO) {
+        validateAvatar(changeUserAvatarRequestDTO);
     }
 
     private void validateRequiredFields(String username,
@@ -128,8 +128,8 @@ public class UserValidator {
         }
     }
 
-    private void validateAvatar(ChangeUserAvatarRequest changeUserAvatarRequest) {
-        if (changeUserAvatarRequest.getAvatar() == null || changeUserAvatarRequest.getAvatar().trim().isEmpty()) {
+    private void validateAvatar(ChangeUserAvatarRequestDTO changeUserAvatarRequestDTO) {
+        if (changeUserAvatarRequestDTO.getAvatar() == null || changeUserAvatarRequestDTO.getAvatar().trim().isEmpty()) {
             throw new AvatarCannotBeNullException(ValidationMessage.AVATAR_REQUIRED.getMessage());
         }
     }

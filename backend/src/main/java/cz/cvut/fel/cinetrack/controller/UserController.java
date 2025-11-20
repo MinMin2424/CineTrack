@@ -4,12 +4,11 @@
 
 package cz.cvut.fel.cinetrack.controller;
 
-import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequest;
-import cz.cvut.fel.cinetrack.dto.user.response.CombinedUserProfile;
-import cz.cvut.fel.cinetrack.dto.user.response.UserProfileResponse;
-import cz.cvut.fel.cinetrack.security.AuthenticationResponse;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.response.CombinedUserProfileResponseDTO;
+import cz.cvut.fel.cinetrack.dto.user.response.UserProfileResponseDTO;
 import cz.cvut.fel.cinetrack.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -32,35 +31,35 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<CombinedUserProfile> getCurrentUserProfile() {
-        CombinedUserProfile profile = userService.getCombinedUserProfile();
+    public ResponseEntity<CombinedUserProfileResponseDTO> getCurrentUserProfile() {
+        CombinedUserProfileResponseDTO profile = userService.getCombinedUserProfile();
         return ResponseEntity.ok(profile);
     }
 
     @PutMapping("/profile")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserProfileResponse> editUserProfile(
-            @Valid @RequestBody EditUserProfileRequest editUserProfileRequest
+    public ResponseEntity<UserProfileResponseDTO> editUserProfile(
+            @Valid @RequestBody EditUserProfileRequestDTO editUserProfileRequest
     ) {
-        UserProfileResponse response = userService.editUserProfile(editUserProfileRequest);
+        UserProfileResponseDTO response = userService.editUserProfile(editUserProfileRequest);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> changePassword(
-            @Valid @RequestBody ChangeUserPasswordRequest changeUserPasswordRequest
+            @Valid @RequestBody ChangeUserPasswordRequestDTO changeUserPasswordRequestDTO
     ) {
-        userService.changeUserPassword(changeUserPasswordRequest);
+        userService.changeUserPassword(changeUserPasswordRequestDTO);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/avatar")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> changeAvatar(
-            @Valid @RequestBody ChangeUserAvatarRequest changeUserAvatarRequest
+            @Valid @RequestBody ChangeUserAvatarRequestDTO changeUserAvatarRequestDTO
     ) {
-        userService.changeUserAvatar(changeUserAvatarRequest);
+        userService.changeUserAvatar(changeUserAvatarRequestDTO);
         return ResponseEntity.ok().build();
     }
 

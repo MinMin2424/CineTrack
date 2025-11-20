@@ -6,12 +6,12 @@ package cz.cvut.fel.cinetrack.dto.user.request;
 
 import jakarta.validation.constraints.NotNull;
 
-public class ChangeUserAvatarRequest {
+public class ChangeUserAvatarRequestDTO {
 
     @NotNull(message = "Avatar is required!")
     private String avatar;
 
-    public ChangeUserAvatarRequest(String avatar) {
+    public ChangeUserAvatarRequestDTO(String avatar) {
         this.avatar = avatar;
     }
 

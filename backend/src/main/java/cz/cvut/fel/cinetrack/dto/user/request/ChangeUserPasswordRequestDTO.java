@@ -7,13 +7,13 @@ package cz.cvut.fel.cinetrack.dto.user.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class ChangeUserPasswordRequest {
+public class ChangeUserPasswordRequestDTO {
 
     @NotNull(message = "Password is required!")
     @Size(min = 6, message = "Password must be at least 6 characters!")
     private String password;
 
-    public ChangeUserPasswordRequest(String password) {
+    public ChangeUserPasswordRequestDTO(String password) {
         this.password = password;
     }
 

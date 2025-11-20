@@ -10,7 +10,6 @@ import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.notFoundObj.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.security.SecurityUtils;
-import cz.cvut.fel.cinetrack.service.EpisodeService;
 import cz.cvut.fel.cinetrack.service.SeriesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

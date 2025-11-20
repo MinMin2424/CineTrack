@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class EditUserProfileRequest {
+public class EditUserProfileRequestDTO {
 
     @NotNull(message = "Username is required!")
     @Size(min = 5, max = 15, message = "Username must be between 5 and 15 characters!")
@@ -26,10 +26,10 @@ public class EditUserProfileRequest {
     @Email(message = "Email should be valid!")
     private String email;
 
-    public EditUserProfileRequest(String username,
-                                  String firstname,
-                                  String lastname,
-                                  String email) {
+    public EditUserProfileRequestDTO(String username,
+                                     String firstname,
+                                     String lastname,
+                                     String email) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;

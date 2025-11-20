@@ -4,12 +4,12 @@
 
 package cz.cvut.fel.cinetrack.service;
 
-import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequest;
-import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequest;
-import cz.cvut.fel.cinetrack.dto.user.response.CombinedUserProfile;
-import cz.cvut.fel.cinetrack.dto.user.response.UserProfileHeaderResponse;
-import cz.cvut.fel.cinetrack.dto.user.response.UserProfileResponse;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequestDTO;
+import cz.cvut.fel.cinetrack.dto.user.response.CombinedUserProfileResponseDTO;
+import cz.cvut.fel.cinetrack.dto.user.response.UserProfileHeaderResponseDTO;
+import cz.cvut.fel.cinetrack.dto.user.response.UserProfileResponseDTO;
 import cz.cvut.fel.cinetrack.exception.user.UserNotFoundException;
 import cz.cvut.fel.cinetrack.exception.user.existingData.EmailAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.user.existingData.UsernameAlreadyExistsException;
@@ -41,9 +41,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileResponse getCurrentUserProfile() {
+    public UserProfileResponseDTO getCurrentUserProfile() {
         User currentUser = getCurrentUserNotDeleted();
-        return new UserProfileResponse(
+        return new UserProfileResponseDTO(
                 currentUser.getUsername(),
                 currentUser.getFirstname(),
                 currentUser.getLastname(),
@@ -52,9 +52,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserProfileHeaderResponse getCurrentUserProfileHeader() {
+    public UserProfileHeaderResponseDTO getCurrentUserProfileHeader() {
         User currentUser = getCurrentUserNotDeleted();
-        return new UserProfileHeaderResponse(
+        return new UserProfileHeaderResponseDTO(
                 "@" + currentUser.getUsername(),
                 currentUser.getFirstname(),
                 currentUser.getLastname(),
@@ -64,15 +64,15 @@ public class UserService {
     }
 
     @Transactional
-    public CombinedUserProfile getCombinedUserProfile() {
-        return new CombinedUserProfile(
+    public CombinedUserProfileResponseDTO getCombinedUserProfile() {
+        return new CombinedUserProfileResponseDTO(
                 getCurrentUserProfile(),
                 getCurrentUserProfileHeader()
         );
     }
 
     @Transactional
-    public UserProfileResponse editUserProfile(EditUserProfileRequest request) {
+    public UserProfileResponseDTO editUserProfile(EditUserProfileRequestDTO request) {
         User currentUser = getCurrentUserNotDeleted();
         userValidator.validateEditProfileData(request);
         validateUniqueness(request, currentUser.getId());
@@ -84,7 +84,7 @@ public class UserService {
         currentUser.setLastModified(LocalDateTime.now());
 
         User updatedUser = userRepository.save(currentUser);
-        return new UserProfileResponse(
+        return new UserProfileResponseDTO(
                 updatedUser.getUsername(),
                 updatedUser.getFirstname(),
                 updatedUser.getLastname(),
@@ -93,7 +93,7 @@ public class UserService {
     }
 
     @Transactional
-    public void changeUserPassword(ChangeUserPasswordRequest request) {
+    public void changeUserPassword(ChangeUserPasswordRequestDTO request) {
         User currentUser = getCurrentUserNotDeleted();
         userValidator.validateUserPassword(request);
         currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -102,7 +102,7 @@ public class UserService {
     }
 
     @Transactional
-    public void changeUserAvatar(ChangeUserAvatarRequest request) {
+    public void changeUserAvatar(ChangeUserAvatarRequestDTO request) {
         User currentUser = getCurrentUserNotDeleted();
         userValidator.validateUserAvatar(request);
         currentUser.setAvatar(request.getAvatar());
@@ -118,7 +118,7 @@ public class UserService {
         userRepository.save(currentUser);
     }
 
-    private void validateUniqueness(EditUserProfileRequest request, Long currentUserId) {
+    private void validateUniqueness(EditUserProfileRequestDTO request, Long currentUserId) {
         Optional<User> existingUserByUsername = userRepository.findByUsername(request.getUsername());
         if (existingUserByUsername.isPresent() && !existingUserByUsername.get().getId().equals(currentUserId)) {
             if (!existingUserByUsername.get().isDeleted()) {
