@@ -20,8 +20,10 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class Series {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "imdb_id", nullable = true, unique = true)
+    @Column(name = "imdb_id", nullable = true)
     private String imdbId;
 
     @Column(name = "title", nullable = false)
@@ -66,7 +68,11 @@ public class Series {
     @Column(name = "notes", nullable = false)
     private String notes;
 
-    @OneToMany(mappedBy = "series", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "series", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Episode> episodeList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -191,6 +197,14 @@ public class Series {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<Episode> getEpisodeList() {

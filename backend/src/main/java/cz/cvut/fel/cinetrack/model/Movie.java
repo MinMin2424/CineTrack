@@ -4,8 +4,11 @@
 
 package cz.cvut.fel.cinetrack.model;
 
+import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,8 +18,10 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +33,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "imdb_id", nullable = true, unique = true)
+    @Column(name = "imdb_id", nullable = true)
     private String imdbId;
 
     @Column(name = "title", nullable = false)
@@ -43,6 +48,9 @@ public class Movie {
     @Column(name = "poster", nullable = true)
     private String poster;
 
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
+
     @Column(name = "watch_start_date", nullable = false)
     private LocalDate watchStartDate;
 
@@ -54,6 +62,10 @@ public class Movie {
 
     @Column(name = "notes", nullable = false)
     private String notes;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -131,6 +143,14 @@ public class Movie {
         this.poster = poster;
     }
 
+    public StatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEnum status) {
+        this.status = status;
+    }
+
     public LocalDate getWatchStartDate() {
         return watchStartDate;
     }
@@ -161,6 +181,14 @@ public class Movie {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public User getUser() {

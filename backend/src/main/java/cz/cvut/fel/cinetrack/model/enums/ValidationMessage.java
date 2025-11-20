@@ -31,7 +31,16 @@ public enum ValidationMessage {
     USER_NOT_FOUND("User with this email: %s not found!"),
 
     REGISTRATION_SUCCESSFUL("Registration successful!"),
-    LOGIN_SUCCESSFUL("Login successful!");
+    LOGIN_SUCCESSFUL("Login successful!"),
+
+    INVALID_MEDIA_TYPE("Selected type does not match the media type!"),
+
+    START_DATE_REQUIRED("Start date is required!"),
+    DATES_REQUIRED("Both date is required for this status!"),
+    INVALID_DATES("End date cannot be before start date!"),
+
+    MOVIE_ALREADY_EXISTS("Movie already exists!"),
+    SERIES_ALREADY_EXISTS("Series already exists!"),;
 
     private final String message;
 

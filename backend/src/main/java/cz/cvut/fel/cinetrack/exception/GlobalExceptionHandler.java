@@ -4,22 +4,11 @@
 
 package cz.cvut.fel.cinetrack.exception;
 
-import cz.cvut.fel.cinetrack.exception.existingData.AlreadyExistsException;
-import cz.cvut.fel.cinetrack.exception.existingData.EmailAlreadyExistsException;
-import cz.cvut.fel.cinetrack.exception.existingData.UsernameAlreadyExistsException;
-import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidFormatException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.AvatarCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.CannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.EmailCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.FirstnameCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.LastnameCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.PasswordCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.nonNullData.UsernameCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidEmailFormatException;
-import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidFirstnameLengthException;
-import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidLastnameLengthException;
-import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidUsernameFormatException;
-import cz.cvut.fel.cinetrack.exception.invalidFormat.InvalidUsernameLengthException;
+import cz.cvut.fel.cinetrack.exception.media.MediaNotFoundException;
+import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
+import cz.cvut.fel.cinetrack.exception.user.PasswordNotStrongEnoughException;
+import cz.cvut.fel.cinetrack.exception.user.UserNotFoundException;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -62,6 +51,8 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    // AUTH
+
     @ExceptionHandler(InvalidCredentialException.class)
     public ResponseEntity<Map<String, String>> handleInvalidCredentialException(
             InvalidCredentialException ex
@@ -88,5 +79,20 @@ public class GlobalExceptionHandler {
             AuthenticationCredentialsNotFoundException ex
     ) {
         return buildErrorResponse("You have to be logged in to access this endpoint", HttpStatus.UNAUTHORIZED);
+    }
+
+    // MEDIA
+    @ExceptionHandler(MediaNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleMediaNotFoundException(
+            MediaNotFoundException ex
+    ) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SeriesNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleSeriesNotFoundException(
+            SeriesNotFoundException ex
+    ) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

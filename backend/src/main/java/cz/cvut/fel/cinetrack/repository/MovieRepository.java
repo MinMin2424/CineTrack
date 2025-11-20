@@ -1,0 +1,23 @@
+/*
+ * Created by minmin_tranova on 10.11.2025
+ */
+
+package cz.cvut.fel.cinetrack.repository;
+
+import cz.cvut.fel.cinetrack.model.Movie;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface MovieRepository extends JpaRepository<Movie, Long> {
+
+    boolean existsByImdbIdAndUserId(String imdbId, Long userId);
+    List<Movie> findByUserId(Long userId);
+    Optional<Movie> findByIdAndUserId(Long id, Long userId);
+
+    @Query("SELECT m FROM Movie m WHERE m.user.id = :userId ORDER BY m.createdAt DESC")
+    List<Movie> findByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
+}
