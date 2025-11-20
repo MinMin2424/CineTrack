@@ -4,28 +4,31 @@
 
 package cz.cvut.fel.cinetrack.mapper;
 
-import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateDTO;
-import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateDTO;
+import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
+import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateRequestDTO;
 import cz.cvut.fel.cinetrack.model.Movie;
 import cz.cvut.fel.cinetrack.model.Series;
 import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.service.CountryService;
 import cz.cvut.fel.cinetrack.service.GenreService;
 import cz.cvut.fel.cinetrack.service.LanguageService;
-import org.apache.commons.codec.language.bm.Lang;
 
 import static cz.cvut.fel.cinetrack.util.MediaUtils.*;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStringToList;
+import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateRating;
 
 public class MediaMapper {
 
     public static void mapMovieDTOToEntity(
-            MovieCreateDTO dto,
+            MovieCreateRequestDTO dto,
             Movie movie,
             LanguageService languageService,
             CountryService countryService,
             GenreService genreService
     ) {
+        float rating = parseStringToFloat(dto.getRating());
+        validateRating(rating);
+
         movie.setImdbId(dto.getImdbID());
         movie.setTitle(dto.getTitle());
         movie.setReleaseYear(parseYear(dto.getYear()));
@@ -33,7 +36,7 @@ public class MediaMapper {
         movie.setPoster(dto.getPoster());
 
         movie.setStatus(parseStatus(dto.getStatus()));
-        movie.setRating(parseStringToFloat(dto.getRating()));
+        movie.setRating(rating);
         movie.setNotes(dto.getNotes());
         movie.setWatchStartDate(dto.getWatchStartDate());
         movie.setWatchEndDate(dto.getWatchEndDate());
@@ -46,12 +49,15 @@ public class MediaMapper {
     }
 
     public static void mapSeriesDTOToEntity(
-            SeriesCreateDTO dto,
+            SeriesCreateRequestDTO dto,
             Series series,
             LanguageService languageService,
             CountryService countryService,
             GenreService genreService
     ) {
+        float rating = parseStringToFloat(dto.getRating());
+        validateRating(rating);
+
         series.setImdbId(dto.getImdbID());
         series.setTitle(dto.getTitle() + " " + parseStringToInt(dto.getSeason()));
         //series.setReleaseYear(parseYear(dto.getYear()));
@@ -60,7 +66,7 @@ public class MediaMapper {
         //series.setEpisodes(parseStringToInt(dto.getEpisodes()));
 
         series.setStatus(parseStatus(dto.getStatus()));
-        series.setRating(parseStringToFloat(dto.getRating()));
+        series.setRating(rating);
         series.setNotes(dto.getNotes());
         series.setWatchStartDate(dto.getWatchStartDate());
         series.setWatchEndDate(dto.getWatchEndDate());

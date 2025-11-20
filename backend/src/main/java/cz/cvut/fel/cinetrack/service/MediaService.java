@@ -6,16 +6,14 @@ package cz.cvut.fel.cinetrack.service;
 
 import cz.cvut.fel.cinetrack.dto.media.EpisodeInfoDTO;
 import cz.cvut.fel.cinetrack.dto.media.MediaItemDTO;
-import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateDTO;
+import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.SearchRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.SeasonInfoDTO;
-import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateDTO;
-import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
+import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.InvalidMediaTypeException;
-import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
 import cz.cvut.fel.cinetrack.model.Episode;
@@ -25,10 +23,8 @@ import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;
 import cz.cvut.fel.cinetrack.repository.EpisodeRepository;
-import cz.cvut.fel.cinetrack.repository.LanguageRepository;
 import cz.cvut.fel.cinetrack.repository.MovieRepository;
 import cz.cvut.fel.cinetrack.repository.SeriesRepository;
-import cz.cvut.fel.cinetrack.validator.MediaValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +36,7 @@ import java.util.List;
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapMovieDTOToEntity;
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapSeriesDTOToEntity;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.*;
+import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateStatusDates;
 
 @Service
 @Transactional
@@ -52,7 +49,6 @@ public class MediaService {
     private final LanguageService languageService;
     private final GenreService genreService;
     private final OMDBService omdbService;
-    private final MediaValidator mediaValidator;
 
     public MediaService(MovieRepository movieRepository,
                         SeriesRepository seriesRepository,
@@ -60,8 +56,7 @@ public class MediaService {
                         CountryService countryService,
                         LanguageService languageService,
                         GenreService genreService,
-                        OMDBService omdbService,
-                        MediaValidator mediaValidator) {
+                        OMDBService omdbService) {
         this.movieRepository = movieRepository;
         this.seriesRepository = seriesRepository;
         this.episodeRepository = episodeRepository;
@@ -69,12 +64,11 @@ public class MediaService {
         this.languageService = languageService;
         this.genreService = genreService;
         this.omdbService = omdbService;
-        this.mediaValidator = mediaValidator;
     }
 
     public List<MediaItemDTO> getUserMedia(Long userId) {
-        List<Movie> movies = movieRepository.findByUserIdOrderByCreatedAtDesc(userId);
-        List<Series> series = seriesRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Movie> movies = movieRepository.findNotDeletedMoviesByUserIdOrderByCreatedAtDesc(userId);
+        List<Series> series = seriesRepository.findNotDeletedSeriesByUserIdOrderByCreatedAtDesc(userId);
 
         List<MediaItemDTO> mediaItems = new ArrayList<>();
 
@@ -86,7 +80,7 @@ public class MediaService {
                 .map(MediaItemDTO::new)
                 .toList());
 
-        mediaItems.sort(Comparator.comparing(MediaItemDTO::getCreatedAt));
+        mediaItems.sort(Comparator.comparing(MediaItemDTO::getCreatedAt).reversed());
         return mediaItems;
     }
 
@@ -110,8 +104,8 @@ public class MediaService {
         return new SeriesSearchResponseDTO(seriesInfo, availableSeasons);
     }
 
-    public MovieResponseDTO createMovie(MovieCreateDTO movieDTO, Long userId) {
-        mediaValidator.validateStatusDates(
+    public MovieResponseDTO createMovie(MovieCreateRequestDTO movieDTO, Long userId) {
+        validateStatusDates(
                 parseStatus(movieDTO.getStatus()),
                 movieDTO.getWatchStartDate(),
                 movieDTO.getWatchEndDate()
@@ -125,8 +119,8 @@ public class MediaService {
         return new MovieResponseDTO(savedMovie);
     }
 
-    public SeriesResponseDTO createSeries(SeriesCreateDTO seriesDTO, Long userId) {
-        mediaValidator.validateStatusDates(
+    public Series createSeries(SeriesCreateRequestDTO seriesDTO, Long userId) {
+        validateStatusDates(
                 parseStatus(seriesDTO.getStatus()),
                 seriesDTO.getWatchStartDate(),
                 seriesDTO.getWatchEndDate()
@@ -138,9 +132,7 @@ public class MediaService {
         mapSeriesDTOToEntity(seriesDTO, series, languageService, countryService, genreService);
         Series savedSeries = seriesRepository.save(series);
         createEpisodesForSeries(series, seriesDTO.getImdbID(), parseStringToInt(seriesDTO.getSeason()));
-        Series seriesWithEpisodes = seriesRepository.findById(savedSeries.getId())
-                .orElseThrow(() -> new SeriesNotFoundException("Series not found!"));
-        return new SeriesResponseDTO(seriesWithEpisodes);
+        return savedSeries;
     }
 
     private void createEpisodesForSeries(Series series, String imdbId, int season) {

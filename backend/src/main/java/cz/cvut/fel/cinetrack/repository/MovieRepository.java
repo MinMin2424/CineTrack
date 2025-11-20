@@ -15,9 +15,14 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     boolean existsByImdbIdAndUserId(String imdbId, Long userId);
-    List<Movie> findByUserId(Long userId);
+    boolean existsById(Long id);
+    boolean existsByIdAndUserId(Long id, Long userId);
+    Optional<Movie> findById(Long id);
     Optional<Movie> findByIdAndUserId(Long id, Long userId);
 
-    @Query("SELECT m FROM Movie m WHERE m.user.id = :userId ORDER BY m.createdAt DESC")
-    List<Movie> findByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
+    @Query("SELECT m FROM Movie m WHERE m.id = :id AND m.user.id = :userId AND m.deleted = false")
+    Optional<Movie> findByIdAndUserIdAndNotDeleted(Long id, Long userId);
+
+    @Query("SELECT m FROM Movie m WHERE m.user.id = :userId AND m.deleted = false ORDER BY m.createdAt DESC")
+    List<Movie> findNotDeletedMoviesByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
 }

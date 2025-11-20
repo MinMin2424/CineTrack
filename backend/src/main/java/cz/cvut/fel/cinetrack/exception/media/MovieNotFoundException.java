@@ -2,8 +2,8 @@ package cz.cvut.fel.cinetrack.exception.media;
 
 import cz.cvut.fel.cinetrack.exception.NotFoundException;
 
-public class MediaNotFoundException extends NotFoundException {
-    public MediaNotFoundException(String message) {
+public class MovieNotFoundException extends NotFoundException {
+    public MovieNotFoundException(String message) {
         super(message);
     }
 }

@@ -1,6 +1,8 @@
 package cz.cvut.fel.cinetrack.exception.media;
 
-public class InvalidDatesException extends RuntimeException {
+import cz.cvut.fel.cinetrack.exception.InvalidFormatException;
+
+public class InvalidDatesException extends InvalidFormatException {
     public InvalidDatesException(String message) {
         super(message);
     }

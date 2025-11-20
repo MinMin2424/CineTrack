@@ -6,15 +6,17 @@ package cz.cvut.fel.cinetrack.dto.media.request;
 
 import java.time.LocalDate;
 
-public class SeriesCreateDTO {
+public class MovieCreateRequestDTO {
+
 
     private String imdbID;
     private String title;
+    private String year;
+    private String runtime;
     private String genre;
     private String language;
     private String country;
     private String poster;
-    private String season;
 
     private String status;
     private String rating;
@@ -36,6 +38,22 @@ public class SeriesCreateDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(String runtime) {
+        this.runtime = runtime;
     }
 
     public String getGenre() {
@@ -68,14 +86,6 @@ public class SeriesCreateDTO {
 
     public void setPoster(String poster) {
         this.poster = poster;
-    }
-
-    public String getSeason() {
-        return season;
-    }
-
-    public void setSeason(String season) {
-        this.season = season;
     }
 
     public String getStatus() {

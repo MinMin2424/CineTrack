@@ -5,10 +5,10 @@
 package cz.cvut.fel.cinetrack.exception;
 
 import cz.cvut.fel.cinetrack.exception.media.MediaNotFoundException;
+import cz.cvut.fel.cinetrack.exception.media.RequestFailedException;
 import cz.cvut.fel.cinetrack.exception.media.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.exception.user.PasswordNotStrongEnoughException;
 import cz.cvut.fel.cinetrack.exception.user.UserNotFoundException;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -51,8 +51,6 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    // AUTH
-
     @ExceptionHandler(InvalidCredentialException.class)
     public ResponseEntity<Map<String, String>> handleInvalidCredentialException(
             InvalidCredentialException ex
@@ -67,13 +65,6 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFoundException(
-            UserNotFoundException ex
-    ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleAuthenticationCredentialsNotFoundException(
             AuthenticationCredentialsNotFoundException ex
@@ -81,18 +72,17 @@ public class GlobalExceptionHandler {
         return buildErrorResponse("You have to be logged in to access this endpoint", HttpStatus.UNAUTHORIZED);
     }
 
-    // MEDIA
-    @ExceptionHandler(MediaNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleMediaNotFoundException(
-            MediaNotFoundException ex
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNotFoundException(
+            NotFoundException ex
     ) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(SeriesNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleSeriesNotFoundException(
-            SeriesNotFoundException ex
+    @ExceptionHandler(RequestFailedException.class)
+    public ResponseEntity<Map<String, String>> handleRequestFailedException(
+            RequestFailedException ex
     ) {
-        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

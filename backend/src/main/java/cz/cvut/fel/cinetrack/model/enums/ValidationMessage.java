@@ -40,7 +40,9 @@ public enum ValidationMessage {
     INVALID_DATES("End date cannot be before start date!"),
 
     MOVIE_ALREADY_EXISTS("Movie already exists!"),
-    SERIES_ALREADY_EXISTS("Series already exists!"),;
+    SERIES_ALREADY_EXISTS("Series already exists!"),
+
+    INVALID_RATING("Rating must be between 0 and 10!");
 
     private final String message;
 
