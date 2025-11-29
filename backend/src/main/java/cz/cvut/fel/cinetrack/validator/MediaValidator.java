@@ -7,7 +7,9 @@ package cz.cvut.fel.cinetrack.validator;
 import cz.cvut.fel.cinetrack.exception.media.InvalidDatesException;
 import cz.cvut.fel.cinetrack.exception.media.InvalidRatingException;
 import cz.cvut.fel.cinetrack.exception.media.nonNullData.DatesCannotBeNullException;
+import cz.cvut.fel.cinetrack.exception.media.nonNullData.MediaInputCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.media.nonNullData.StartDateCannotBeNullException;
+import cz.cvut.fel.cinetrack.model.enums.MediaType;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,43 @@ import java.time.LocalDate;
 
 @Component
 public class MediaValidator {
+
+    public static void validateInputs(
+            String title,
+            String runtime,
+            String year,
+            String poster,
+            String status,
+            LocalDate watchStartDate,
+            String rating,
+            String notes,
+            String season,
+            MediaType type
+    ) {
+        if (title == null || title.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.TITLE_REQUIRED.getMessage());
+        if (poster == null || poster.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.POSTER_REQUIRED.getMessage());
+        if (status == null || status.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.STATUS_REQUIRED.getMessage());
+        if (watchStartDate == null)  throw new MediaInputCannotBeNullException(ValidationMessage.START_DATE_REQUIRED.getMessage());
+        if (rating == null || rating.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.RATING_REQUIRED.getMessage());
+        if (notes == null || notes.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.NOTES_REQUIRED.getMessage());
+        if (type == MediaType.MOVIE) {
+            if (runtime == null || runtime.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.RUNTIME_REQUIRED.getMessage());
+            if (year == null || year.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.YEAR_REQUIRED.getMessage());
+        }
+        if (type == MediaType.SERIES) {
+            if (season == null || season.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.SEASON_REQUIRED.getMessage());
+        }
+    }
+
+    public static void validateEditInputs(
+            String notes,
+            String rating,
+            LocalDate watchStartDate
+    ) {
+        if (notes == null || notes.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.NOTES_REQUIRED.getMessage());
+        if (rating == null || rating.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.RATING_REQUIRED.getMessage());
+        if (watchStartDate == null)  throw new MediaInputCannotBeNullException(ValidationMessage.START_DATE_REQUIRED.getMessage());
+    }
 
     public static void validateStatusDates(StatusEnum status, LocalDate startDate, LocalDate endDate) {
         if (status == StatusEnum.COMPLETED && (startDate == null || endDate == null)) {

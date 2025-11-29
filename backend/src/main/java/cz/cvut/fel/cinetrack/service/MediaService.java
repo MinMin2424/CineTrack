@@ -21,6 +21,7 @@ import cz.cvut.fel.cinetrack.model.Episode;
 import cz.cvut.fel.cinetrack.model.Movie;
 import cz.cvut.fel.cinetrack.model.Series;
 import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
+import cz.cvut.fel.cinetrack.model.enums.MediaType;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;
 import cz.cvut.fel.cinetrack.repository.EpisodeRepository;
@@ -37,6 +38,7 @@ import java.util.List;
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapMovieDTOToEntity;
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapSeriesDTOToEntity;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.*;
+import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateInputs;
 import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateStatusDates;
 
 @Service
@@ -106,6 +108,18 @@ public class MediaService {
     }
 
     public MovieResponseDTO createMovie(MovieCreateRequestDTO movieDTO, Long userId) {
+        validateInputs(
+                movieDTO.getTitle(),
+                movieDTO.getRuntime(),
+                movieDTO.getYear(),
+                movieDTO.getPoster(),
+                movieDTO.getStatus(),
+                movieDTO.getWatchStartDate(),
+                movieDTO.getRating(),
+                movieDTO.getNotes(),
+                null,
+                MediaType.MOVIE
+        );
         validateStatusDates(
                 parseStatus(movieDTO.getStatus()),
                 movieDTO.getWatchStartDate(),
@@ -121,6 +135,18 @@ public class MediaService {
     }
 
     public SeriesResponseDTO createSeries(SeriesCreateRequestDTO seriesDTO, Long userId) {
+        validateInputs(
+                seriesDTO.getTitle(),
+                null,
+                null,
+                seriesDTO.getPoster(),
+                seriesDTO.getStatus(),
+                seriesDTO.getWatchStartDate(),
+                seriesDTO.getRating(),
+                seriesDTO.getNotes(),
+                seriesDTO.getSeason(),
+                MediaType.SERIES
+        );
         validateStatusDates(
                 parseStatus(seriesDTO.getStatus()),
                 seriesDTO.getWatchStartDate(),

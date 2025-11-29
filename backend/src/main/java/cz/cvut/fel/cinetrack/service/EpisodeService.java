@@ -62,7 +62,7 @@ public class EpisodeService {
         }
         Series series = seriesRepository.findByIdAndUserIdAndNotDeleted(seriesId, userId)
                 .orElseThrow(() -> new AccessDeniedException(String.format("You do not have access to series with id %s!", seriesId)));
-        List<Episode> episodes = episodeRepository.findBySeriesIdOrderByEpisode(seriesId);
+        List<Episode> episodes = episodeRepository.findBySeriesIdOrderByEpisode(series.getId());
         return episodes.stream()
                 .map(EpisodeResponseDTO::new)
                 .toList();

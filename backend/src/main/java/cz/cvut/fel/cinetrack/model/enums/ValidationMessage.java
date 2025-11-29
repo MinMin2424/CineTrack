@@ -42,6 +42,16 @@ public enum ValidationMessage {
     MOVIE_ALREADY_EXISTS("Movie already exists!"),
     SERIES_ALREADY_EXISTS("Series already exists!"),
 
+    TITLE_REQUIRED("Title is required!"),
+    RUNTIME_REQUIRED("Runtime is required!"),
+    YEAR_REQUIRED("Year is required!"),
+    POSTER_REQUIRED("Poster is required!"),
+    STATUS_REQUIRED("Status is required!"),
+    WATCH_START_DATE_REQUIRED("Watch start date is required!"),
+    RATING_REQUIRED("Rating is required!"),
+    NOTES_REQUIRED("Notes is required!"),
+    SEASON_REQUIRED("Season is required!"),
+
     INVALID_RATING("Rating must be between 0 and 10!");
 
     private final String message;

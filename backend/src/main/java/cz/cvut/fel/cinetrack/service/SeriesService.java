@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStatus;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStringToFloat;
-import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateDates;
-import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateRating;
+import static cz.cvut.fel.cinetrack.validator.MediaValidator.*;
 
 @Service
 @Transactional
@@ -45,6 +44,11 @@ public class SeriesService {
 
     public SeriesResponseDTO editSeries(Long seriesId, Long userId, EditMediaRequestDTO request) {
         Series series = checkSeriesExistence(seriesId, userId);
+        validateEditInputs(
+                request.getNotes(),
+                request.getRating(),
+                request.getWatchStartDate()
+        );
         validateDates(request.getWatchStartDate(), request.getWatchEndDate());
         validateRating(parseStringToFloat(request.getRating()));
 

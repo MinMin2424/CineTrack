@@ -26,7 +26,10 @@ public class CountryService {
 
     public List<Country> getOrCreateCountries(List<String> countryName) {
         if (countryName == null) return new ArrayList<>();
-        List<Country> existingCountries = countryRepository.findByCountryNameIn(countryName);
+        List<String> uniqueNames = countryName.stream()
+                .distinct()
+                .toList();
+        List<Country> existingCountries = countryRepository.findByCountryNameIn(uniqueNames);
         Set<String> existingNames = existingCountries.stream()
                 .map(Country::getCountryName)
                 .collect(Collectors.toSet());
@@ -35,7 +38,9 @@ public class CountryService {
             if (!existingNames.contains(name)) {
                 Country newCountry = new Country();
                 newCountry.setCountryName(name);
-                result.add(countryRepository.save(newCountry));
+                Country savedCountry = countryRepository.save(newCountry);
+                result.add(savedCountry);
+                existingNames.add(name);
             }
         }
         return result;

@@ -26,7 +26,10 @@ public class GenreService {
 
     public List<Genre> getOrCreateGenres(List<String> types) {
         if (types == null) return new ArrayList<>();
-        List<Genre> existingGenres = genreRepository.findByTypeIn(types);
+        List<String> uniqueGenres = types.stream()
+                .distinct()
+                .toList();
+        List<Genre> existingGenres = genreRepository.findByTypeIn(uniqueGenres);
         Set<String> existingTypes = existingGenres.stream()
                 .map(Genre::getType)
                 .collect(Collectors.toSet());
@@ -35,7 +38,9 @@ public class GenreService {
             if (!existingTypes.contains(type)) {
                 Genre newGenre = new Genre();
                 newGenre.setType(type);
-                result.add(genreRepository.save(newGenre));
+                Genre savedGenre = genreRepository.save(newGenre);
+                result.add(savedGenre);
+                existingTypes.add(type);
             }
         }
         return result;

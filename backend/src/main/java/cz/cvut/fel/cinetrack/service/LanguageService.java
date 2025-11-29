@@ -26,7 +26,10 @@ public class LanguageService {
 
     public List<Language> getOrCreateLanguage(List<String> languages) {
         if (languages == null) return new ArrayList<>();
-        List<Language> existingLanguages = languageRepository.findByLangIn(languages);
+        List<String> uniqueLanguages = languages.stream()
+                .distinct()
+                .toList();
+        List<Language> existingLanguages = languageRepository.findByLangIn(uniqueLanguages);
         Set<String> existingNames = existingLanguages.stream()
                 .map(Language::getLang)
                 .collect(Collectors.toSet());
@@ -35,7 +38,9 @@ public class LanguageService {
             if (!existingNames.contains(name)) {
                 Language newLanguage = new Language();
                 newLanguage.setLang(name);
-                result.add(languageRepository.save(newLanguage));
+                Language savedLanguage = languageRepository.save(newLanguage);
+                result.add(savedLanguage);
+                existingNames.add(name);
             }
         }
         return result;

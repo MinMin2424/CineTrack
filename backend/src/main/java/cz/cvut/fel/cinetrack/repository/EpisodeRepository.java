@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     List<Episode> findBySeriesId(Long seriesId);
-    Optional<Episode> findByEpisodeId(Long episodeId);
+    Optional<Episode> findById(Long episodeId);
     void deleteBySeriesId(Long seriesId);
 
     @Query("SELECT e FROM Episode e WHERE e.series.id = :seriesId AND e.episode = :episode AND e.series.deleted = false")
