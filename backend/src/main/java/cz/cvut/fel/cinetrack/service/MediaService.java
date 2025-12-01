@@ -211,6 +211,7 @@ public class MediaService {
             episodes.add(episode);
         }
         episodeRepository.saveAll(episodes);
+        series.setEpisodeList(episodes);
     }
 
 }

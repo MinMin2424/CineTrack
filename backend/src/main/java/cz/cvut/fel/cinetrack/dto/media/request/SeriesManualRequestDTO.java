@@ -4,7 +4,6 @@
 
 package cz.cvut.fel.cinetrack.dto.media.request;
 
-import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -30,6 +29,10 @@ public class SeriesManualRequestDTO {
     @Min(value = 1, message = "Season must be at least 1")
     private int season;
 
+    @NotNull(message = "Episode count is required")
+    @Min(value = 1, message = "At least one episode is required")
+    private int episodeCount;
+
     @NotBlank(message = "Poster URL is required")
     private String posterUrl;
 
@@ -46,13 +49,13 @@ public class SeriesManualRequestDTO {
     private String notes;
 
     @NotEmpty(message = "At least one genre is required")
-    private List<String> genres;
+    private List<String> genre;
 
     @NotEmpty(message = "At least one language is required")
-    private List<String> languages;
+    private List<String> language;
 
     @NotEmpty(message = "At least one country is required")
-    private List<String> countries;
+    private List<String> country;
 
     public @NotBlank(message = "Title is required") String getTitle() {
         return title;
@@ -81,6 +84,16 @@ public class SeriesManualRequestDTO {
 
     public void setSeason(@NotNull(message = "Runtime is required") @Min(value = 1, message = "Season must be at least 1") int season) {
         this.season = season;
+    }
+
+    @NotNull(message = "Episode count is required")
+    @Min(value = 1, message = "At least one episode is required")
+    public int getEpisodeCount() {
+        return episodeCount;
+    }
+
+    public void setEpisodeCount(@NotNull(message = "Episode count is required") @Min(value = 1, message = "At least one episode is required") int episodeCount) {
+        this.episodeCount = episodeCount;
     }
 
     public @NotBlank(message = "Poster URL is required") String getPosterUrl() {
@@ -133,27 +146,27 @@ public class SeriesManualRequestDTO {
         this.notes = notes;
     }
 
-    public @NotEmpty(message = "At least one genre is required") List<String> getGenres() {
-        return genres;
+    public @NotEmpty(message = "At least one genre is required") List<String> getGenre() {
+        return genre;
     }
 
-    public void setGenres(@NotEmpty(message = "At least one genre is required") List<String> genres) {
-        this.genres = genres;
+    public void setGenre(@NotEmpty(message = "At least one genre is required") List<String> genre) {
+        this.genre = genre;
     }
 
-    public @NotEmpty(message = "At least one language is required") List<String> getLanguages() {
-        return languages;
+    public @NotEmpty(message = "At least one language is required") List<String> getLanguage() {
+        return language;
     }
 
-    public void setLanguages(@NotEmpty(message = "At least one language is required") List<String> languages) {
-        this.languages = languages;
+    public void setLanguage(@NotEmpty(message = "At least one language is required") List<String> language) {
+        this.language = language;
     }
 
-    public @NotEmpty(message = "At least one country is required") List<String> getCountries() {
-        return countries;
+    public @NotEmpty(message = "At least one country is required") List<String> getCountry() {
+        return country;
     }
 
-    public void setCountries(@NotEmpty(message = "At least one country is required") List<String> countries) {
-        this.countries = countries;
+    public void setCountry(@NotEmpty(message = "At least one country is required") List<String> country) {
+        this.country = country;
     }
 }

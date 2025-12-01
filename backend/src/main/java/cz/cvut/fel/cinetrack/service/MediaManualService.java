@@ -10,9 +10,13 @@ import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
+import cz.cvut.fel.cinetrack.model.Episode;
 import cz.cvut.fel.cinetrack.model.Movie;
 import cz.cvut.fel.cinetrack.model.Series;
+import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
+import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;
+import cz.cvut.fel.cinetrack.repository.EpisodeRepository;
 import cz.cvut.fel.cinetrack.repository.MovieRepository;
 import cz.cvut.fel.cinetrack.repository.SeriesRepository;
 import cz.cvut.fel.cinetrack.security.SecurityUtils;
@@ -20,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStatus;
 import static cz.cvut.fel.cinetrack.validator.MediaValidator.*;
@@ -30,18 +36,21 @@ public class MediaManualService {
 
     private final MovieRepository movieRepository;
     private final SeriesRepository seriesRepository;
+    private final EpisodeRepository episodeRepository;
     private final LanguageService languageService;
     private final GenreService genreService;
     private final CountryService countryService;
 
     public MediaManualService(MovieRepository movieRepository,
                               SeriesRepository seriesRepository,
+                              EpisodeRepository episodeRepository,
                               LanguageService languageService,
                               GenreService genreService,
                               CountryService countryService
     ) {
         this.movieRepository = movieRepository;
         this.seriesRepository = seriesRepository;
+        this.episodeRepository = episodeRepository;
         this.languageService = languageService;
         this.genreService = genreService;
         this.countryService = countryService;
@@ -66,6 +75,7 @@ public class MediaManualService {
         validateRating(request.getRating());
 
         Series series = createSeries(request);
+        createFallbackEpisodes(series, request.getEpisodeCount());
         return new SeriesResponseDTO(series);
     }
 
@@ -108,12 +118,28 @@ public class MediaManualService {
         series.setNotes(request.getNotes());
         series.setCreatedAt(LocalDateTime.now());
 
-        series.setGenres(genreService.getOrCreateGenres(request.getGenres()));
-        series.setLanguages(languageService.getOrCreateLanguage(request.getLanguages()));
-        series.setCountries(countryService.getOrCreateCountries(request.getCountries()));
+        series.setGenres(genreService.getOrCreateGenres(request.getGenre()));
+        series.setLanguages(languageService.getOrCreateLanguage(request.getLanguage()));
+        series.setCountries(countryService.getOrCreateCountries(request.getCountry()));
 
         series.setUser(SecurityUtils.getCurrentUser());
 
         return seriesRepository.save(series);
+    }
+
+    private void createFallbackEpisodes(Series series, int episodeCount) {
+        List<Episode> episodes = new ArrayList<>();
+        for(int i = 1; i <= episodeCount; i++) {
+            Episode episode = new Episode();
+            episode.setTitle("Episode: " + i);
+            episode.setEpisode(i);
+            episode.setStatus(series.getStatus() == StatusEnum.COMPLETED ? EpisodeStatusEnum.COMPLETED : EpisodeStatusEnum.NONE);
+            episode.setRating(0);
+            episode.setNotes("");
+            episode.setSeries(series);
+            episodes.add(episode);
+        }
+        episodeRepository.saveAll(episodes);
+        series.setEpisodeList(episodes);
     }
 }
