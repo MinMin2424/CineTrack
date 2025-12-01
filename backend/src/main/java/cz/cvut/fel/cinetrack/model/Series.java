@@ -47,7 +47,7 @@ public class Series {
     @Column(name = "release_year", nullable = false)
     private int releaseYear;
 
-    @Column(name = "poster", nullable = true)
+    @Column(name = "poster", nullable = false)
     private String poster;
 
     @Column(name = "episodes", nullable = false)
@@ -56,16 +56,16 @@ public class Series {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @Column(name = "watch_start_date", nullable = false)
+    @Column(name = "watch_start_date", nullable = true)
     private LocalDate watchStartDate;
 
     @Column(name = "watch_end_date", nullable = true)
     private LocalDate watchEndDate;
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating", nullable = true)
     private float rating;
 
-    @Column(name = "notes", nullable = false)
+    @Column(name = "notes", nullable = true)
     private String notes;
 
     @CreationTimestamp

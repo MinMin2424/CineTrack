@@ -8,7 +8,6 @@ import cz.cvut.fel.cinetrack.exception.media.InvalidDatesException;
 import cz.cvut.fel.cinetrack.exception.media.InvalidRatingException;
 import cz.cvut.fel.cinetrack.exception.media.nonNullData.DatesCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.media.nonNullData.MediaInputCannotBeNullException;
-import cz.cvut.fel.cinetrack.exception.media.nonNullData.StartDateCannotBeNullException;
 import cz.cvut.fel.cinetrack.model.enums.MediaType;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.ValidationMessage;

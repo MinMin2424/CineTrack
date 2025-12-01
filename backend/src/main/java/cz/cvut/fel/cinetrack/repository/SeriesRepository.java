@@ -17,6 +17,7 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     boolean existsByImdbIdAndSeasonAndUserId(String imdbId, int season, Long userId);
     boolean existsById(Long id);
     boolean existsByIdAndUserId(Long id, Long userId);
+    boolean existsByTitleAndUserId(String title, Long userId);
     List<Series> findByUserId(Long userId);
     Optional<Series> findByIdAndUserId(Long id, Long userId);
 
