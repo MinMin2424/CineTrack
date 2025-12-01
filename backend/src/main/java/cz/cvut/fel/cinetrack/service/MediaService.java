@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapMovieDTOToEntity;
@@ -69,7 +68,7 @@ public class MediaService {
         this.omdbService = omdbService;
     }
 
-    public List<MediaItemDTO> getUserMedia(Long userId) {
+    public List<MediaItemDTO> getUserMedia(Long userId, String sortBy) {
         List<Movie> movies = movieRepository.findNotDeletedMoviesByUserIdOrderByCreatedAtDesc(userId);
         List<Series> series = seriesRepository.findNotDeletedSeriesByUserIdOrderByCreatedAtDesc(userId);
 
@@ -83,16 +82,60 @@ public class MediaService {
                 .map(MediaItemDTO::new)
                 .toList());
 
-        mediaItems.sort(Comparator.comparing(MediaItemDTO::getCreatedAt).reversed());
+        mediaItems = sortMediaItems(mediaItems, sortBy);
         return mediaItems;
     }
 
-    public OMDBResponseDTO searchMovie(SearchRequestDTO request) {
+    public OMDBResponseDTO searchMediaFromAPI(SearchRequestDTO request) {
         OMDBResponseDTO response = omdbService.searchMedia(request.getTitle());
         if (!"movie".equalsIgnoreCase(request.getType())) {
             throw new InvalidMediaTypeException(ValidationMessage.INVALID_MEDIA_TYPE.getMessage());
         }
         return response;
+    }
+
+    public List<String> autocompleteTitles(Long userId, String query, int limit) {
+        if (query == null || query.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        String normalizedQuery = query.trim().toLowerCase();
+        List<String> suggestions = new ArrayList<>();
+
+        List<Movie> movies = movieRepository.findNotDeletedMoviesByUserId(userId);
+        suggestions.addAll(
+                movies.stream()
+                        .map(Movie::getTitle)
+                        .filter(title -> matchesSearchTerm(title, normalizedQuery))
+                        .toList()
+        );
+
+        List<Series> series = seriesRepository.findNotDeletedSeriesByUserId(userId);
+        suggestions.addAll(
+                series.stream()
+                        .map(Series::getTitle)
+                        .filter(title -> matchesSearchTerm(title, normalizedQuery))
+                        .toList()
+        );
+        suggestions = suggestions.stream()
+                .distinct()
+                .sorted((a,b) -> {
+                    boolean aExact = isExactMatch(a, normalizedQuery);
+                    boolean bExact = isExactMatch(b, normalizedQuery);
+
+                    if (aExact && !bExact) return -1;
+                    if (aExact && bExact) return 1;
+
+                    int aIndex = a.toLowerCase().indexOf(normalizedQuery);
+                    int bIndex = b.toLowerCase().indexOf(normalizedQuery);
+
+                    if (aIndex != bIndex) {
+                        return Integer.compare(aIndex, bIndex);
+                    }
+                    return Integer.compare(a.length(), b.length());
+                })
+                .limit(limit > 0 ? limit : 10)
+                .toList();
+        return suggestions;
     }
 
     public SeriesSearchResponseDTO searchSeriesWithSeason(SearchRequestDTO request) {
@@ -213,5 +256,7 @@ public class MediaService {
         episodeRepository.saveAll(episodes);
         series.setEpisodeList(episodes);
     }
+
+
 
 }

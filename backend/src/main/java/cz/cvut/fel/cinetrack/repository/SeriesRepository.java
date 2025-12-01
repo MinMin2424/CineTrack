@@ -29,4 +29,7 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
 
     @Query("SELECT s FROM Series s LEFT JOIN FETCH s.episodeList WHERE s.id = :id")
     Optional<Series> findByIdAndEpisodeList(@Param("id") Long id);
+
+    @Query("SELECT s FROM Series s WHERE s.user.id = :userId AND s.deleted = false")
+    List<Series> findNotDeletedSeriesByUserId(@Param("userId") Long userId);
 }

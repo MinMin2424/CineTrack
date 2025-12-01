@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,10 +41,12 @@ public class MediaController {
     }
 
     @GetMapping("/overview")
-    public ResponseEntity<?> getUserMediaOverview() {
+    public ResponseEntity<?> getUserMediaOverview(
+            @RequestParam(required = false, defaultValue = "CREATED_AT_DESC") String sortBy
+    ) {
         try {
             User user = SecurityUtils.getCurrentUser();
-            List<MediaItemDTO> mediaItems = mediaService.getUserMedia(user.getId());
+            List<MediaItemDTO> mediaItems = mediaService.getUserMedia(user.getId(), sortBy);
             return ResponseEntity.ok(mediaItems);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -60,7 +63,7 @@ public class MediaController {
                 SeriesSearchResponseDTO result = mediaService.searchSeriesWithSeason(request);
                 return ResponseEntity.ok(result);
             } else {
-                OMDBResponseDTO result = mediaService.searchMovie(request);
+                OMDBResponseDTO result = mediaService.searchMediaFromAPI(request);
                 return ResponseEntity.ok(result);
             }
         } catch (InvalidMediaTypeException e) {
@@ -69,6 +72,16 @@ public class MediaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Search failed: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("/autocomplete")
+    public ResponseEntity<List<String>> autocompleteTitles(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        List<String> suggestions = mediaService.autocompleteTitles(userId, query, limit);
+        return ResponseEntity.ok(suggestions);
     }
 
     @PostMapping("/movie")

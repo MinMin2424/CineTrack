@@ -4,11 +4,13 @@
 
 package cz.cvut.fel.cinetrack.util;
 
+import cz.cvut.fel.cinetrack.dto.media.MediaItemDTO;
 import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,5 +87,70 @@ public class MediaUtils {
             case "paused" -> EpisodeStatusEnum.PAUSED;
             default -> EpisodeStatusEnum.NONE;
         };
+    }
+
+    public static List<MediaItemDTO> sortMediaItems(List<MediaItemDTO> mediaItems, String sortBy) {
+        if (sortBy == null || sortBy.isEmpty()) {
+            return mediaItems.stream()
+                    .sorted(Comparator.comparing(MediaItemDTO::getCreatedAt).reversed())
+                    .toList();
+        }
+        switch (sortBy.toUpperCase()) {
+            case "TITLE_ASC":
+                return mediaItems.stream()
+                        .sorted(Comparator.comparing(MediaItemDTO::getTitle, String.CASE_INSENSITIVE_ORDER))
+                        .toList();
+            case "TITLE_DESC":
+                return mediaItems.stream()
+                        .sorted(Comparator.comparing(MediaItemDTO::getTitle, String.CASE_INSENSITIVE_ORDER).reversed())
+                        .toList();
+            case "RELEASE_YEAR_ASC":
+                return mediaItems.stream()
+                        .sorted(Comparator.comparing(MediaItemDTO::getReleaseYear))
+                        .toList();
+            case "RELEASE_YEAR_DESC":
+                return mediaItems.stream()
+                        .sorted(Comparator.comparing(MediaItemDTO::getReleaseYear).reversed())
+                        .toList();
+            case "CREATED_AT_ASC":
+                return mediaItems.stream()
+                        .sorted(Comparator.comparing(MediaItemDTO::getCreatedAt))
+                        .toList();
+            case "CREATED_AT_DESC":
+            default:
+                return mediaItems.stream()
+                        .sorted(Comparator.comparing(MediaItemDTO::getCreatedAt).reversed())
+                        .toList();
+        }
+    }
+
+    public static boolean matchesSearchTerm(String title, String searchTerm) {
+        if (title == null || searchTerm == null || searchTerm.trim().isEmpty()) {
+            return false;
+        }
+        String normalizedTitle = title.toLowerCase();
+        if (normalizedTitle.equals(searchTerm)) {
+            return true;
+        }
+        if (normalizedTitle.startsWith(searchTerm)) {
+            return true;
+        }
+        if (normalizedTitle.contains(searchTerm)) {
+            return true;
+        }
+        String[] titleWords = normalizedTitle.split("[\\s\\-_:,()+]");
+        for (String word : titleWords) {
+            if (word.startsWith(searchTerm)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isExactMatch(String title, String searchTerm) {
+        if (title == null || searchTerm == null) {
+            return false;
+        }
+        return title.toLowerCase().equals(searchTerm);
     }
 }

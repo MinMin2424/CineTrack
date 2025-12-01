@@ -27,4 +27,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("SELECT m FROM Movie m WHERE m.user.id = :userId AND m.deleted = false ORDER BY m.createdAt DESC")
     List<Movie> findNotDeletedMoviesByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId);
+
+    @Query("SELECT m FROM Movie m WHERE m.user.id = :userId AND m.deleted = false")
+    List<Movie> findNotDeletedMoviesByUserId(Long userId);
 }
