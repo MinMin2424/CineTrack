@@ -25,18 +25,12 @@ public class MediaValidator {
             String year,
             String poster,
             String status,
-            LocalDate watchStartDate,
-            String rating,
-            String notes,
             String season,
             MediaType type
     ) {
         if (title == null || title.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.TITLE_REQUIRED.getMessage());
         if (poster == null || poster.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.POSTER_REQUIRED.getMessage());
         if (status == null || status.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.STATUS_REQUIRED.getMessage());
-        if (watchStartDate == null)  throw new MediaInputCannotBeNullException(ValidationMessage.START_DATE_REQUIRED.getMessage());
-        if (rating == null || rating.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.RATING_REQUIRED.getMessage());
-        if (notes == null || notes.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.NOTES_REQUIRED.getMessage());
         if (type == MediaType.MOVIE) {
             if (runtime == null || runtime.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.RUNTIME_REQUIRED.getMessage());
             if (year == null || year.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.YEAR_REQUIRED.getMessage());
@@ -46,26 +40,9 @@ public class MediaValidator {
         }
     }
 
-    public static void validateEditInputs(
-            String notes,
-            String rating,
-            LocalDate watchStartDate
-    ) {
-        if (notes == null || notes.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.NOTES_REQUIRED.getMessage());
-        if (rating == null || rating.trim().isEmpty()) throw new MediaInputCannotBeNullException(ValidationMessage.RATING_REQUIRED.getMessage());
-        if (watchStartDate == null)  throw new MediaInputCannotBeNullException(ValidationMessage.START_DATE_REQUIRED.getMessage());
-    }
-
     public static void validateStatusDates(StatusEnum status, LocalDate startDate, LocalDate endDate) {
         if (status == StatusEnum.COMPLETED && (startDate == null || endDate == null)) {
             throw new DatesCannotBeNullException(ValidationMessage.DATES_REQUIRED.getMessage());
-        }
-        if ((status == StatusEnum.WATCHING ||
-                status == StatusEnum.PLAN_TO_WATCH ||
-                status == StatusEnum.PAUSED ||
-                status == StatusEnum.DROPPED) && startDate == null
-        ) {
-            throw new StartDateCannotBeNullException(ValidationMessage.START_DATE_REQUIRED.getMessage());
         }
         validateDates(startDate, endDate);
     }

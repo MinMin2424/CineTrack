@@ -44,11 +44,6 @@ public class MovieService {
 
     public MovieResponseDTO editMovie(Long movieId, Long userId, EditMediaRequestDTO request) {
         Movie movie = checkMovieExistence(movieId, userId);
-        validateEditInputs(
-            request.getNotes(),
-            request.getRating(),
-            request.getWatchStartDate()
-        );
         validateDates(request.getWatchStartDate(), request.getWatchEndDate());
         validateRating(parseStringToFloat(request.getRating()));
 

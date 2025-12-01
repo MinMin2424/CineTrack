@@ -114,9 +114,6 @@ public class MediaService {
                 movieDTO.getYear(),
                 movieDTO.getPoster(),
                 movieDTO.getStatus(),
-                movieDTO.getWatchStartDate(),
-                movieDTO.getRating(),
-                movieDTO.getNotes(),
                 null,
                 MediaType.MOVIE
         );
@@ -141,9 +138,6 @@ public class MediaService {
                 null,
                 seriesDTO.getPoster(),
                 seriesDTO.getStatus(),
-                seriesDTO.getWatchStartDate(),
-                seriesDTO.getRating(),
-                seriesDTO.getNotes(),
                 seriesDTO.getSeason(),
                 MediaType.SERIES
         );

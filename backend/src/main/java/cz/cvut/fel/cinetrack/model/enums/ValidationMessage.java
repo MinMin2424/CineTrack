@@ -35,7 +35,6 @@ public enum ValidationMessage {
 
     INVALID_MEDIA_TYPE("Selected type does not match the media type!"),
 
-    START_DATE_REQUIRED("Start date is required!"),
     DATES_REQUIRED("Both date is required for this status!"),
     INVALID_DATES("End date cannot be before start date!"),
 
@@ -47,9 +46,6 @@ public enum ValidationMessage {
     YEAR_REQUIRED("Year is required!"),
     POSTER_REQUIRED("Poster is required!"),
     STATUS_REQUIRED("Status is required!"),
-    WATCH_START_DATE_REQUIRED("Watch start date is required!"),
-    RATING_REQUIRED("Rating is required!"),
-    NOTES_REQUIRED("Notes is required!"),
     SEASON_REQUIRED("Season is required!"),
 
     INVALID_RATING("Rating must be between 0 and 10!");

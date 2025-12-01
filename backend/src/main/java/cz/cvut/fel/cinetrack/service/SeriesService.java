@@ -44,11 +44,6 @@ public class SeriesService {
 
     public SeriesResponseDTO editSeries(Long seriesId, Long userId, EditMediaRequestDTO request) {
         Series series = checkSeriesExistence(seriesId, userId);
-        validateEditInputs(
-                request.getNotes(),
-                request.getRating(),
-                request.getWatchStartDate()
-        );
         validateDates(request.getWatchStartDate(), request.getWatchEndDate());
         validateRating(parseStringToFloat(request.getRating()));
 

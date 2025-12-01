@@ -137,49 +137,6 @@ public class MovieServiceTest {
     }
 
     @Test
-    void editMovie_WhenNotesIsNull_ThrowsException() {
-        EditMediaRequestDTO request = new EditMediaRequestDTO();
-        request.setNotes(null);
-        request.setRating("9.5");
-        request.setWatchStartDate(LocalDate.now().plusDays(2));
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                movieService.editMovie(movie.getId(), user.getId(), request));
-
-        request.setNotes("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                movieService.editMovie(movie.getId(), user.getId(), request));
-    }
-
-    @Test
-    void editMovie_WhenRatingIsNull_ThrowsException() {
-        EditMediaRequestDTO request = new EditMediaRequestDTO();
-        request.setNotes("Update notes");
-        request.setRating(null);
-        request.setWatchStartDate(LocalDate.now().plusDays(2));
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                movieService.editMovie(movie.getId(), user.getId(), request));
-
-        request.setRating("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                movieService.editMovie(movie.getId(), user.getId(), request));
-    }
-
-    @Test
-    void editMovie_WhenWatchStartDateIsNull_ThrowsException() {
-        EditMediaRequestDTO request = new EditMediaRequestDTO();
-        request.setNotes("Update notes");
-        request.setRating("9.5");
-        request.setWatchStartDate(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                movieService.editMovie(movie.getId(), user.getId(), request));
-    }
-
-    @Test
     void editMovie_WhenWatchEndDateIsBeforeStartDate_ThrowsException() {
         EditMediaRequestDTO request = new EditMediaRequestDTO();
         request.setNotes("Update notes");
