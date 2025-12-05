@@ -22,6 +22,10 @@ import cz.cvut.fel.cinetrack.repository.SeriesRepository;
 import cz.cvut.fel.cinetrack.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,8 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static cz.cvut.fel.cinetrack.environment.SetMovieParameters.createBaseMovieRequest;
 import static cz.cvut.fel.cinetrack.environment.SetMovieParameters.setMovieParameters;
+import static cz.cvut.fel.cinetrack.environment.SetSeriesParameters.createBaseSeriesRequest;
 import static cz.cvut.fel.cinetrack.environment.SetSeriesParameters.setSeriesParameters;
 import static cz.cvut.fel.cinetrack.environment.SetUserParameters.setUserParameters;
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,6 +67,7 @@ public class MediaServiceTest {
     private User otherUser;
     private Movie movie;
     private Series series;
+    private final String SORT_BY = "created_at_desc";
 
     @BeforeEach
     void setUp() {
@@ -78,7 +86,7 @@ public class MediaServiceTest {
 
     @Test
     void getUserMedia_WhenUserHasMovieAndSeries_ReturnsMixedList() {
-        List<MediaItemDTO> response = mediaService.getUserMedia(user.getId());
+        List<MediaItemDTO> response = mediaService.getUserMedia(user.getId(), SORT_BY);
 
         assertNotNull(response);
         assertEquals(2, response.size());
@@ -92,7 +100,7 @@ public class MediaServiceTest {
         Movie movie2 = new Movie(); setMovieParameters(movie2, otherUser);
         movieRepository.save(movie1); movieRepository.save(movie2);
 
-        List<MediaItemDTO> response = mediaService.getUserMedia(otherUser.getId());
+        List<MediaItemDTO> response = mediaService.getUserMedia(otherUser.getId(), SORT_BY);
         assertNotNull(response);
         assertEquals(2, response.size());
         assertTrue(response.stream().allMatch(item -> item.getType().equals(MediaType.MOVIE)));
@@ -104,7 +112,7 @@ public class MediaServiceTest {
         Series series2 = new Series(); setSeriesParameters(series2, otherUser);
         seriesRepository.save(series1); seriesRepository.save(series2);
 
-        List<MediaItemDTO> response = mediaService.getUserMedia(otherUser.getId());
+        List<MediaItemDTO> response = mediaService.getUserMedia(otherUser.getId(), SORT_BY);
         assertNotNull(response);
         assertEquals(2, response.size());
         assertTrue(response.stream().allMatch(item -> item.getType().equals(MediaType.SERIES)));
@@ -112,7 +120,7 @@ public class MediaServiceTest {
 
     @Test
     void getUserMedia_WhenUserHasNoMedia_ReturnsEmptyList() {
-        List<MediaItemDTO> response = mediaService.getUserMedia(otherUser.getId());
+        List<MediaItemDTO> response = mediaService.getUserMedia(otherUser.getId(), SORT_BY);
         assertNotNull(response);
         assertEquals(0, response.size());
         assertTrue(response.isEmpty());
@@ -123,8 +131,8 @@ public class MediaServiceTest {
         Movie movie1 = new Movie(); setMovieParameters(movie1, otherUser);
         movieRepository.save(movie1);
 
-        List<MediaItemDTO> userResponse = mediaService.getUserMedia(user.getId());
-        List<MediaItemDTO> otherUserResponse = mediaService.getUserMedia(otherUser.getId());
+        List<MediaItemDTO> userResponse = mediaService.getUserMedia(user.getId(), SORT_BY);
+        List<MediaItemDTO> otherUserResponse = mediaService.getUserMedia(otherUser.getId(), SORT_BY);
 
         assertEquals(2, userResponse.size());
         assertEquals(1, otherUserResponse.size());
@@ -137,7 +145,7 @@ public class MediaServiceTest {
         Series deletedSeries = new Series(); setSeriesParameters(deletedSeries, true, user);
         seriesRepository.save(deletedSeries);
 
-        List<MediaItemDTO> response = mediaService.getUserMedia(user.getId());
+        List<MediaItemDTO> response = mediaService.getUserMedia(user.getId(), SORT_BY);
         assertEquals(2, response.size());
     }
 
@@ -145,342 +153,138 @@ public class MediaServiceTest {
     void createMovie_WhenMovieAlreadyExists_ThrowsException() {
         Movie existingMovie = new Movie(); setMovieParameters(existingMovie, "tt1234567", otherUser);
         movieRepository.save(existingMovie);
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Movie");
-        request.setYear("2025");
-        request.setRuntime("250 min");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setStatus("plan to watch");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
+        MovieCreateRequestDTO request = createBaseMovieRequest();
         assertThrows(MovieAlreadyExistsException.class, () ->
                 mediaService.createMovie(request, otherUser.getId()));
     }
 
-    @Test
-    void createMovie_WhenStatusIsCompletedAndStartDateIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Movie");
-        request.setYear("2025");
-        request.setRuntime("250 min");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setStatus("completed");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(null);
-        request.setWatchEndDate(LocalDate.now());
-
-        assertThrows(DatesCannotBeNullException.class, () ->
+    @ParameterizedTest
+    @MethodSource("provideMovieNullEmptyFields")
+    void createMovie_WhenFieldIsNullOrEmpty_ThrowsException(
+            String fieldName, String value, String methodCall
+    ) {
+        MovieCreateRequestDTO request = createBaseMovieRequest();
+        switch(methodCall) {
+            case "setTitle" -> request.setTitle(value);
+            case "setRuntime" -> request.setRuntime(value);
+            case "setYear" -> request.setYear(value);
+            case "setPoster" -> request.setPoster(value);
+            case "setStatus" -> request.setStatus(value);
+        }
+        assertThrows(MediaInputCannotBeNullException.class, () ->
                 mediaService.createMovie(request, otherUser.getId()));
     }
 
-    @Test
-    void createMovie_WhenStatusIsCompletedAndEndDateIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Movie");
-        request.setYear("2025");
-        request.setRuntime("250 min");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setStatus("completed");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
-        assertThrows(DatesCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
+    private static Stream<Arguments> provideMovieNullEmptyFields() {
+        return Stream.of(
+                Arguments.of("title", null, "setTitle"),
+                Arguments.of("title", "", "setTitle"),
+                Arguments.of("runtime", null, "setRuntime"),
+                Arguments.of("runtime", "", "setRuntime"),
+                Arguments.of("year", null, "setYear"),
+                Arguments.of("year", "", "setYear"),
+                Arguments.of("poster", null, "setPoster"),
+                Arguments.of("poster", "", "setPoster"),
+                Arguments.of("status", null, "setStatus"),
+                Arguments.of("status", "", "setStatus")
+        );
     }
 
-    @Test
-    void createMovie_WhenEndDateIsBeforeStartDate_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Movie");
-        request.setYear("2025");
-        request.setRuntime("250 min");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setStatus("completed");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(LocalDate.now().minusDays(1));
-
-        assertThrows(InvalidDatesException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-    }
-
-    @Test
-    void createMovie_WhenRatingIsGreaterThan10_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Movie");
-        request.setYear("2025");
-        request.setRuntime("250 min");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setStatus("watching");
-        request.setNotes("Notes");
-        request.setRating("11");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
+    @ParameterizedTest
+    @ValueSource(strings = {"11", "-1", "10.5", "-0.1"})
+    void createMovie_WhenRatingIsInvalid_ThrowsException(String invalidRating) {
+        MovieCreateRequestDTO request = createBaseMovieRequest();
+        request.setRating(invalidRating);
         assertThrows(InvalidRatingException.class, () ->
                 mediaService.createMovie(request, otherUser.getId()));
     }
 
-    @Test
-    void createMovie_WhenRatingIsLessThan0_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Movie");
-        request.setYear("2025");
-        request.setRuntime("250 min");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setStatus("watching");
-        request.setNotes("Notes");
-        request.setRating("-11");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
-        assertThrows(InvalidRatingException.class, () ->
+    @ParameterizedTest
+    @MethodSource("provideMediaDateScenarios")
+    void createMovie_WhenDatesAreInvalid_ThrowsException(
+            LocalDate startDate,
+            LocalDate endDate,
+            String status,
+            Class<? extends Exception> expectedException
+    ) {
+        MovieCreateRequestDTO request = createBaseMovieRequest();
+        request.setStatus(status);
+        request.setWatchStartDate(startDate);
+        request.setWatchEndDate(endDate);
+        assertThrows(expectedException, () ->
                 mediaService.createMovie(request, otherUser.getId()));
     }
 
-    @Test
-    void createMovie_WhenTitleIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setTitle(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-
-        request.setTitle("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-    }
-
-    @Test
-    void createMovie_WhenRuntimeIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setRuntime(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-
-        request.setRuntime("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-    }
-
-    @Test
-    void createMovie_WhenYearIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setYear(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-
-        request.setYear("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-    }
-
-    @Test
-    void createMovie_WhenPosterIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setPoster(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-
-        request.setPoster("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-    }
-
-    @Test
-    void createMovie_WhenStatusIsNull_ThrowsException() {
-        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
-        request.setStatus(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
-
-        request.setStatus("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createMovie(request, otherUser.getId()));
+    private static Stream<Arguments> provideMediaDateScenarios() {
+        LocalDate today = LocalDate.now();
+        return Stream.of(
+                Arguments.of(null, today, "completed", DatesCannotBeNullException.class),
+                Arguments.of(today, null, "completed", DatesCannotBeNullException.class),
+                Arguments.of(today, today.minusDays(1), "completed", InvalidDatesException.class)
+        );
     }
 
     @Test
     void createSeries_WhenSeriesAlreadyExists_ThrowsException() {
         Series existingSeries = new Series(); setSeriesParameters(existingSeries, "tt1234567", otherUser);
         seriesRepository.save(existingSeries);
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Series");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setSeason("1");
-        request.setStatus("plan to watch");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
+        SeriesCreateRequestDTO request = createBaseSeriesRequest();
         assertThrows(SeriesAlreadyExistsException.class, () ->
                 mediaService.createSeries(request, otherUser.getId()));
     }
 
-    @Test
-    void createSeries_WhenStatusIsCompletedAndStartDateIsNull_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Series");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setSeason("2");
-        request.setStatus("completed");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(null);
-        request.setWatchEndDate(LocalDate.now());
-
-        assertThrows(DatesCannotBeNullException.class, () ->
+    @ParameterizedTest
+    @MethodSource("provideSeriesNullEmptyFields")
+    void createSeries_WhenFieldIsNullOrEmpty_ThrowsException(
+            String fieldName, String value, String methodCall
+    ) {
+        SeriesCreateRequestDTO request = createBaseSeriesRequest();
+        switch(methodCall) {
+            case "setTitle" -> request.setTitle(value);
+            case "setSeason" -> request.setSeason(value);
+            case "setPoster" -> request.setPoster(value);
+            case "setStatus" -> request.setStatus(value);
+        }
+        assertThrows(MediaInputCannotBeNullException.class, () ->
                 mediaService.createSeries(request, otherUser.getId()));
     }
 
-
-    @Test
-    void createSeries_WhenStatusIsCompletedAndEndDateIsNull_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Series");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setSeason("2");
-        request.setStatus("completed");
-        request.setNotes("Notes");
-        request.setRating("2.0");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
-        assertThrows(DatesCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
+    private static Stream<Arguments> provideSeriesNullEmptyFields() {
+        return Stream.of(
+                Arguments.of("title", null, "setTitle"),
+                Arguments.of("title", "", "setTitle"),
+                Arguments.of("season", null, "setSeason"),
+                Arguments.of("season", "", "setSeason"),
+                Arguments.of("poster", null, "setPoster"),
+                Arguments.of("poster", "", "setPoster"),
+                Arguments.of("status", null, "setStatus"),
+                Arguments.of("status", "", "setStatus")
+        );
     }
 
-    @Test
-    void createSeries_WhenRatingIsGreaterThan10_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Series");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setSeason("2");
-        request.setStatus("watching");
-        request.setNotes("Notes");
-        request.setRating("11");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
+    @ParameterizedTest
+    @ValueSource(strings = {"11", "-1", "10.5", "-0.1"})
+    void createSeries_WhenRatingIsInvalid_ThrowsException(String invalidRating) {
+        SeriesCreateRequestDTO request = createBaseSeriesRequest();
+        request.setRating(invalidRating);
         assertThrows(InvalidRatingException.class, () ->
                 mediaService.createSeries(request, otherUser.getId()));
     }
 
-    @Test
-    void createSeries_WhenRatingIsLessThan0_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setImdbID("tt1234567");
-        request.setTitle("New Series");
-        request.setCountry("United States, France");
-        request.setLanguage("English");
-        request.setGenre("Action");
-        request.setPoster("...");
-        request.setSeason("2");
-        request.setStatus("watching");
-        request.setNotes("Notes");
-        request.setRating("-11");
-        request.setWatchStartDate(LocalDate.now());
-        request.setWatchEndDate(null);
-
-        assertThrows(InvalidRatingException.class, () ->
+    @ParameterizedTest
+    @MethodSource("provideMediaDateScenarios")
+    void createSeries_WhenDatesAreInvalid_ThrowsException(
+            LocalDate startDate,
+            LocalDate endDate,
+            String status,
+            Class<? extends Exception> expectedException
+    ) {
+        SeriesCreateRequestDTO request = createBaseSeriesRequest();
+        request.setStatus(status);
+        request.setWatchStartDate(startDate);
+        request.setWatchEndDate(endDate);
+        assertThrows(expectedException, () ->
                 mediaService.createSeries(request, otherUser.getId()));
     }
 
-    @Test
-    void createSeries_WhenTitleIsNull_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setTitle(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
-
-        request.setTitle("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
-    }
-
-    @Test
-    void createSeries_WhenSeasonIsNull_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setSeason(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
-
-        request.setSeason("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
-    }
-
-    @Test
-    void createSeries_WhenStatusIsNull_ThrowsException() {
-        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
-        request.setStatus(null);
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
-
-        request.setStatus("");
-
-        assertThrows(MediaInputCannotBeNullException.class, () ->
-                mediaService.createSeries(request, otherUser.getId()));
-    }
 }

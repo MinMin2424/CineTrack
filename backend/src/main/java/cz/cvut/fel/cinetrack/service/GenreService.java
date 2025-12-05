@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,15 +27,22 @@ public class GenreService {
 
     public List<Genre> getOrCreateGenres(List<String> types) {
         if (types == null) return new ArrayList<>();
-        List<String> uniqueGenres = types.stream()
+
+        List<String> validTypes = types.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(type -> !type.isEmpty())
                 .distinct()
                 .toList();
-        List<Genre> existingGenres = genreRepository.findByTypeIn(uniqueGenres);
+        if (validTypes.isEmpty()) return new ArrayList<>();
+
+        List<Genre> existingGenres = genreRepository.findByTypeIn(validTypes);
         Set<String> existingTypes = existingGenres.stream()
                 .map(Genre::getType)
                 .collect(Collectors.toSet());
+
         List<Genre> result = new ArrayList<>(existingGenres);
-        for (String type: types) {
+        for (String type: validTypes) {
             if (!existingTypes.contains(type)) {
                 Genre newGenre = new Genre();
                 newGenre.setType(type);

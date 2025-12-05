@@ -18,6 +18,9 @@ import cz.cvut.fel.cinetrack.repository.SeriesRepository;
 import cz.cvut.fel.cinetrack.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -103,18 +106,27 @@ public class EpisodeServiceTest {
                 episodeService.getEpisodeByNumber(testSeries.getId(), 2, user.getId()));
     }
 
-    @Test
-    void changeEpisodeStatus_WhenValidRequest_UpdateStatus() {
+    @ParameterizedTest
+    @CsvSource({
+            "completed, COMPLETED",
+            "watching, WATCHING",
+            "plan to watch, PLAN_TO_WATCH",
+            "dropped, DROPPED",
+            "paused, PAUSED"
+    })
+    void changeEpisodeStatus_WhenValidRequest_UpdateStatus(
+            String statusInput, EpisodeStatusEnum expectedStatus
+    ) {
         ChangeEpisodeStatusRequestDTO request = new ChangeEpisodeStatusRequestDTO();
-        request.setStatus("completed");
+        request.setStatus(statusInput);
 
         EpisodeResponseDTO response = episodeService.changeEpisodeStatus(testSeries.getId(), 1, user.getId(), request);
 
         assertNotNull(response);
-        assertEquals(EpisodeStatusEnum.COMPLETED, response.getStatus());
+        assertEquals(expectedStatus, response.getStatus());
 
         Episode updatedEpisode = episodeRepository.findById(testEpisode.getId()).orElseThrow();
-        assertEquals(EpisodeStatusEnum.COMPLETED, updatedEpisode.getStatus());
+        assertEquals(expectedStatus, updatedEpisode.getStatus());
     }
 
     @Test
@@ -134,10 +146,11 @@ public class EpisodeServiceTest {
         assertEquals("Updated notes", updatedEpisode.getNotes());
     }
 
-    @Test
-    void editEpisode_whenRatingGreaterThan10_ThrowsException() {
+    @ParameterizedTest
+    @ValueSource(strings = {"-1.0", "-0.5", "10.5", "11.0", "100.0", "-10.0"})
+    void editEpisode_whenRatingIsInvalid_ThrowsException(String invalidRating) {
         EditEpisodeRequestDTO request = new EditEpisodeRequestDTO();
-        request.setRating("11.0");
+        request.setRating(invalidRating);
         request.setNotes("Updated notes");
 
         assertThrows(InvalidRatingException.class, () ->

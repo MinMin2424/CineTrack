@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,15 +27,22 @@ public class LanguageService {
 
     public List<Language> getOrCreateLanguage(List<String> languages) {
         if (languages == null) return new ArrayList<>();
-        List<String> uniqueLanguages = languages.stream()
+
+        List<String> validLanguages = languages.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(type -> !type.isEmpty())
                 .distinct()
                 .toList();
-        List<Language> existingLanguages = languageRepository.findByLangIn(uniqueLanguages);
+        if (validLanguages.isEmpty()) return new ArrayList<>();
+
+        List<Language> existingLanguages = languageRepository.findByLangIn(validLanguages);
         Set<String> existingNames = existingLanguages.stream()
                 .map(Language::getLang)
                 .collect(Collectors.toSet());
+
         List<Language> result = new ArrayList<>(existingLanguages);
-        for (String name : languages) {
+        for (String name : validLanguages) {
             if (!existingNames.contains(name)) {
                 Language newLanguage = new Language();
                 newLanguage.setLang(name);

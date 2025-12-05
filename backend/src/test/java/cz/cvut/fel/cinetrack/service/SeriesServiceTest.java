@@ -9,7 +9,6 @@ import cz.cvut.fel.cinetrack.dto.media.request.EditMediaRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.InvalidDatesException;
 import cz.cvut.fel.cinetrack.exception.media.InvalidRatingException;
-import cz.cvut.fel.cinetrack.exception.media.nonNullData.MediaInputCannotBeNullException;
 import cz.cvut.fel.cinetrack.exception.media.notFoundObj.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.model.Series;
 import cz.cvut.fel.cinetrack.model.User;
@@ -18,6 +17,11 @@ import cz.cvut.fel.cinetrack.repository.SeriesRepository;
 import cz.cvut.fel.cinetrack.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static cz.cvut.fel.cinetrack.environment.SetSeriesParameters.setSeriesParameters;
 import static cz.cvut.fel.cinetrack.environment.SetUserParameters.setUserParameters;
@@ -91,17 +96,26 @@ public class SeriesServiceTest {
                 seriesService.getSeriesById(deletedSeries.getId(), otherUser.getId()));
     }
 
-    @Test
-    void changeSeriesStatus_WhenValidStatus_UpdateStatus() {
+    @ParameterizedTest
+    @CsvSource({
+            "completed, COMPLETED",
+            "watching, WATCHING",
+            "plan to watch, PLAN_TO_WATCH",
+            "dropped, DROPPED",
+            "paused, PAUSED"
+    })
+    void changeSeriesStatus_WithDifferentStatus_UpdateStatus(
+            String statusInput, StatusEnum expectedStatus
+    ) {
         ChangeStatusRequestDTO request = new ChangeStatusRequestDTO();
-        request.setStatus("dropped");
+        request.setStatus(statusInput);
 
         SeriesResponseDTO response = seriesService.changeSeriesStatus(series.getId(), user.getId(), request);
         assertNotNull(response);
-        assertEquals(StatusEnum.DROPPED, response.getStatus());
+        assertEquals(expectedStatus, response.getStatus());
 
         Series updatedSeries = seriesRepository.findById(series.getId()).orElseThrow();
-        assertEquals(StatusEnum.DROPPED, updatedSeries.getStatus());
+        assertEquals(expectedStatus, updatedSeries.getStatus());
     }
 
     @Test
@@ -136,35 +150,37 @@ public class SeriesServiceTest {
         assertEquals(LocalDate.now().plusDays(2), updatedSeries.getWatchEndDate());
     }
 
-    @Test
-    void editSeries_WhenWatchEndDateIsBeforeStartDate_ThrowsException() {
+    @ParameterizedTest
+    @MethodSource("provideInvalidDateScenarios")
+    void editSeries_WhenDatesAreInvalid_ThrowsException(
+            LocalDate startDate,
+            LocalDate endDate,
+            Class<? extends Exception> expectedException
+    ) {
         EditMediaRequestDTO request = new EditMediaRequestDTO();
         request.setNotes("Update notes");
         request.setRating("9.5");
-        request.setWatchStartDate(LocalDate.now().plusDays(2));
-        request.setWatchEndDate(LocalDate.now().plusDays(1));
+        request.setWatchStartDate(startDate);
+        request.setWatchEndDate(endDate);
 
-        assertThrows(InvalidDatesException.class, () ->
+        assertThrows(expectedException, () ->
                 seriesService.editSeries(series.getId(), user.getId(), request));
     }
 
-    @Test
-    void editSeries_WhenRatingIsGreaterThan10_ThrowsException() {
-        EditMediaRequestDTO request = new EditMediaRequestDTO();
-        request.setNotes("Update notes");
-        request.setRating("12");
-        request.setWatchStartDate(LocalDate.now().plusDays(2));
-        request.setWatchStartDate(LocalDate.now().plusDays(2));
-
-        assertThrows(InvalidRatingException.class, () ->
-                seriesService.editSeries(series.getId(), user.getId(), request));
+    private static Stream<Arguments> provideInvalidDateScenarios() {
+        LocalDate today = LocalDate.now();
+        return Stream.of(
+                Arguments.of(today, today.minusDays(1), InvalidDatesException.class),
+                Arguments.of(today, today.minusYears(1), InvalidDatesException.class)
+        );
     }
 
-    @Test
-    void editSeries_WhenRatingIsLessThan0_ThrowsException() {
+    @ParameterizedTest
+    @ValueSource(strings = {"-1", "-0.5", "10.5", "11", "100"})
+    void editSeries_WhenRatingIsInvalid_ThrowsException(String invalidRating) {
         EditMediaRequestDTO request = new EditMediaRequestDTO();
         request.setNotes("Update notes");
-        request.setRating("-12");
+        request.setRating(invalidRating);
         request.setWatchStartDate(LocalDate.now().plusDays(2));
         request.setWatchStartDate(LocalDate.now().plusDays(2));
 

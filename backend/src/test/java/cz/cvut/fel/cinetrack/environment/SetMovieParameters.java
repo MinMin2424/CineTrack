@@ -4,6 +4,7 @@
 
 package cz.cvut.fel.cinetrack.environment;
 
+import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
 import cz.cvut.fel.cinetrack.model.Movie;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
@@ -54,5 +55,23 @@ public class SetMovieParameters {
         movie.setCreatedAt(LocalDateTime.now());
         movie.setDeleted(false);
         movie.setUser(user);
+    }
+
+    public static MovieCreateRequestDTO createBaseMovieRequest() {
+        MovieCreateRequestDTO request = new MovieCreateRequestDTO();
+        request.setImdbID("tt1234567");
+        request.setTitle("New Movie");
+        request.setYear("2025");
+        request.setRuntime("250 min");
+        request.setCountry("United States, France");
+        request.setLanguage("English");
+        request.setGenre("Action");
+        request.setPoster("...");
+        request.setStatus("completed");
+        request.setNotes("Notes");
+        request.setRating("2.0");
+        request.setWatchStartDate(LocalDate.now());
+        request.setWatchEndDate(LocalDate.now().plusDays(1));
+        return request;
     }
 }

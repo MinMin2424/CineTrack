@@ -4,6 +4,7 @@
 
 package cz.cvut.fel.cinetrack.environment;
 
+import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateRequestDTO;
 import cz.cvut.fel.cinetrack.model.Series;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
@@ -59,5 +60,22 @@ public class SetSeriesParameters {
         series.setCreatedAt(LocalDateTime.now());
         series.setDeleted(false);
         series.setUser(user);
+    }
+
+    public static SeriesCreateRequestDTO createBaseSeriesRequest() {
+        SeriesCreateRequestDTO request = new SeriesCreateRequestDTO();
+        request.setImdbID("tt1234567");
+        request.setTitle("Test Series");
+        request.setCountry("United States, France");
+        request.setLanguage("English");
+        request.setGenre("Action");
+        request.setPoster("...");
+        request.setSeason("1");
+        request.setStatus("completed");
+        request.setNotes("Notes");
+        request.setRating("2.0");
+        request.setWatchStartDate(LocalDate.now());
+        request.setWatchEndDate(LocalDate.now().plusDays(1));
+        return request;
     }
 }

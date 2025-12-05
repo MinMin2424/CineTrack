@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,15 +27,22 @@ public class CountryService {
 
     public List<Country> getOrCreateCountries(List<String> countryName) {
         if (countryName == null) return new ArrayList<>();
-        List<String> uniqueNames = countryName.stream()
+
+        List<String> validNames = countryName.stream()
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(name -> !name.isEmpty())
                 .distinct()
                 .toList();
-        List<Country> existingCountries = countryRepository.findByCountryNameIn(uniqueNames);
+        if (validNames.isEmpty()) return new ArrayList<>();
+
+        List<Country> existingCountries = countryRepository.findByCountryNameIn(validNames);
         Set<String> existingNames = existingCountries.stream()
                 .map(Country::getCountryName)
                 .collect(Collectors.toSet());
+
         List<Country> result = new ArrayList<>(existingCountries);
-        for (String name : countryName) {
+        for (String name : validNames) {
             if (!existingNames.contains(name)) {
                 Country newCountry = new Country();
                 newCountry.setCountryName(name);
