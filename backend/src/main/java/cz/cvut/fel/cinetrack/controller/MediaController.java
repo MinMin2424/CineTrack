@@ -4,7 +4,9 @@
 
 package cz.cvut.fel.cinetrack.controller;
 
+import cz.cvut.fel.cinetrack.dto.media.FilterOptionsDTO;
 import cz.cvut.fel.cinetrack.dto.media.MediaItemDTO;
+import cz.cvut.fel.cinetrack.dto.media.request.FilterRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBResponseDTO;
@@ -14,9 +16,14 @@ import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
+import cz.cvut.fel.cinetrack.model.Country;
+import cz.cvut.fel.cinetrack.model.Genre;
 import cz.cvut.fel.cinetrack.model.User;
+import cz.cvut.fel.cinetrack.model.enums.MediaType;
+import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.service.MediaService;
+import org.hibernate.jdbc.Expectation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.ResponseEntity;
@@ -42,11 +49,24 @@ public class MediaController {
 
     @GetMapping("/overview")
     public ResponseEntity<?> getUserMediaOverview(
-            @RequestParam(required = false, defaultValue = "CREATED_AT_DESC") String sortBy
+            @RequestParam(required = false, defaultValue = "CREATED_AT_DESC") String sortBy,
+            @RequestParam(required = false) List<MediaType> types,
+            @RequestParam(required = false) List<StatusEnum> statuses,
+            @RequestParam(required = false) List<Long> genreIds,
+            @RequestParam(required = false) List<Integer> releaseYears,
+            @RequestParam(required = false) List<Long> coutryIds
     ) {
         try {
             User user = SecurityUtils.getCurrentUser();
-            List<MediaItemDTO> mediaItems = mediaService.getUserMedia(user.getId(), sortBy);
+
+            FilterRequestDTO filters = new FilterRequestDTO();
+            filters.setTypes(types);
+            filters.setStatuses(statuses);
+            filters.setGenreIds(genreIds);
+            filters.setReleaseYears(releaseYears);
+            filters.setCountryIds(coutryIds);
+
+            List<MediaItemDTO> mediaItems = mediaService.getUserMedia(user.getId(), sortBy, filters);
             return ResponseEntity.ok(mediaItems);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -82,6 +102,18 @@ public class MediaController {
         Long userId = SecurityUtils.getCurrentUserId();
         List<String> suggestions = mediaService.autocompleteTitles(userId, query, limit);
         return ResponseEntity.ok(suggestions);
+    }
+
+    @GetMapping("/filter-options")
+    public ResponseEntity<?> getFilterOptions() {
+        try {
+            Long userId = SecurityUtils.getCurrentUserId();
+            FilterOptionsDTO options = mediaService.getFilterOptions(userId);
+            return ResponseEntity.ok(options);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to get filter options: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/movie")

@@ -5,7 +5,9 @@
 package cz.cvut.fel.cinetrack.service;
 
 import cz.cvut.fel.cinetrack.dto.media.EpisodeInfoDTO;
+import cz.cvut.fel.cinetrack.dto.media.FilterOptionsDTO;
 import cz.cvut.fel.cinetrack.dto.media.MediaItemDTO;
+import cz.cvut.fel.cinetrack.dto.media.request.FilterRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
@@ -17,7 +19,9 @@ import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.InvalidMediaTypeException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
+import cz.cvut.fel.cinetrack.model.Country;
 import cz.cvut.fel.cinetrack.model.Episode;
+import cz.cvut.fel.cinetrack.model.Genre;
 import cz.cvut.fel.cinetrack.model.Movie;
 import cz.cvut.fel.cinetrack.model.Series;
 import cz.cvut.fel.cinetrack.model.enums.EpisodeStatusEnum;
@@ -32,10 +36,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapMovieDTOToEntity;
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapSeriesDTOToEntity;
+import static cz.cvut.fel.cinetrack.util.MediaFilters.applyFiltersToMovies;
+import static cz.cvut.fel.cinetrack.util.MediaFilters.applyFiltersToSeries;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.*;
 import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateInputs;
 import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateStatusDates;
@@ -68,17 +78,19 @@ public class MediaService {
         this.omdbService = omdbService;
     }
 
-    public List<MediaItemDTO> getUserMedia(Long userId, String sortBy) {
+    public List<MediaItemDTO> getUserMedia(Long userId, String sortBy, FilterRequestDTO filters) {
         List<Movie> movies = movieRepository.findNotDeletedMoviesByUserIdOrderByCreatedAtDesc(userId);
         List<Series> series = seriesRepository.findNotDeletedSeriesByUserIdOrderByCreatedAtDesc(userId);
 
         List<MediaItemDTO> mediaItems = new ArrayList<>();
 
-        mediaItems.addAll(movies.stream()
+        List<Movie> filteredMovies = applyFiltersToMovies(movies, filters);
+        mediaItems.addAll(filteredMovies.stream()
                 .map(MediaItemDTO::new)
                 .toList());
 
-        mediaItems.addAll(series.stream()
+        List<Series> filteredSeries = applyFiltersToSeries(series, filters);
+        mediaItems.addAll(filteredSeries.stream()
                 .map(MediaItemDTO::new)
                 .toList());
 
@@ -257,6 +269,31 @@ public class MediaService {
         series.setEpisodeList(episodes);
     }
 
+    public FilterOptionsDTO getFilterOptions(Long userId) {
+        List<Movie> movies = movieRepository.findNotDeletedMoviesByUserId(userId);
+        List<Series> series = seriesRepository.findNotDeletedSeriesByUserId(userId);
 
+        FilterOptionsDTO filterOptions = new FilterOptionsDTO();
+
+        filterOptions.setTypes(Arrays.asList(MediaType.values()));
+        filterOptions.setStatuses(Arrays.asList(StatusEnum.values()));
+
+        Set<Genre> allGenres = new HashSet<>();
+        movies.forEach(m -> allGenres.addAll(m.getGenres()));
+        series.forEach(s -> allGenres.addAll(s.getGenres()));
+        filterOptions.setGenres(new ArrayList<>(allGenres));
+
+        Set<Integer> years = new TreeSet<>();
+        movies.forEach(m -> years.add(m.getReleaseYear()));
+        series.forEach(m -> years.add(m.getReleaseYear()));
+        filterOptions.setReleaseYears(new ArrayList<>(years));
+
+        Set<Country> allCountries = new HashSet<>();
+        movies.forEach(m -> allCountries.addAll(m.getCountries()));
+        series.forEach(m -> allCountries.addAll(m.getCountries()));
+        filterOptions.setCountries(new ArrayList<>(allCountries));
+
+        return filterOptions;
+    }
 
 }
