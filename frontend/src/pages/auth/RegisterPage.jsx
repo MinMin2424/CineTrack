@@ -50,7 +50,7 @@ const RegisterPage = () => {
             await register(registerData);
             navigate('/');
         } catch (error) {
-            const beMessage = error.response?.data?.message || error.response?.data;
+            const beMessage = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response?.data : null);
             if (typeof beMessage === 'string') {
                 if (beMessage.toLowerCase().includes('username')) {
                     setErrors({ username: beMessage });

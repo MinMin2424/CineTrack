@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> logout() {
         authService.logout();
         return ResponseEntity.ok().build();

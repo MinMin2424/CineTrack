@@ -34,15 +34,15 @@ axiosConfig.interceptors.response.use(
     },
      (error) => {
         const isLoginRequest = error.config?.url?.includes('/auth/login');
-        const isLogoutRequest = error.config?.url?.includes('/auth/logout');
+        // const isLogoutRequest = error.config?.url?.includes('/auth/logout');
         if (isLoginRequest) {
             return Promise.reject(error);
         }
-        if (isLogoutRequest) {
-            localStorage.removeItem('token');
-            window.location.href = '/auth/login';
-            return Promise.resolve();
-        }
+        // if (isLogoutRequest) {
+        //     localStorage.removeItem('token');
+        //     window.location.href = '/auth/login';
+        //     return Promise.resolve();
+        // }
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             window.location.href = '/auth/login';

@@ -45,7 +45,7 @@ const LoginPage = () => {
             await login(formData.email, formData.password);
             navigate('/');
         } catch (error) {
-            const beMessage = error.response?.data?.message || error.response?.data;
+            const beMessage = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response?.data : null);
             if (typeof beMessage === 'string') {
                 if (beMessage.toLowerCase().includes('email') || beMessage.toLowerCase().includes('user not found')) {
                     setErrors({ email: beMessage });
