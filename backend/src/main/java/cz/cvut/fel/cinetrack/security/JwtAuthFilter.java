@@ -106,6 +106,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private boolean isPublicEndpoint(HttpServletRequest request) {
         String path = request.getRequestURI();
+        if (path.equals("/api/auth/logout")) return false;
         return path.startsWith("/api/auth/") && !path.equals("/api/auth/refresh");
     }
 }

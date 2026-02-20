@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@100..800&family=Outfit:wght@100..900&display=swap');
+
+:root {
+    /* ===== FONT ===== */
+    --font-primary: 'Anek Latin';
+
+    --text-title: 800 36px var(--font-primary);
+    --text-subtitle: 500 16px var(--font-primary);
+    --text-input: 600 16px var(--font-primary);
+    --text-error: 500 14px var(--font-primary);
+    --text-placeholder: 500 16px var(--font-primary);
+    --text-link: 500 14px var(--font-primary);
+    --icon: 20px;
+
+    /* ===== BORDER RADIUS ===== */
+    --border-radius-primary: 20px;
+    --border-radius-input: 50px;
+
+    /* ===== COLORS ===== */
+    --color-primary-dark-purple: #290066;
+    --color-secondary-dark-purple: rgba(41, 0, 102, 0.8);
+    --color-medium-purple: #5E1193;
+    --color-light-purple: rgba(151, 56, 237, 1);
+    --color-light-purple-shadow: rgba(185, 159, 255, 0.6);
+    --color-extra-light-purple: #B99FFF;
+    --color-extra-light-purple-bg: rgba(155, 120, 250, 0.4);
+    --color-extra-light-purple-shadow: rgba(155, 120, 250, 1);
+    --color-bg-purple: rgba(151, 56, 237, 0.3);
+
+    --color-dark-blue: #0E103D;
+    --color-medium-blue: #152FA9;
+    --color-light-blue: #392ABE;
+    --color-light-blue-border: #262BA3;
+    --color-light-blue-bg: rgba(38, 43, 163, 0.6);
+
+    --color-primary-pink: #FFA6FE;
+    --color-secondary-pink: rgba(212, 129, 211, 0.8);
+    --color-input-pink: #D481D3;
+
+    --color-error-extra-red: #6e0000;
+    --color-error-red: #ff5b5b;
+
+    --color-white: #ffffff;
+    --color-light-white: rgba(255, 255, 255, 0.8);
+
+}

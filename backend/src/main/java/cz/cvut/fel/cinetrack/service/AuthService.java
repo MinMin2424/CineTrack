@@ -110,6 +110,7 @@ public class AuthService {
         user.setEmail(normalizedEmail);
         user.setAvatar(avatarService.getRandomAvatar());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setLastLogin(LocalDateTime.now());
         return user;
     }
 }
