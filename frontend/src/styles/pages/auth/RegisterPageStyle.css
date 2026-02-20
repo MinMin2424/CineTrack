@@ -1,0 +1,190 @@
+@import '../../global/variables.css';
+
+/* ===== REGISTER PAGE ===== */
+.register-page {
+    font-family: var(--font-primary), sans-serif;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../../../../public/images/register-bg.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ===== DECORATION IMAGES ===== */
+.register-image-minions {
+    position: absolute;
+    top: 0;
+    left: 300px;
+    width: 120px;
+    height: auto;
+    z-index: 1;
+}
+
+.register-image-toroto {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 320px;
+    z-index: 1;
+}
+
+/* ===== REGISTER FORM ===== */
+.register-card {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 460px;
+    background: var(--color-extra-light-purple-bg);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: var(--border-radius-primary);
+    border: 2px solid var(--color-extra-light-purple-shadow);
+    padding: 48px 52px 44px;
+    box-shadow: 0 0 50px 10px var(--color-extra-light-purple-shadow);
+    margin: 0 20px;
+}
+
+/* ===== TITLE ===== */
+.register-title {
+    font: var(--text-title);
+    color: var(--color-white);
+    text-align: center;
+    margin: 0 0 32px;
+    line-height: 1.2;
+}
+
+/* ===== GENERAL ERROR ===== */
+.register-error-banner {
+    background: rgba(255,80,80,0.2);
+    border: 1px solid rgba(255,100,100,0.4);
+    color: #ffaaaa;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* ===== INPUTS AND SUBMIT BUTTON ===== */
+.register-field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 30px;
+}
+
+.register-row-wrapper {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.register-row-wrapper .register-field-wrapper {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.register-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.register-input {
+    width: 100%;
+    padding: 15px 50px 15px 22px;
+    background: var(--color-light-blue-bg);
+    border: 2px solid var(--color-light-blue-border);
+    border-radius: var(--border-radius-input);
+    color: var(--color-white);
+    font: var(--text-input);
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px 2px var(--color-extra-light-purple-shadow);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.register-input::placeholder {
+    color: var(--color-light-white);
+    letter-spacing: 1px;
+    font: var(--text-placeholder);
+}
+
+.register-input:focus {
+    border: 3px solid var(--color-extra-light-purple);
+    box-shadow: 0 0 10px 2px var(--color-white);
+    outline: none;
+}
+
+.register-input:-webkit-autofill,
+.register-input:-webkit-autofill:hover,
+.register-input:-webkit-autofill:focus,
+.register-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-light-blue-bg) inset,
+                        0 0 10px 2px var(--color-extra-light-purple-shadow) !important;
+    box-shadow: 0 0 0px 1000px var(--color-light-blue-bg) inset,
+                0 0 10px 2px var(--color-extra-light-purple-shadow) !important;
+    -webkit-text-fill-color: var(--color-white) !important;
+    border-color: var(--color-light-blue-border) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.register-eye-button {
+    position: absolute;
+    right: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-white);
+    font-size: var(--icon);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.register-error-text {
+    color: var(--color-error-extra-red);
+    font: var(--text-error);
+    text-align: right;
+    padding-top: 10px;
+    margin-right: 20px;
+    margin-bottom: -5px;
+}
+
+.register-submit-button {
+    width: 50%;
+    display: block;
+    margin: 0 auto 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--color-light-blue) 0%, var(--color-dark-blue) 100%);
+    border: 2px solid var(--color-extra-light-purple);
+    border-radius: 50px;
+    color: var(--color-white);
+    font: var(--text-placeholder);
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 0 10px 2px var(--color-light-purple-shadow);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.register-switch-text {
+    font-size: var(--text-link);
+    color: var(--color-dark-blue);
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-switch-link {
+    color: var(--color-dark-blue);
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 8px;
+    transition: color 0.2s;
+}
