@@ -16,14 +16,11 @@ import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
-import cz.cvut.fel.cinetrack.model.Country;
-import cz.cvut.fel.cinetrack.model.Genre;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.model.enums.MediaType;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.security.SecurityUtils;
 import cz.cvut.fel.cinetrack.service.MediaService;
-import org.hibernate.jdbc.Expectation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +53,7 @@ public class MediaController {
             @RequestParam(required = false) List<StatusEnum> statuses,
             @RequestParam(required = false) List<Long> genreIds,
             @RequestParam(required = false) List<Integer> releaseYears,
-            @RequestParam(required = false) List<Long> coutryIds
+            @RequestParam(required = false) List<Long> countryIds
     ) {
         try {
             User user = SecurityUtils.getCurrentUser();
@@ -66,7 +63,7 @@ public class MediaController {
             filters.setStatuses(statuses);
             filters.setGenreIds(genreIds);
             filters.setReleaseYears(releaseYears);
-            filters.setCountryIds(coutryIds);
+            filters.setCountryIds(countryIds);
 
             List<MediaItemDTO> mediaItems = mediaService.getUserMedia(user.getId(), sortBy, filters);
             return ResponseEntity.ok(mediaItems);

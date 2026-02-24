@@ -13,6 +13,8 @@ import cz.cvut.fel.cinetrack.service.CountryService;
 import cz.cvut.fel.cinetrack.service.GenreService;
 import cz.cvut.fel.cinetrack.service.LanguageService;
 
+import java.util.HashSet;
+
 import static cz.cvut.fel.cinetrack.util.MediaUtils.*;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStringToList;
 import static cz.cvut.fel.cinetrack.validator.MediaValidator.validateRating;
@@ -41,9 +43,9 @@ public class MediaMapper {
         movie.setWatchStartDate(dto.getWatchStartDate());
         movie.setWatchEndDate(dto.getWatchEndDate());
 
-        movie.setLanguages(languageService.getOrCreateLanguage(parseStringToList(dto.getLanguage())));
-        movie.setCountries(countryService.getOrCreateCountries(parseStringToList(dto.getCountry())));
-        movie.setGenres(genreService.getOrCreateGenres(parseStringToList(dto.getGenre())));
+        movie.setLanguages(new HashSet<>(languageService.getOrCreateLanguage(parseStringToList(dto.getLanguage()))));
+        movie.setCountries(new HashSet<>(countryService.getOrCreateCountries(parseStringToList(dto.getCountry()))));
+        movie.setGenres(new HashSet<>(genreService.getOrCreateGenres(parseStringToList(dto.getGenre()))));
 
         movie.setUser(SecurityUtils.getCurrentUser());
     }
@@ -71,9 +73,9 @@ public class MediaMapper {
         series.setWatchStartDate(dto.getWatchStartDate());
         series.setWatchEndDate(dto.getWatchEndDate());
 
-        series.setLanguages(languageService.getOrCreateLanguage(parseStringToList(dto.getLanguage())));
-        series.setCountries(countryService.getOrCreateCountries(parseStringToList(dto.getCountry())));
-        series.setGenres(genreService.getOrCreateGenres(parseStringToList(dto.getGenre())));
+        series.setLanguages(new HashSet<>(languageService.getOrCreateLanguage(parseStringToList(dto.getLanguage()))));
+        series.setCountries(new HashSet<>(countryService.getOrCreateCountries(parseStringToList(dto.getCountry()))));
+        series.setGenres(new HashSet<>(genreService.getOrCreateGenres(parseStringToList(dto.getGenre()))));
 
         series.setUser(SecurityUtils.getCurrentUser());
     }

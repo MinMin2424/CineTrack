@@ -1,22 +1,16 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import HomePage from "./pages/HomePage";
+import MainLayout from "./pages/MainLayout";
 
-const HomePage = () => {
-  const { user, logout } = useAuth();
-  return (
-      <div>
-        <h1>Welcome to CineTrack!</h1>
-        <p>Log in as: {user?.sub}</p>
-        <button onClick={logout} >
-          Logout
-        </button>
-      </div>
-  )
-}
+const StatisticsPage = () => <div>Statistics - TODO</div>
+const WatchlistPage = () => <div>Watchlist - TODO</div>
+const DiscoveryPage = () => <div>Discovery - TODO</div>
+const SettingsPage = () => <div>Settings - TODO</div>
 
 function App() {
   return (
@@ -27,8 +21,12 @@ function App() {
             <Route path="/auth/register" element={<RegisterPage />} />
 
             <Route element={<ProtectedRoute />} >
-              <Route path="/" element={<HomePage />} />
-                {/* todo */}
+              <Route element={<MainLayout />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/statistics" element={<StatisticsPage />} />
+                <Route path="/watchlist" element={<WatchlistPage />} />
+                <Route path="/discovery" element={<DiscoveryPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

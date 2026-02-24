@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStatus;
@@ -94,9 +95,9 @@ public class MediaManualService {
         movie.setNotes(request.getNotes());
         movie.setCreatedAt(LocalDateTime.now());
 
-        movie.setGenres(genreService.getOrCreateGenres(request.getGenre()));
-        movie.setLanguages(languageService.getOrCreateLanguage(request.getLanguage()));
-        movie.setCountries(countryService.getOrCreateCountries(request.getCountry()));
+        movie.setGenres(new HashSet<>(genreService.getOrCreateGenres(request.getGenre())));
+        movie.setLanguages(new HashSet<>(languageService.getOrCreateLanguage(request.getLanguage())));
+        movie.setCountries(new HashSet<>(countryService.getOrCreateCountries(request.getCountry())));
 
         movie.setUser(SecurityUtils.getCurrentUser());
 
@@ -118,9 +119,9 @@ public class MediaManualService {
         series.setNotes(request.getNotes());
         series.setCreatedAt(LocalDateTime.now());
 
-        series.setGenres(genreService.getOrCreateGenres(request.getGenre()));
-        series.setLanguages(languageService.getOrCreateLanguage(request.getLanguage()));
-        series.setCountries(countryService.getOrCreateCountries(request.getCountry()));
+        series.setGenres(new HashSet<>(genreService.getOrCreateGenres(request.getGenre())));
+        series.setLanguages(new HashSet<>(languageService.getOrCreateLanguage(request.getLanguage())));
+        series.setCountries(new HashSet<>(countryService.getOrCreateCountries(request.getCountry())));
 
         series.setUser(SecurityUtils.getCurrentUser());
 
