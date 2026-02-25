@@ -1,5 +1,6 @@
 /*
  * Created by minmin_tranova on 19.02.2026
+ * Custom hook for form validation.
  */
 
 import {useState} from "react";

@@ -1,5 +1,6 @@
 /*
  * Created by minmin_tranova on 18.02.2026
+ * API functions for authentication endpoints.
  */
 
 import axiosConfig from "./AxiosConfig";

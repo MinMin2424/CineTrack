@@ -1,5 +1,6 @@
 /*
  * Created by minmin_tranova on 19.02.2026
+ * Protected route component that restricts access to authenticated users only.
  */
 
 import React from 'react';

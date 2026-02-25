@@ -1,5 +1,6 @@
 /*
  * Created by minmin_tranova on 20.02.2026
+ * API functions for media management and filtering.
  */
 
 import axiosConfig from "./AxiosConfig";
