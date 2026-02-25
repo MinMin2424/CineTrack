@@ -4,7 +4,6 @@
 
 package cz.cvut.fel.cinetrack.dto.media;
 
-import cz.cvut.fel.cinetrack.model.Country;
 import cz.cvut.fel.cinetrack.model.Genre;
 import cz.cvut.fel.cinetrack.model.enums.MediaType;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
@@ -15,9 +14,9 @@ public class FilterOptionsDTO {
 
     private List<MediaType> types;
     private List<StatusEnum> statuses;
-    private List<Genre> genres;
+    private List<GenreOptionDTO> genres;
     private List<Integer> releaseYears;
-    private List<Country> countries;
+    private List<CountryOptionDTO> countries;
 
     public List<MediaType> getTypes() {
         return types;
@@ -35,11 +34,11 @@ public class FilterOptionsDTO {
         this.statuses = statuses;
     }
 
-    public List<Genre> getGenres() {
+    public List<GenreOptionDTO> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(List<GenreOptionDTO> genres) {
         this.genres = genres;
     }
 
@@ -51,11 +50,11 @@ public class FilterOptionsDTO {
         this.releaseYears = releaseYears;
     }
 
-    public List<Country> getCountries() {
+    public List<CountryOptionDTO> getCountries() {
         return countries;
     }
 
-    public void setCountries(List<Country> countries) {
+    public void setCountries(List<CountryOptionDTO> countries) {
         this.countries = countries;
     }
 }

@@ -4,8 +4,10 @@
 
 package cz.cvut.fel.cinetrack.service;
 
+import cz.cvut.fel.cinetrack.dto.media.CountryOptionDTO;
 import cz.cvut.fel.cinetrack.dto.media.EpisodeInfoDTO;
 import cz.cvut.fel.cinetrack.dto.media.FilterOptionsDTO;
+import cz.cvut.fel.cinetrack.dto.media.GenreOptionDTO;
 import cz.cvut.fel.cinetrack.dto.media.MediaItemDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.FilterRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.MovieCreateRequestDTO;
@@ -41,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapMovieDTOToEntity;
 import static cz.cvut.fel.cinetrack.mapper.MediaMapper.mapSeriesDTOToEntity;
@@ -79,8 +82,8 @@ public class MediaService {
     }
 
     public List<MediaItemDTO> getUserMedia(Long userId, String sortBy, FilterRequestDTO filters) {
-        List<Movie> movies = movieRepository.findNotDeletedMoviesByUserIdOrderByCreatedAtDesc(userId);
-        List<Series> series = seriesRepository.findNotDeletedSeriesByUserIdOrderByCreatedAtDesc(userId);
+        List<Movie> movies = movieRepository.findNotDeletedMoviesByUserId(userId);
+        List<Series> series = seriesRepository.findNotDeletedSeriesByUserId(userId);
 
         List<MediaItemDTO> mediaItems = new ArrayList<>();
 
@@ -281,7 +284,11 @@ public class MediaService {
         Set<Genre> allGenres = new HashSet<>();
         movies.forEach(m -> allGenres.addAll(m.getGenres()));
         series.forEach(s -> allGenres.addAll(s.getGenres()));
-        filterOptions.setGenres(new ArrayList<>(allGenres));
+        filterOptions.setGenres(
+                allGenres.stream()
+                        .map(GenreOptionDTO::new)
+                        .collect(Collectors.toList())
+        );
 
         Set<Integer> years = new TreeSet<>();
         movies.forEach(m -> years.add(m.getReleaseYear()));
@@ -291,7 +298,11 @@ public class MediaService {
         Set<Country> allCountries = new HashSet<>();
         movies.forEach(m -> allCountries.addAll(m.getCountries()));
         series.forEach(m -> allCountries.addAll(m.getCountries()));
-        filterOptions.setCountries(new ArrayList<>(allCountries));
+        filterOptions.setCountries(
+                allCountries.stream()
+                        .map(CountryOptionDTO::new)
+                        .collect(Collectors.toList())
+        );
 
         return filterOptions;
     }

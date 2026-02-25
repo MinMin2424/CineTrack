@@ -1,0 +1,47 @@
+.topbar {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    background: var(--color-primary-dark-purple-topbar);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.topbar-menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-tertiary-pink);
+    font-size: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    transition: all 0.3s ease;
+}
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.topbar-avatar {
+    width: 32px;
+    height: 32px;
+    color: var(--color-tertiary-pink);
+}
+
+.topbar-username {
+    color: var(--color-tertiary-pink);
+    font: var(--text-nav);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
