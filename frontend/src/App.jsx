@@ -4,8 +4,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import HomePage from "./pages/HomePage";
 import MainLayout from "./pages/MainLayout";
+import HomePageContainer from "./pages/home/HomePageContainer";
 
 const StatisticsPage = () => <div>Statistics - TODO</div>
 const WatchlistPage = () => <div>Watchlist - TODO</div>
@@ -21,12 +21,13 @@ function App() {
             <Route path="/auth/register" element={<RegisterPage />} />
 
             <Route element={<ProtectedRoute />} >
-              <Route element={<MainLayout />} />
-                <Route path="/" element={<HomePage />} />
+              <Route element={<MainLayout />} >
+                <Route path="/" element={<HomePageContainer />} />
                 <Route path="/statistics" element={<StatisticsPage />} />
                 <Route path="/watchlist" element={<WatchlistPage />} />
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+              </Route>
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

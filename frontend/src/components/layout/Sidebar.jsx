@@ -4,13 +4,14 @@
 
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext"
+import { useAuth } from "../../contexts/AuthContext"
 import { HiHome } from "react-icons/hi2";
 import { BsFillBarChartLineFill } from "react-icons/bs";
 import { FaBookmark } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { IoIosSettings } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
+import "../../styles/components/SidebarStyle.css"
 
 const NAV_ITEMS = [
     { to: "/", label: "HOME", Icon: HiHome },
@@ -23,7 +24,7 @@ const NAV_ITEMS = [
 const Sidebar = () => {
     const { logout } = useAuth();
     return (
-        <aside className="sidebar">
+        <aside className="sidebar" >
             <div className="sidebar-logo">
                 <span className="sidebar-logo-text">CineTrack</span>
             </div>

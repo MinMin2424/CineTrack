@@ -4,11 +4,13 @@
 
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { loginUser, registerUser, logoutUser } from "../api/AuthApi";
+import { getUserProfile } from "../api/UserApi";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [userProfile, setUserProfile] = useState(null);
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [loading, setLoading] = useState(true);
 
@@ -21,35 +23,59 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        if (token) {
+    const fetchUserProfile = useCallback(async () => {
+        if (!token) return null;
+        try {
+            const profileData = await getUserProfile();
             const decoded = decodeToken(token);
-            if (decoded && decoded.exp * 1000 > Date.now()) {
-                setUser(decoded);
-            } else {
-                localStorage.removeItem("token");
-                setToken(null);
-            }
+            setUserProfile(profileData);
+            setUser({
+                ...decoded,
+                ...profileData.profile,
+                header: profileData.header,
+            });
+            return profileData;
+        } catch (error) {
+            console.error("Failed to get user profile", error);
+            const decoded = decodeToken(token);
+            setUser(decoded);
+            return null;
         }
-        setLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [token]);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            if (token) {
+                const decoded = decodeToken(token);
+                if (decoded && decoded.exp * 1000 > Date.now()) {
+                    await fetchUserProfile();
+                } else {
+                    localStorage.removeItem("token");
+                    setToken(null);
+                }
+            }
+            setLoading(false);
+        };
+        initAuth();
+    }, [token, fetchUserProfile]);
 
     const login = useCallback(async (email, password) => {
         const data = await loginUser({ email, password });
         localStorage.setItem("token", data.token);
         setToken(data.token);
         setUser(decodeToken(data.token));
+        await fetchUserProfile();
         return data;
-    }, []);
+    }, [fetchUserProfile]);
 
     const register = useCallback(async (registerData) => {
         const data = await registerUser(registerData);
         localStorage.setItem("token", data.token);
         setToken(data.token);
         setUser(decodeToken(data.token));
+        await fetchUserProfile();
         return data;
-    }, []);
+    }, [fetchUserProfile]);
 
     const logout = useCallback(async () => {
         try {
@@ -58,17 +84,20 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem("token");
             setToken(null);
             setUser(null);
+            setUserProfile(null);
         }
     }, []);
 
     const value = {
         user,
+        userProfile,
         token,
         isAuthenticated: !!user,
         login,
         register,
         logout,
         loading,
+        refreshProfile: fetchUserProfile,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
