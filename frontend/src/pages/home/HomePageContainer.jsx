@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { getMediaOverview, getFilterOptions, autocompleteTitles } from "../../api/MediaApi";
 import HomePageView from "./HomePageView";
+import AddMediaModal from "../../components/media/AddMediaModal"
 import {FaLongArrowAltDown, FaLongArrowAltUp} from "react-icons/fa";
 
 const SORT_OPTIONS = [
@@ -49,6 +50,8 @@ const HomePage = () => {
         years: [],
         countries: []
     });
+
+    const [showAddModal, setShowAddModal] = useState(false);
 
     const fetchMedia = useCallback(async () => {
         setLoading(true);
@@ -147,28 +150,41 @@ const HomePage = () => {
         )
         : mediaItems;
 
+    const handleMediaAdded = () => {
+        fetchMedia();
+    };
+
     return (
-        <HomePageView
-            displayedItems={displayedItems}
-            loading={loading}
-            error={error}
-            sortBy={sortBy}
-            sortOpen={sortOpen}
-            sortOptions={SORT_OPTIONS}
-            onSortChange={handleSortChange}
-            onSortToggle={() => setSortOpen(prev => !prev)}
-            filterOptions={filterOptions}
-            selectedFilters={selectedFilters}
-            openFilter={openFilter}
-            onFilterChange={handleFilterChange}
-            onFilterToggle={(key) => setOpenFilter(openFilter === key ? null : key)}
-            searchQuery={searchQuery}
-            suggestions={suggestions}
-            onSearchChange={(e) => setSearchQuery(e.target.value)}
-            onSuggestionClick={handleSuggestionClick}
-            sortRef={sortRef}
-            filterRefs={filterRefs}
-        />
+        <>
+            <HomePageView
+                displayedItems={displayedItems}
+                loading={loading}
+                error={error}
+                sortBy={sortBy}
+                sortOpen={sortOpen}
+                sortOptions={SORT_OPTIONS}
+                onSortChange={handleSortChange}
+                onSortToggle={() => setSortOpen(prev => !prev)}
+                filterOptions={filterOptions}
+                selectedFilters={selectedFilters}
+                openFilter={openFilter}
+                onFilterChange={handleFilterChange}
+                onFilterToggle={(key) => setOpenFilter(openFilter === key ? null : key)}
+                searchQuery={searchQuery}
+                suggestions={suggestions}
+                onSearchChange={(e) => setSearchQuery(e.target.value)}
+                onSuggestionClick={handleSuggestionClick}
+                sortRef={sortRef}
+                filterRefs={filterRefs}
+                onAddMedia={() => setShowAddModal(true)}
+            />
+            {showAddModal && (
+                <AddMediaModal
+                    onClose={() => setShowAddModal(false)}
+                    onMediaAdded={handleMediaAdded}
+                />
+            )}
+        </>
     );
 }
 

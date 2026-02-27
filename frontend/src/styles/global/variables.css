@@ -8,6 +8,9 @@
 
     --text-logo: 1000 34px var(--font-logo);
     --text-title: 800 36px var(--font-primary);
+    --text-title-form: 600 28px var(--font-primary);
+    --text-primary-label: 600 16px var(--font-primary);
+    --text-secondary-label: 500 16px var(--font-primary);
     --text-subtitle: 500 16px var(--font-primary);
     --text-input: 600 16px var(--font-primary);
     --text-error: 500 14px var(--font-primary);
@@ -20,6 +23,7 @@
 
     /* ===== BORDER RADIUS ===== */
     --border-radius-primary: 20px;
+    --border-radius-secondary: 10px;
     --border-radius-input: 50px;
 
     /* ===== COLORS ===== */
@@ -28,6 +32,7 @@
     --color-primary-dark-purple-input: rgba(51, 32, 87, 0.4); /* #3B2563 */
     --color-primary-dark-purple-topbar: #332057;
     --color-primary-dark-purple-dropdown: #20113B;
+    --color-primary-dark-purple-bg-dropfown: rgba(59, 37, 99, 0.6);
 
     --color-primary-dark-purple: #290066;
     --color-secondary-dark-purple: rgba(41, 0, 102, 0.8); /* #290066 */
@@ -50,6 +55,7 @@
     --color-tertiary-pink: #FFD1FE;
     --color-input-pink: #D481D3;
     --color-active-nav-pink: #543E82;
+    --color-light-pink: #EB7A96;
     --color-medium-pink: #E3008C;
 
     --color-error-extra-red: #6e0000;
@@ -58,6 +64,8 @@
     --color-white: #ffffff;
     --color-light-white: rgba(255, 255, 255, 0.8);
     --color-grey: #828991;
+    --color-grey-border: rgba(117, 117, 117, 0.3);
+    --color-grey-bg-input: rgba(102, 111, 121, 0.1);
 
     --color-badge-completed-bg: #00A42C; /* stroke */
     --color-barge-completed-shadow: #85FF80;
