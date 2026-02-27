@@ -44,6 +44,7 @@ const HomePageView = ({
     onSuggestionClick,
     sortRef,
     filterRefs,
+    onAddMedia,
 }) => {
     return (
         <div className="home-page">
@@ -290,8 +291,7 @@ const HomePageView = ({
                         Start building your collection by adding your first movie or TV series.
                         Keep track of what you've watched and what you plan to watch!
                     </p>
-                    {/* TODO ADDING FIRST MEDIA BUTTON */}
-                    <button className="home-add-btn">
+                    <button className="home-add-btn" onClick={onAddMedia}>
                         <FaPlus /> Add Your First Media
                     </button>
                 </div>
@@ -328,6 +328,16 @@ const HomePageView = ({
                     ))}
                 </div>
             )}
+
+            {/* ADD MEDIA BTN */}
+            <button
+                className="home-add-btn-primary"
+                onClick={onAddMedia}
+                aria-label="add media"
+            >
+                <FaPlus />
+            </button>
+
         </div>
     );
 };

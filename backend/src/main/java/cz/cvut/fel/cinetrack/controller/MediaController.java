@@ -127,7 +127,7 @@ public class MediaController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create movie: " + e.getMessage()));
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -143,7 +143,7 @@ public class MediaController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Failed to create series: " + e.getMessage()));
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 

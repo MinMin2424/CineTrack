@@ -196,3 +196,24 @@
     color: var(--color-grey);
     font: var(--text-input);
 }
+
+/* ===== ADD MEDIA BTN ===== */
+.home-add-btn-primary {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--color-light-pink) 0%, var(--color-light-purple) 100%);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 0 20px var(--color-badge-planning-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}

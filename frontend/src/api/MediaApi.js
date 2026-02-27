@@ -55,3 +55,34 @@ export const autocompleteTitles = async (query, limit = 10) => {
     });
     return response.data;
 }
+
+/**
+ * POST /media/search
+ * @param title
+ * @param type
+ * @returns {Promise<any>}
+ */
+export const searchMedia = async (title, type) => {
+    const response = await axiosConfig.post('/media/search', {title, type});
+    return response.data;
+}
+
+/**
+ * POST /media/movie
+ * @param data
+ * @returns {Promise<any>}
+ */
+export const createMovie = async (data) => {
+    const response = await axiosConfig.post('/media/movie', data);
+    return response.data;
+}
+
+/**
+ * POST /media/series
+ * @param data
+ * @returns {Promise<any>}
+ */
+export const createSeries = async (data) => {
+    const response = await axiosConfig.post('/media/series', data);
+    return response.data;
+}
