@@ -37,7 +37,9 @@ export const logoutUser = async () => {
  * POST /auth/refresh
  * @returns {Promise<any>}
  */
-export const refreshToken = async () => {
-    const response = await axiosConfig.post('/auth/refresh');
+export const refreshToken = async (refreshToken) => {
+    const response = await axiosConfig.post('/auth/refresh', {
+        refreshToken: refreshToken,
+    });
     return response.data;
 };

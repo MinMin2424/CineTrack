@@ -34,23 +34,46 @@ axiosConfig.interceptors.request.use(
  * Handles new tokens and error states.
  */
 axiosConfig.interceptors.response.use(
-    (response) => {
-        const newToken = response.headers['x-new-token'];
-        if (newToken) {
-            localStorage.setItem('token', newToken);
-        }
-        return response;
-    },
-     (error) => {
-        const isLoginRequest = error.config?.url?.includes('/auth/login');
-        if (isLoginRequest) {
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        const isAuthRequest = error.config?.url?.includes('/auth/');
+        if (isAuthRequest) {
             return Promise.reject(error);
         }
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = '/auth/login';
+
+        if (error.response?.status !== 401 || originalRequest._retry) {
+            return Promise.reject(error);
         }
-        return Promise.reject(error);
+        originalRequest._retry = true;
+
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+        if (!storedRefreshToken) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('expiresAt');
+            window.location.href = '/auth/login';
+            return Promise.reject(error);
+        }
+
+        try {
+            const refreshResponse = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+                refreshToken: storedRefreshToken,
+            });
+            const { accessToken, refreshToken: newRefreshToken, expiresAt } = refreshResponse.data;
+            localStorage.setItem('token', accessToken);
+            localStorage.setItem('refreshToken', newRefreshToken);
+            localStorage.setItem('expiresAt', String(expiresAt));
+            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+            return axiosConfig(originalRequest);
+        } catch (error) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('expiresAt');
+            window.location.href = '/auth/login';
+            return Promise.reject(error);
+        }
     }
 );
 

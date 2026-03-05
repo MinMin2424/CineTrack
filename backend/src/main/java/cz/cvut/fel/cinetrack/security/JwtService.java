@@ -43,12 +43,15 @@ public class JwtService {
                 .compact();
     }
 
-    public String refreshToken(String token) {
-        Claims claims = extractAllClaims(token);
+    public String generateRefreshToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId());
+        claims.put("type", "refresh");
         return Jwts.builder()
                 .claims(claims)
+                .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration()))
+                .expiration(new Date(System.currentTimeMillis() + 7L * 24 * 60 * 60 * 1000)) // 7 days
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -114,6 +117,10 @@ public class JwtService {
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtConfig.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public long getExpirationTime(String token) {
+        return extractClaims(token, Claims::getExpiration).getTime();
     }
 }
 

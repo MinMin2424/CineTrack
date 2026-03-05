@@ -54,7 +54,9 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         String token = jwtService.generateToken(savedUser);
-        return new AuthenticationResponse(token);
+        String refreshToken = jwtService.generateRefreshToken(savedUser);
+        long expiresAt = jwtService.getExpirationTime(token);
+        return new AuthenticationResponse(token, refreshToken, expiresAt);
     }
 
     @Transactional
@@ -71,7 +73,9 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        long expiresAt = jwtService.getExpirationTime(token);
+        return new AuthenticationResponse(token, refreshToken, expiresAt);
     }
 
     @Transactional

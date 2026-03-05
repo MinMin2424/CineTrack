@@ -86,8 +86,8 @@ public class AuthServiceTest {
         AuthenticationResponse response = authService.register(validRegisterRequest);
 
         assertNotNull(response);
-        assertNotNull(response.getToken());
-        assertTrue(jwtService.isTokenValid(response.getToken()));
+        assertNotNull(response.getAccessToken());
+        assertTrue(jwtService.isTokenValid(response.getAccessToken()));
 
         Optional<User> savedUser = userRepository.findByEmail("test@test.cz");
 
@@ -419,8 +419,8 @@ public class AuthServiceTest {
         AuthenticationResponse response = authService.login(validLoginRequest);
 
         assertNotNull(response);
-        assertNotNull(response.getToken());
-        assertTrue(jwtService.isTokenValid(response.getToken()));
+        assertNotNull(response.getAccessToken());
+        assertTrue(jwtService.isTokenValid(response.getAccessToken()));
 
         User user = userRepository.findByEmail("test@test.cz")
                 .orElseThrow();

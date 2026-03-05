@@ -3,11 +3,13 @@
  * Authentication Context Provider for managing user authentication state.
  */
 
-import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
-import { loginUser, registerUser, logoutUser } from "../api/AuthApi";
+import React, {createContext, useState, useContext, useEffect, useCallback, useRef} from "react";
+import { loginUser, registerUser, logoutUser, refreshToken as callRefreshToken } from "../api/AuthApi";
 import { getUserProfile } from "../api/UserApi";
 
 const AuthContext = createContext(null);
+
+const REFRESH_BEFORE_EXPIRY_MS = 30 * 1000;
 
 /**
  * AuthProvider Component
@@ -17,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     const [userProfile, setUserProfile] = useState(null);
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [loading, setLoading] = useState(true);
+    const refreshTimerRef = useRef(null);
 
     /**
      * Decodes JWT token to extract user information.
@@ -32,14 +35,65 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const saveTokens = useCallback((accessToken, refreshToken, expiresAt) => {
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('expiresAt', String(expiresAt));
+    }, []);
+
+    const clearTokens = useCallback(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('expiresAt');
+    }, []);
+
+    const doRefresh = useCallback(async () => {
+        const storedRefreshToken = localStorage.getItem('refreshToken');
+        if (!storedRefreshToken) {
+            clearTokens();
+            return;
+        }
+        try {
+            const data = await callRefreshToken(storedRefreshToken);
+            saveTokens(data.accessToken, data.refreshToken, data.expiresAt);
+            setToken(data.accessToken);
+            return data;
+        } catch (error) {
+            clearTokens();
+            setToken(null);
+            setUser(null);
+            setUserProfile(null);
+            window.location.href="/auth/login";
+        }
+    }, [saveTokens, clearTokens])
+
+    const scheduleRefresh = useCallback((expiresAt) => {
+        if (refreshTimerRef.current) {
+            clearTimeout(refreshTimerRef.current);
+        }
+        const now = Date.now();
+        const timeUntilRefresh = expiresAt - now - REFRESH_BEFORE_EXPIRY_MS;
+        if (timeUntilRefresh <= 0) {
+            doRefresh().then(data => {
+                if (data) scheduleRefresh(data.expiresAt);
+            });
+            return;
+        }
+        refreshTimerRef.current = setTimeout(async () => {
+            const data = await doRefresh();
+            if (data) scheduleRefresh(data.expiresAt);
+        }, timeUntilRefresh);
+    }, [doRefresh]);
+
     /**
      * Fetches detailed user profile from the API.
      */
-    const fetchUserProfile = useCallback(async () => {
-        if (!token) return null;
+    const fetchUserProfile = useCallback(async (accessToken) => {
+        const currentToken = accessToken || localStorage.getItem('token');
+        if (!currentToken) return null;
         try {
             const profileData = await getUserProfile();
-            const decoded = decodeToken(token);
+            const decoded = decodeToken(accessToken);
             setUserProfile(profileData);
             setUser({
                 ...decoded,
@@ -53,64 +107,87 @@ export const AuthProvider = ({ children }) => {
             setUser(decoded);
             return null;
         }
-    }, [token]);
+        // eslint-disable-next-line
+    }, []);
 
     /**
      * Initial authentication check on component mount.
      */
     useEffect(() => {
         const initAuth = async () => {
-            if (token) {
-                const decoded = decodeToken(token);
-                if (decoded && decoded.exp * 1000 > Date.now()) {
-                    await fetchUserProfile();
+            const storedToken = localStorage.getItem('token');
+            const storedRefreshToken = localStorage.getItem('refreshToken');
+            const storedExpiresAt = localStorage.getItem('expiresAt');
+            if (storedToken && storedExpiresAt) {
+                const expiresAt = parseInt(storedExpiresAt, 10);
+                if (expiresAt > Date.now()) {
+                    setToken(storedToken);
+                    await fetchUserProfile(storedToken);
+                    scheduleRefresh(expiresAt);
+                } else if (storedRefreshToken) {
+                    const data = await doRefresh();
+                    if (data) {
+                        await fetchUserProfile(data.accessToken);
+                        scheduleRefresh(data.expiresAt);
+                    }
                 } else {
-                    localStorage.removeItem("token");
-                    setToken(null);
+                    clearTokens();
                 }
             }
             setLoading(false);
         };
         initAuth();
-    }, [token, fetchUserProfile]);
+        return () => {
+            if (refreshTimerRef.current) {
+                clearTimeout(refreshTimerRef.current);
+            }
+        };
+        // eslint-disable-next-line
+    }, []);
 
     /**
      * Login function
      */
     const login = useCallback(async (email, password) => {
         const data = await loginUser({ email, password });
-        localStorage.setItem("token", data.token);
-        setToken(data.token);
-        setUser(decodeToken(data.token));
-        await fetchUserProfile();
+        console.log('Login response', data);
+        saveTokens(data.accessToken, data.refreshToken, data.expiresAt);
+        setToken(data.accessToken);
+        setUser(decodeToken(data.accessToken));
+        scheduleRefresh(data.expiresAt)
+        await fetchUserProfile(data.accessToken);
         return data;
-    }, [fetchUserProfile]);
+    }, [fetchUserProfile, saveTokens, scheduleRefresh]);
 
     /**
      * Register function
      */
     const register = useCallback(async (registerData) => {
         const data = await registerUser(registerData);
-        localStorage.setItem("token", data.token);
-        setToken(data.token);
-        setUser(decodeToken(data.token));
-        await fetchUserProfile();
+        saveTokens(data.accessToken, data.refreshToken, data.expiresAt);
+        setToken(data.accessToken);
+        setUser(decodeToken(data.accessToken));
+        scheduleRefresh(data.expiresAt)
+        await fetchUserProfile(data.accessToken);
         return data;
-    }, [fetchUserProfile]);
+    }, [fetchUserProfile, saveTokens, scheduleRefresh]);
 
     /**
      * Logout function
      */
     const logout = useCallback(async () => {
+        if (refreshTimerRef.current) {
+            clearTimeout(refreshTimerRef.current);
+        }
         try {
             await logoutUser();
         } finally {
-            localStorage.removeItem("token");
+            clearTokens();
             setToken(null);
             setUser(null);
             setUserProfile(null);
         }
-    }, []);
+    }, [clearTokens]);
 
     const value = {
         user,

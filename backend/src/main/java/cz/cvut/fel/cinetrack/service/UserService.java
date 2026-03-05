@@ -41,6 +41,11 @@ public class UserService {
     }
 
     @Transactional
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow();
+    }
+
+    @Transactional
     public UserProfileResponseDTO getCurrentUserProfile() {
         User currentUser = getCurrentUserNotDeleted();
         return new UserProfileResponseDTO(
