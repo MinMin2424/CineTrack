@@ -4,12 +4,14 @@
 
 package cz.cvut.fel.cinetrack.service;
 
+import cz.cvut.fel.cinetrack.dto.media.GenreOptionDTO;
 import cz.cvut.fel.cinetrack.model.Genre;
 import cz.cvut.fel.cinetrack.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -52,5 +54,12 @@ public class GenreService {
             }
         }
         return result;
+    }
+
+    public List<GenreOptionDTO> getAllGenres() {
+        return genreRepository.findAll().stream()
+                .map(GenreOptionDTO::new)
+                .sorted(Comparator.comparing(GenreOptionDTO::getType))
+                .toList();
     }
 }

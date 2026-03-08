@@ -3,21 +3,22 @@
  */
 
 import React, { useState } from "react";
-import { createSeries } from "../../api/MediaApi";
+import { createMovie } from "../../api/MediaApi";
 import {IoClose} from "react-icons/io5";
 import MediaDetailsForm from "./MediaDetailsForm"
-import "../../styles/components/addMediaForms/AddMediaFormStyle.css"
+import "../../styles/components/forms/AddMediaFormStyle.css"
 
-const AddSeriesForm = ({ omdbData, onSuccess, onBack, onClose }) => {
+const AddMovieForm = ({ omdbData, onSuccess, onBack, onClose}) => {
 
     const [formData, setFormData] = useState({
         imdbID: omdbData?.imdbID || "",
         title: omdbData?.Title || "",
+        year: omdbData?.Year || "",
+        runtime: omdbData?.Runtime || "",
         genre: omdbData?.Genre || "",
         language: omdbData?.Language || "",
         country: omdbData?.Country || "",
         poster: omdbData?.Poster || "",
-        season: omdbData?.selectedSeason?.toString() || "1",
         status: "plan to watch",
         rating: "",
         notes: "",
@@ -36,7 +37,7 @@ const AddSeriesForm = ({ omdbData, onSuccess, onBack, onClose }) => {
         setLoading(true);
         setError(null);
         try {
-            await createSeries({
+            await createMovie({
                 ...formData,
                 rating: formData.rating || "0",
                 watchStartDate: formData.watchStartDate || null,
@@ -44,34 +45,34 @@ const AddSeriesForm = ({ omdbData, onSuccess, onBack, onClose }) => {
             });
             onSuccess();
         } catch (error) {
-            setError(error.response?.data?.error || "Failed to add TV series. Please try again.")
+            setError(error.response?.data?.error || "Failed to add movie. Please try again.")
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-container" onClick={e => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2 className="modal-title">Add New Media</h2>
-                    <button className="modal-close-btn" onClick={onClose}>
-                        <IoClose />
-                    </button>
-                </div>
-                <MediaDetailsForm
-                    formData={formData}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
-                    onBack={onBack}
-                    onClose={onClose}
-                    loading={loading}
-                    error={error}
-                    submitLabel="Add TV Series"
-                />
-            </div>
-        </div>
+      <div className="modal-overlay" onClick={onClose}>
+          <div className="modal-container" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                  <h2 className="modal-title">Add New Media</h2>
+                  <button className="modal-close-btn" onClick={onClose}>
+                      <IoClose />
+                  </button>
+              </div>
+              <MediaDetailsForm
+                  formData={formData}
+                  onChange={handleChange}
+                  onSubmit={handleSubmit}
+                  onBack={onBack}
+                  onClose={onClose}
+                  loading={loading}
+                  error={error}
+                  submitLabel="Add Movie"
+              />
+          </div>
+      </div>
     );
 };
 
-export default AddSeriesForm;
+export default AddMovieForm;

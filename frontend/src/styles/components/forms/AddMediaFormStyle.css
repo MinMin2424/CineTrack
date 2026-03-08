@@ -27,25 +27,28 @@
     border-radius: var(--border-radius-primary);
     box-shadow: 0 0 20px var(--color-white);
     overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     animation: slideUp 0.3s ease-out;
     position: relative;
 }
 
 .modal-container::-webkit-scrollbar {
-    width: 15px;
+    /*width: 15px;*/
+    display: none;
 }
 
-.modal-container::-webkit-scrollbar-track {
-    border-radius: 0 50px 50px 0;
-    margin: 0 50px;
-    background: var(--color-grey);
-}
+/*.modal-container::-webkit-scrollbar-track {*/
+/*    border-radius: 0 50px 50px 0;*/
+/*    margin: 0 50px;*/
+/*    background: var(--color-grey);*/
+/*}*/
 
-.modal-container::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    background: var(--color-primary-dark-blue-bg);
-}
+/*.modal-container::-webkit-scrollbar-thumb {*/
+/*    border-radius: 20px;*/
+/*    transition: all 0.3s ease;*/
+/*    background: var(--color-primary-dark-blue-bg);*/
+/*}*/
 
 @keyframes slideUp {
     from {

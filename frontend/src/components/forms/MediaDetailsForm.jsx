@@ -4,7 +4,7 @@
 
 import React from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import "../../styles/components/addMediaForms/AddMediaFormStyle.css"
+import "../../styles/components/forms/AddMediaFormStyle.css"
 
 const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },

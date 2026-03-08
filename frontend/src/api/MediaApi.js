@@ -86,3 +86,50 @@ export const createSeries = async (data) => {
     const response = await axiosConfig.post('/media/series', data);
     return response.data;
 }
+
+/**
+ * POST /media/manual/movie
+ * @param data
+ * @returns {Promise<any>}
+ */
+export const createMovieManually = async (data) => {
+    const response = await axiosConfig.post('/media/manual/movie', data);
+    return response.data;
+}
+
+/**
+ * POST /media/manual/series
+ * @param data
+ * @returns {Promise<any>}
+ */
+export const createSeriesManually = async (data) => {
+    const response = await axiosConfig.post('/media/manual/series', data);
+    return response.data;
+}
+
+/**
+ * GET /media/metadata/genres
+ * @returns {Promise<any>}
+ */
+export const getAllGenres = async () => {
+    const response = await axiosConfig.get('/media/metadata/genres');
+    return response.data;
+}
+
+/**
+ * GET /media/metadata/languages
+ * @returns {Promise<any>}
+ */
+export const getAllLanguages = async () => {
+    const response = await axiosConfig.get('/media/metadata/languages');
+    return response.data;
+}
+
+/**
+ * GET /media/metadata/countries
+ * @returns {Promise<any>}
+ */
+export const getAllCountries = async () => {
+    const response = await axiosConfig.get('/media/metadata/countries');
+    return response.data;
+}

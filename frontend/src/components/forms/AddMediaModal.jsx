@@ -6,25 +6,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { searchMedia } from "../../api/MediaApi";
 import AddMovieForm from "./AddMovieForm";
 import AddSeriesForm from "./AddSeriesForm";
+import AddMovieManualForm from "./AddMovieManualForm";
+import AddSeriesManualForm from "./AddSeriesManualForm";
 import { IoClose } from "react-icons/io5";
-import "../../styles/components/addMediaForms/AddMediaFormStyle.css"
+import "../../styles/components/forms/AddMediaFormStyle.css"
 
 const AddMediaModal = ({ onClose, onMediaAdded }) => {
     const [mediaType, setMediaType] = useState("movie");
     const [titleQuery, setTitleQuery] = useState("");
     const [searchResult, setSearchResult] = useState(null);
     const [searching, setSearching] = useState(false);
-    const [searchError, setSearchError] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
-    const [manualMode, setManualMode] = useState(false);
+    const [mode, setMode] = useState("none");
     const debounceTimer = useRef(null);
 
     useEffect(() => {
         clearTimeout(debounceTimer.current);
         setSearchResult(null);
         setShowDropdown(false);
-        setSearchError(null);
 
         if (titleQuery.trim().length < 2) return;
 
@@ -51,33 +51,38 @@ const AddMediaModal = ({ onClose, onMediaAdded }) => {
         setSearchResult(null);
         setShowDropdown(false);
         setSelectedMedia(null);
-        setManualMode(false);
+        setMode("none");
     };
 
     const handleSelectResult = (result) => {
         setSelectedMedia(result);
         setShowDropdown(false);
-        setManualMode(false);
+        setMode("omdb");
     };
 
     const handleManual = () => {
         setSelectedMedia(null);
-        setManualMode(true);
         setShowDropdown(false);
+        setMode("manual");
     };
+
+    const handleBack = () => {
+        setSelectedMedia(null);
+        setMode("none");
+    }
 
     const handleSuccess = () => {
         onMediaAdded();
         onClose();
     };
 
-    if (selectedMedia || manualMode) {
+    if (mode === "omdb") {
         if (mediaType === "movie") {
             return (
                 <AddMovieForm
                     omdbData={selectedMedia}
                     onSuccess={handleSuccess}
-                    onBack={() => { setSelectedMedia(null); setManualMode(false); }}
+                    onBack={handleBack}
                     onClose={onClose}
                 />
             )
@@ -86,8 +91,30 @@ const AddMediaModal = ({ onClose, onMediaAdded }) => {
                 <AddSeriesForm
                     omdbData={selectedMedia}
                     onSuccess={handleSuccess}
-                    onBack={() => { setSelectedMedia(null); setManualMode(false); }}
+                    onBack={handleBack}
                     onClose={onClose}
+                />
+            )
+        }
+    }
+
+    if (mode === "manual") {
+        if (mediaType === "movie") {
+            return (
+                <AddMovieManualForm
+                    onSuccess={handleSuccess}
+                    onBack={handleBack}
+                    onClose={onClose}
+                    onSwitchToSeries={() => setMediaType("series")}
+                />
+            )
+        } else {
+            return (
+                <AddSeriesManualForm
+                    onSuccess={handleSuccess}
+                    onBack={handleBack}
+                    onClose={onClose}
+                    onSwitchToMovie={() => setMediaType("movie")}
                 />
             )
         }
@@ -159,7 +186,10 @@ const AddMediaModal = ({ onClose, onMediaAdded }) => {
                                       {searchResult.seriesInfo.Title} Season {season.season}
                                   </li>
                               ))}
-                              <li className="modal-search-item modal-search-manual">
+                              <li
+                                  className="modal-search-item modal-search-manual"
+                                  onClick={handleManual}
+                              >
                                   {mediaType === "movie" ? "Add movie manually" : "Add TV series manually"}
                               </li>
                           </ul>
@@ -172,7 +202,7 @@ const AddMediaModal = ({ onClose, onMediaAdded }) => {
               <div className="modal-footer">
                 <button
                     className="modal-continue-btn"
-                    disabled={!selectedMedia && !manualMode}
+                    disabled={mode === "none" && !selectedMedia}
                     onClick={() => {}}
                 >
                     Continue

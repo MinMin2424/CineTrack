@@ -5,7 +5,7 @@
 
 import { useAuth } from "../../contexts/AuthContext";
 import { IoMenu } from "react-icons/io5";
-import "../../styles/components/TopbarStyle.css"
+import "../../styles/components/layout/TopbarStyle.css"
 
 const TopBar = ({ onMenuToggle }) => {
     const { user, userProfile } = useAuth();
