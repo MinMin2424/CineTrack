@@ -14,8 +14,10 @@ import cz.cvut.fel.cinetrack.dto.media.request.SearchRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.request.SeriesCreateRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesSearchResponseDTO;
+import cz.cvut.fel.cinetrack.exception.media.RequestFailedException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.MovieAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.media.existingData.SeriesAlreadyExistsException;
+import cz.cvut.fel.cinetrack.exception.media.notFoundObj.MediaNotFoundException;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.model.enums.MediaType;
 import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
@@ -87,9 +89,11 @@ public class MediaController {
             }
         } catch (InvalidMediaTypeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (MediaNotFoundException | RequestFailedException e) {
+            return ResponseEntity.ok(null);
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Search failed: " + e.getMessage()));
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 

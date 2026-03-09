@@ -4,12 +4,14 @@
 
 package cz.cvut.fel.cinetrack.service;
 
+import cz.cvut.fel.cinetrack.dto.media.response.LanguageOptionDTO;
 import cz.cvut.fel.cinetrack.model.Language;
 import cz.cvut.fel.cinetrack.repository.LanguageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -52,5 +54,12 @@ public class LanguageService {
             }
         }
         return result;
+    }
+
+    public List<LanguageOptionDTO> getAllLanguages() {
+        return languageRepository.findAll().stream()
+                .map(LanguageOptionDTO::new)
+                .sorted(Comparator.comparing(LanguageOptionDTO::getLang))
+                .toList();
     }
 }

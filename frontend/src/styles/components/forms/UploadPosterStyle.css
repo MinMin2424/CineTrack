@@ -1,0 +1,96 @@
+.poster-upload-wrapper {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.poster-upload-zone {
+    width: 100%;
+    min-height: 120px;
+    border: 1px dashed var(--color-grey-border);
+    border-radius: var(--border-radius-secondary);
+    background: var(--color-grey-bg-input);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.poster-upload-zone:hover {
+    border-color: var(--color-primary-dark-blue-bg);
+    background: var(--color-white);
+}
+
+.poster-upload-zone--dragging {
+    border-color: var(--color-primary-dark-purple-sidebar);
+    background: var(--color-white);
+}
+
+.poster-upload-zone.input-error {
+    border-color: var(--color-error-red);
+}
+
+.poster-upload-input {
+    display: none;
+}
+
+.poster-upload-icon {
+    font-size: 28px;
+    color: var(--color-primary-dark-blue-bg);
+    line-height: 1;
+}
+
+.poster-upload-text {
+    font: var(--text-placeholder);
+    color: var(--color-grey);
+    margin: 0;
+    text-align: center;
+}
+
+.poster-upload-link {
+    color: var(--color-primary-dark-purple-sidebar);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.poster-upload-hint {
+    font-size: 11px;
+    color: var(--color-grey);
+    margin: 0;
+}
+
+.poster-upload-preview {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    border-radius: var(--border-radius-secondary);
+    overflow: hidden;
+}
+
+.poster-upload-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius-secondary);
+}
+
+.poster-upload-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    color: var(--color-white);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: backgroud 0.2s ease;
+}

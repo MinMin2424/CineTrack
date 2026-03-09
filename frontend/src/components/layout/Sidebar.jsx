@@ -12,7 +12,7 @@ import { FaBookmark } from "react-icons/fa";
 import { BiSearchAlt } from "react-icons/bi";
 import { IoIosSettings } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
-import "../../styles/components/SidebarStyle.css"
+import "../../styles/components/layout/SidebarStyle.css"
 
 const NAV_ITEMS = [
     { to: "/", label: "HOME", Icon: HiHome },

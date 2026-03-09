@@ -4,12 +4,15 @@
 
 package cz.cvut.fel.cinetrack.service;
 
+import cz.cvut.fel.cinetrack.dto.media.CountryOptionDTO;
+import cz.cvut.fel.cinetrack.dto.media.response.LanguageOptionDTO;
 import cz.cvut.fel.cinetrack.model.Country;
 import cz.cvut.fel.cinetrack.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -52,5 +55,12 @@ public class CountryService {
             }
         }
         return result;
+    }
+
+    public List<CountryOptionDTO> getAllCountries() {
+        return countryRepository.findAll().stream()
+                .map(CountryOptionDTO::new)
+                .sorted(Comparator.comparing(CountryOptionDTO::getCountryName))
+                .toList();
     }
 }

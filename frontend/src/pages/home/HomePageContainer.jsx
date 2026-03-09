@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { getMediaOverview, getFilterOptions, autocompleteTitles } from "../../api/MediaApi";
 import HomePageView from "./HomePageView";
-import AddMediaModal from "../../components/media/AddMediaModal"
+import AddMediaModal from "../../components/forms/AddMediaModal"
 import {FaLongArrowAltDown, FaLongArrowAltUp} from "react-icons/fa";
 
 const SORT_OPTIONS = [
@@ -60,7 +60,7 @@ const HomePage = () => {
             const data = await getMediaOverview(sortBy, selectedFilters);
             setMediaItems(data);
         } catch (error) {
-            setError("Failed to load media. Please try again.")
+            setError("Failed to load forms. Please try again.")
         } finally {
             setLoading(false);
         }
