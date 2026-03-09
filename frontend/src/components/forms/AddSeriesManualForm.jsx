@@ -8,6 +8,7 @@ import {IoIosArrowDown} from "react-icons/io";
 import { createSeriesManually, getAllGenres, getAllLanguages, getAllCountries } from "../../api/MediaApi";
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import "../../styles/components/forms/AddMediaFormStyle.css"
+import PosterUpload from "./PosterUpload";
 
 const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },
@@ -191,18 +192,6 @@ const AddSeriesManualForm = ({
                         </div>
                     </div>
 
-                    {/* POSTER */}
-                    <label className="modal-label">Poster *</label>
-                    <input
-                        type="text"
-                        name="posterUrl"
-                        className={`modal-input ${fieldErrors.posterUrl ? "input-error" : ""}`}
-                        placeholder="Add Poster"
-                        value={formData.posterUrl}
-                        onChange={handleChange}
-                    />
-                    {fieldErrors.posterUrl && <p className="manual-field-error">{fieldErrors.posterUrl}</p>}
-
                     {/* DATES */}
                     <div className="modal-row">
                         <div className="modal-field">
@@ -302,6 +291,16 @@ const AddSeriesManualForm = ({
                         selected={formData.country}
                         onToggle={val => handleMultiToggle("country", val)}
                         error={fieldErrors.country}
+                    />
+
+                    {/* POSTER */}
+                    <PosterUpload
+                        value={formData.posterUrl}
+                        onChange={(url) => {
+                            setFormData(prev => ({...prev, posterUrl: url}));
+                            setFieldErrors(prev => ({...prev, posterUrl: null}));
+                        }}
+                        error={fieldErrors.posterUrl}
                     />
 
                     {error && (
