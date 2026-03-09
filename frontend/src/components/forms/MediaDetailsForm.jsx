@@ -2,9 +2,10 @@
  * Created by minmin_tranova on 26.02.2026
  */
 
-import React from "react";
+import React, {useEffect} from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import "../../styles/components/forms/AddMediaFormStyle.css"
+import {useMediaFormValidation} from "../../hooks/UseMediaFormValidation";
 
 const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },
@@ -24,6 +25,13 @@ const MediaDetailsForm = ({
    error,
    submitLabel
 }) => {
+    const {fieldErrors} = useMediaFormValidation(formData, ["rating", "dates"]);
+    const hasErrors = Object.keys(fieldErrors).length > 0;
+    const handleSubmit = () => {
+        if (hasErrors) return;
+        onSubmit();
+    };
+
     return (
         <>
             <div className="modal-body">
@@ -42,24 +50,34 @@ const MediaDetailsForm = ({
                 {/* START / END DATE */}
                 <div className="modal-row">
                     <div className="modal-field">
-                        <label className="modal-label">Start watching date</label>
+                        <label className="modal-label">
+                            Start watching date{formData.status === "completed" ? "*" : ""}
+                        </label>
                         <input
                             type="date"
                             name="watchStartDate"
-                            className="modal-input"
+                            className={`modal-input ${fieldErrors.watchStartDate ? "input-error" : ""}`}
                             value={formData.watchStartDate || ""}
                             onChange={onChange}
                         />
+                        {fieldErrors.watchStartDate && (
+                            <p className="field-error">{fieldErrors.watchStartDate}</p>
+                        )}
                     </div>
                     <div className="modal-field">
-                        <label className="modal-label">End watching date</label>
+                        <label className="modal-label">
+                            End watching date{formData.status === "completed" ? "*" : ""}
+                        </label>
                         <input
                             type="date"
                             name="watchEndDate"
-                            className="modal-input"
+                            className={`modal-input ${fieldErrors.watchEndDate ? "input-error" : ""}`}
                             value={formData.watchEndDate || ""}
                             onChange={onChange}
                         />
+                        {fieldErrors.watchEndDate && (
+                            <p className="field-error">{fieldErrors.watchEndDate}</p>
+                        )}
                     </div>
                 </div>
 
@@ -88,7 +106,7 @@ const MediaDetailsForm = ({
                         <input
                             type="number"
                             name="rating"
-                            className="modal-input"
+                            className={`modal-input ${fieldErrors.rating ? "input-error" : ""}`}
                             placeholder="8.5"
                             min="0"
                             max="10"
@@ -96,6 +114,9 @@ const MediaDetailsForm = ({
                             value={formData.rating}
                             onChange={onChange}
                         />
+                        {fieldErrors.rating && (
+                            <p className="field-error">{fieldErrors.rating}</p>
+                        )}
                     </div>
                 </div>
 
@@ -120,7 +141,7 @@ const MediaDetailsForm = ({
                 </button>
                 <button
                     className="modal-submit-btn"
-                    onClick={onSubmit}
+                    onClick={handleSubmit}
                     disabled={loading || !formData.title || !formData.status}
                 >
                     {loading ? "Adding..." : submitLabel}

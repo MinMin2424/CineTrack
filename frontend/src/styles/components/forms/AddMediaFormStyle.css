@@ -150,6 +150,16 @@
     cursor: not-allowed;
 }
 
+.input-error {
+    border: 1px solid var(--color-error-red);
+}
+
+.field-error {
+    text-align: center;
+    font: var(--text-error);
+    color: var(--color-error-red);
+}
+
 .modal-search-dropdown {
     /*position: absolute;*/
     width: calc(100% - 5px);

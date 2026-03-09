@@ -5,7 +5,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { useFormValidation } from "../../hooks/UseFormValidation";
+import { useAuthFormValidation } from "../../hooks/UseAuthFormValidation";
 import "../../styles/pages/auth/RegisterPageStyle.css"
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
@@ -13,7 +13,7 @@ import { LuEyeClosed } from "react-icons/lu";
 const RegisterPage = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
-    const { errors, validateRegisterForm, setErrors } = useFormValidation();
+    const { errors, validateRegisterForm, setErrors } = useAuthFormValidation();
 
     const [formData, setFormData] = useState({
         username: '',

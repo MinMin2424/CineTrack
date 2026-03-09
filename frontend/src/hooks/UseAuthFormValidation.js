@@ -5,7 +5,7 @@
 
 import {useState} from "react";
 
-export const useFormValidation = () => {
+export const useAuthFormValidation = () => {
     const [errors, setErrors] = useState({});
 
     const validateUsername = (username) => {

@@ -9,6 +9,7 @@ import { createSeriesManually, getAllGenres, getAllLanguages, getAllCountries } 
 import MultiSelectDropdown from "./MultiSelectDropdown";
 import "../../styles/components/forms/AddMediaFormStyle.css"
 import PosterUpload from "./PosterUpload";
+import {useMediaFormValidation} from "../../hooks/UseMediaFormValidation";
 
 const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },
@@ -44,7 +45,9 @@ const AddSeriesManualForm = ({
     const [countryOptions, setCountryOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [fieldErrors, setFieldErrors] = useState({});
+    const [submitErrors, setSubmitErrors] = useState({});
+    const {fieldErrors: inlineErrors} = useMediaFormValidation(formData, ["rating", "dates", "releaseYear", "season", "episodeCount"]);
+    const fieldErrors = {...submitErrors, ...inlineErrors}
 
     useEffect(() => {
         Promise.all([getAllGenres(), getAllLanguages(), getAllCountries()])
@@ -59,7 +62,7 @@ const AddSeriesManualForm = ({
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        setFieldErrors(prev => ({ ...prev, [name]: null }));
+        setSubmitErrors(prev => ({ ...prev, [name]: null }));
     };
 
     const handleMultiToggle = (field, value) => {
@@ -69,7 +72,7 @@ const AddSeriesManualForm = ({
                 ? prev[field].filter(v => v !== value)
                 : [...prev[field], value],
         }));
-        setFieldErrors(prev => ({ ...prev, [field]: null }));
+        setSubmitErrors(prev => ({ ...prev, [field]: null }));
     };
 
     const validate = () => {
@@ -88,7 +91,7 @@ const AddSeriesManualForm = ({
     const handleSubmit = async () => {
         const errors = validate();
         if (Object.keys(errors).length > 0) {
-            setFieldErrors(errors);
+            setSubmitErrors(errors);
             return;
         }
         setLoading(true);
@@ -148,7 +151,7 @@ const AddSeriesManualForm = ({
                         value={formData.title}
                         onChange={handleChange}
                     />
-                    {fieldErrors.title && <p className="manual-field-error">{fieldErrors.title}</p>}
+                    {fieldErrors.title && <p className="field-error">{fieldErrors.title}</p>}
 
                     {/* RELEASED YEAR + SEASON + EPISODES */}
                     <div className="modal-row">
@@ -162,7 +165,7 @@ const AddSeriesManualForm = ({
                                 value={formData.releaseYear}
                                 onChange={handleChange}
                             />
-                            {fieldErrors.releaseYear && <p className="manual-field-error">{fieldErrors.releaseYear}</p>}
+                            {fieldErrors.releaseYear && <p className="field-error">{fieldErrors.releaseYear}</p>}
                         </div>
                         <div className="modal-field">
                             <label className="modal-label">Season *</label>
@@ -175,7 +178,7 @@ const AddSeriesManualForm = ({
                                 value={formData.season}
                                 onChange={handleChange}
                             />
-                            {fieldErrors.season && <p className="manual-field-error">{fieldErrors.season}</p>}
+                            {fieldErrors.season && <p className="field-error">{fieldErrors.season}</p>}
                         </div>
                         <div className="modal-field">
                             <label className="modal-label">Episode count *</label>
@@ -188,14 +191,16 @@ const AddSeriesManualForm = ({
                                 value={formData.episodeCount}
                                 onChange={handleChange}
                             />
-                            {fieldErrors.episodeCount && <p className="manual-field-error">{fieldErrors.episodeCount}</p>}
+                            {fieldErrors.episodeCount && <p className="field-error">{fieldErrors.episodeCount}</p>}
                         </div>
                     </div>
 
                     {/* DATES */}
                     <div className="modal-row">
                         <div className="modal-field">
-                            <label className="modal-label">Start watching date</label>
+                            <label className="modal-label">
+                                Start watching date{formData.status === "completed" ? "*" : ""}
+                            </label>
                             <input
                                 type="date"
                                 name="watchStartDate"
@@ -203,9 +208,12 @@ const AddSeriesManualForm = ({
                                 value={formData.watchStartDate}
                                 onChange={handleChange}
                             />
+                            {fieldErrors.watchStartDate && <p className="field-error">{fieldErrors.watchStartDate}</p>}
                         </div>
                         <div className="modal-field">
-                            <label className="modal-label">End watching date</label>
+                            <label className="modal-label">
+                                End watching date{formData.status === "completed" ? "*" : ""}
+                            </label>
                             <input
                                 type="date"
                                 name="watchEndDate"
@@ -213,6 +221,7 @@ const AddSeriesManualForm = ({
                                 value={formData.watchEndDate}
                                 onChange={handleChange}
                             />
+                            {fieldErrors.watchEndDate && <p className="field-error">{fieldErrors.watchEndDate}</p>}
                         </div>
                     </div>
 
@@ -241,7 +250,7 @@ const AddSeriesManualForm = ({
                             <input
                                 type="number"
                                 name="rating"
-                                className="modal-input"
+                                className={`modal-input ${inlineErrors.rating ? "input-error" : ""}`}
                                 placeholder="8.5"
                                 min="0"
                                 max="10"
@@ -249,6 +258,7 @@ const AddSeriesManualForm = ({
                                 value={formData.rating}
                                 onChange={handleChange}
                             />
+                            {fieldErrors.rating && <p className="field-error">{fieldErrors.rating}</p>}
                         </div>
                     </div>
 
@@ -298,7 +308,7 @@ const AddSeriesManualForm = ({
                         value={formData.posterUrl}
                         onChange={(url) => {
                             setFormData(prev => ({...prev, posterUrl: url}));
-                            setFieldErrors(prev => ({...prev, posterUrl: null}));
+                            setSubmitErrors(prev => ({...prev, posterUrl: null}));
                         }}
                         error={fieldErrors.posterUrl}
                     />

@@ -5,7 +5,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { useFormValidation } from "../../hooks/UseFormValidation";
+import { useAuthFormValidation } from "../../hooks/UseAuthFormValidation";
 import '../../styles/pages/auth/LoginPageStyle.css';
 import { FiUser } from "react-icons/fi";
 import { LuEye } from "react-icons/lu";
@@ -14,7 +14,7 @@ import { LuEyeClosed } from "react-icons/lu";
 const LoginPage = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
-    const { errors, validateLoginForm, setErrors } = useFormValidation();
+    const { errors, validateLoginForm, setErrors } = useAuthFormValidation();
 
     const [formData, setFormData] = useState({
         email: '',
