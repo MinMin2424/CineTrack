@@ -4,10 +4,10 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { searchMedia } from "../../api/MediaApi";
-import AddMovieForm from "./AddMovieForm";
-import AddSeriesForm from "./AddSeriesForm";
-import AddMovieManualForm from "./AddMovieManualForm";
-import AddSeriesManualForm from "./AddSeriesManualForm";
+import AddMovieForm from "./movie/AddMovieForm";
+import AddSeriesForm from "./series/AddSeriesForm";
+import AddMovieManualForm from "./movie/AddMovieManualForm";
+import AddSeriesManualForm from "./series/AddSeriesManualForm";
 import { IoClose } from "react-icons/io5";
 import "../../styles/components/forms/AddMediaFormStyle.css"
 

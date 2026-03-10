@@ -3,10 +3,10 @@
  */
 
 import React, { useState } from "react";
-import { createMovie } from "../../api/MediaApi";
+import { createMovie } from "../../../api/MediaApi";
 import {IoClose} from "react-icons/io5";
-import MediaDetailsForm from "./MediaDetailsForm"
-import "../../styles/components/forms/AddMediaFormStyle.css"
+import MediaDetailsForm from "../MediaDetailsForm"
+import "../../../styles/components/forms/AddMediaFormStyle.css"
 
 const AddMovieForm = ({ omdbData, onSuccess, onBack, onClose}) => {
 
