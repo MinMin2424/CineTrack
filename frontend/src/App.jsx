@@ -6,6 +6,8 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import MainLayout from "./pages/MainLayout";
 import HomePageContainer from "./pages/home/HomePageContainer";
+import MovieDetailContainer from "./pages/movie/MovieDetailContainer";
+import SeriesDetailContainer from "./pages/series/SeriesDetailContainer";
 
 const StatisticsPage = () => <div>Statistics - TODO</div>
 const WatchlistPage = () => <div>Watchlist - TODO</div>
@@ -23,6 +25,8 @@ function App() {
             <Route element={<ProtectedRoute />} >
               <Route element={<MainLayout />} >
                 <Route path="/" element={<HomePageContainer />} />
+                <Route path="/movies/:movieId" element={<MovieDetailContainer />} />
+                <Route path="/series/:seriesId" element={<SeriesDetailContainer />} />
                 <Route path="/statistics" element={<StatisticsPage />} />
                 <Route path="/watchlist" element={<WatchlistPage />} />
                 <Route path="/discovery" element={<DiscoveryPage />} />

@@ -10,6 +10,8 @@ import "../../styles/pages/home/HomePageStyle.css"
 import "../../styles/pages/home/HomeSearchStyle.css"
 import "../../styles/pages/home/HomeSortStyle.css"
 import "../../styles/pages/home/HomeFilterStyle.css"
+import "../../styles//components/layout/SpinnerStyle.css"
+import {useNavigate} from "react-router-dom";
 
 const STATUS_LABELS = {
     COMPLETED: "Completed",
@@ -46,6 +48,12 @@ const HomePageView = ({
     filterRefs,
     onAddMedia,
 }) => {
+    const navigate = useNavigate();
+    const handleCardClick = (item) => {
+        if (item.type === "MOVIE") {
+            navigate(`/movies/${item.id}`);
+        }
+    };
     return (
         <div className="home-page">
 
@@ -62,19 +70,6 @@ const HomePageView = ({
                         onChange={onSearchChange}
                         className="home-search-input"
                     />
-                    {/*{suggestions.length > 0 && (*/}
-                    {/*    <ul className="home-autocomplete-list">*/}
-                    {/*        {suggestions.map((title, idx) => (*/}
-                    {/*            <li*/}
-                    {/*                key={idx}*/}
-                    {/*                onClick={() => onSuggestionClick(title)}*/}
-                    {/*                className="home-autocomplete-item"*/}
-                    {/*            >*/}
-                    {/*                {title}*/}
-                    {/*            </li>*/}
-                    {/*        ))}*/}
-                    {/*    </ul>*/}
-                    {/*)}*/}
                 </div>
 
                 {/* SORT BUTTON */}
@@ -272,7 +267,9 @@ const HomePageView = ({
 
             {/* loading state */}
             {loading && (
-                <p>Loading...</p>
+                <div className="loading">
+                    <div className="spinner"/>
+                </div>
             )}
 
             {/* error state */}
@@ -301,7 +298,11 @@ const HomePageView = ({
             {!loading && !error && displayedItems.length > 0 && (
                 <div className="home-media-grid">
                     {displayedItems.map(item => (
-                        <div key={`${item.type} ${item.id}`} className="home-media-card">
+                        <div
+                            key={`${item.type}-${item.id}`}
+                            className="home-media-card"
+                            onClick={() => handleCardClick(item)}
+                        >
                             <img
                                 src={item.poster || '/images/placeholder.png'}
                                 alt={item.title}
