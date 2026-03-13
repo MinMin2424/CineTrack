@@ -21,8 +21,16 @@ export const getMovie = async (movieId) => {
  * @returns {Promise<any>}
  */
 export const editMovie = async (movieId, data) => {
-    const response = await axiosConfig.put(`/movies/${movieId}`, {data});
+    const response = await axiosConfig.put(`/movies/${movieId}`, data);
     return response.data;
+}
+
+const STATUS_MAP = {
+    WATCHING: "watching",
+    PAUSED: "paused",
+    COMPLETED: "completed",
+    DROPPED: "dropped",
+    PLAN_TO_WATCH: "plan to watch"
 }
 
 /**
@@ -32,7 +40,7 @@ export const editMovie = async (movieId, data) => {
  * @returns {Promise<any>}
  */
 export const changeMovieStatus = async (movieId, status) => {
-    const response = await axiosConfig.put(`/movies/${movieId}/status`, {status});
+    const response = await axiosConfig.put(`/movies/${movieId}/status`, {status: STATUS_MAP[status] ?? status.toLowerCase()});
     return response.data;
 }
 

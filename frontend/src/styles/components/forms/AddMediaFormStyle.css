@@ -1,5 +1,6 @@
 .modal-overlay {
     font: var(--font-primary);
+    color: var(--color-primary-dark-blue-bg);
     position: fixed;
     top: 0;
     left: 0;

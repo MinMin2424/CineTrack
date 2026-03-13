@@ -12,6 +12,8 @@ import { FaRegStar } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import "../../styles/pages/mediaDetail/MovieDetailStyle.css"
 import "../../styles//components/layout/SpinnerStyle.css"
+import DeleteMediaPopup from "../../components/popup/DeleteMediaPopup";
+import EditMediaForm from "../../components/forms/editMedia/EditMediaForm";
 
 const STATUS_OPTIONS = [
     { value: "WATCHING", label: "Watching" },
@@ -37,10 +39,22 @@ const MovieDetailView = ({
     statusOpen,
     statusLoading,
     statusRef,
+    showDeletePopup,
+    deleteLoading,
+    showEditForm,
+    editFormData,
+    editLoading,
+    editError,
     onBack,
     onStatusToggle,
     onStatusChange,
-    onDelete
+    onDeleteClick,
+    onDeleteConfirm,
+    onDeleteCancel,
+    onEditClick,
+    onEditChange,
+    onEditSubmit,
+    onEditClose,
 }) => {
    if (loading) return (
        <div className="loading">
@@ -112,13 +126,17 @@ const MovieDetailView = ({
                                )}
                            </div>
                            {/* EDIT */}
-                           <button className="movie-detail-icon-btn">
+                           <button
+                               className="movie-detail-icon-btn"
+                               onClick={onEditClick}
+                               title="Edit"
+                           >
                                <FiEdit2 />
                            </button>
                            {/* DELETE */}
                            <button
                                className="movie-detail-icon-btn movie-detail-icon-btn--delete"
-                               onClick={onDelete}
+                               onClick={onDeleteClick}
                                title="Delete"
                            >
                                <FaRegTrashCan />
@@ -194,6 +212,28 @@ const MovieDetailView = ({
                    </div>
                </div>
            </div>
+
+           {/* EDIT FORM */}
+           {showEditForm && (
+               <EditMediaForm
+                   formData={editFormData}
+                   onChange={onEditChange}
+                   onSubmit={onEditSubmit}
+                   onClose={onEditClose}
+                   loading={loading}
+                   error={error}
+               />
+           )}
+
+           {/* DELETE CONFIRM POPUP */}
+           {showDeletePopup && (
+                <DeleteMediaPopup
+                    title="movie"
+                    onConfirm={onDeleteConfirm}
+                    onCancel={onDeleteCancel}
+                    loading={deleteLoading}
+                />
+           )}
        </div>
    );
 };
