@@ -220,8 +220,8 @@ const MovieDetailView = ({
                    onChange={onEditChange}
                    onSubmit={onEditSubmit}
                    onClose={onEditClose}
-                   loading={loading}
-                   error={error}
+                   loading={editLoading}
+                   error={editError}
                />
            )}
 

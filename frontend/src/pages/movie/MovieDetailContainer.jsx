@@ -52,7 +52,7 @@ const MovieDetailContainer = () => {
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    });
+    }, []);
 
     const handleStatusChange = async (newStatus) => {
         setStatusOpen(false);
@@ -73,7 +73,6 @@ const MovieDetailContainer = () => {
             await deleteMovie(movieId);
             navigate("/");
         } catch (error) {
-            console.log("Failed to delete movie", error);
             setDeleteLoading(false);
             setShowDeletePopup(false)
         }

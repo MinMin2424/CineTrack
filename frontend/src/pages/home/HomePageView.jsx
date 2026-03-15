@@ -53,6 +53,9 @@ const HomePageView = ({
         if (item.type === "MOVIE") {
             navigate(`/movies/${item.id}`);
         }
+        if (item.type === "SERIES") {
+            navigate(`/series/${item.id}`);
+        }
     };
     return (
         <div className="home-page">

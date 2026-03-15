@@ -9,6 +9,30 @@
 }
 
 /* ===== BACK BTN ===== */
+.movie-detail-top-bar {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.movie-detail-episodes-btn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 28px;
+    gap: 6px;
+    border-radius: 15px;
+    padding: 10px 16px;
+    font: var(--text-primary-label);
+    border: 2px solid var(--color-primary-dark-purple-sidebar);
+    background: var(--color-primary-dark-purple-topbar);
+    color: var(--color-tertiary-pink);
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    box-shadow: 0 0 20px var(--color-primary-dark-purple-sidebar);
+}
+
 .movie-detail-back-btn {
     display: flex;
     align-items: center;
