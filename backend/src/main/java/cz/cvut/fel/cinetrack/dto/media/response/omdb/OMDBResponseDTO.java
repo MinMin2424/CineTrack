@@ -30,6 +30,10 @@ public class OMDBResponseDTO {
     private String totalSeasons;
     @JsonProperty("Response")
     private String response;
+    @JsonProperty("imdbRating")
+    private String imdbRating;
+    @JsonProperty("Plot")
+    private String plot;
 
     public String getImdbID() {
         return imdbID;
@@ -117,5 +121,21 @@ public class OMDBResponseDTO {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getImdbRating() {
+        return imdbRating;
+    }
+
+    public void setImdbRating(String imdbRating) {
+        this.imdbRating = imdbRating;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public void setPlot(String plot) {
+        this.plot = plot;
     }
 }

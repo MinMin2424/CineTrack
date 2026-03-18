@@ -68,6 +68,16 @@ export const searchMedia = async (title, type) => {
 }
 
 /**
+ * GET /media/discover
+ * @param query
+ * @param limit
+ * @returns {Promise<any>}
+ */
+export const discoverMedia = async (query, limit = "10") => {
+    const response = await axiosConfig.get(`/media/discover?query=${encodeURIComponent(query)}&limit=${limit}`);
+    return response.data;}
+
+/**
  * POST /media/movie
  * @param data
  * @returns {Promise<any>}
