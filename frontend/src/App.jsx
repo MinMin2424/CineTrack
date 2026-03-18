@@ -9,9 +9,9 @@ import HomePageContainer from "./pages/home/HomePageContainer";
 import MovieDetailContainer from "./pages/movie/MovieDetailContainer";
 import SeriesDetailContainer from "./pages/series/SeriesDetailContainer";
 import EpisodeDetailContainer from "./pages/episode/EpisodeDetailContainer";
+import WatchlistPageContainer from "./pages/watchlist/WatchlistPageContainer";
 
 const StatisticsPage = () => <div>Statistics - TODO</div>
-const WatchlistPage = () => <div>Watchlist - TODO</div>
 const DiscoveryPage = () => <div>Discovery - TODO</div>
 const SettingsPage = () => <div>Settings - TODO</div>
 
@@ -30,7 +30,7 @@ function App() {
                 <Route path="/series/:seriesId" element={<SeriesDetailContainer />} />
                 <Route path="/series/:seriesId/episodes/:episodeNumber" element={<EpisodeDetailContainer />} />
                 <Route path="/statistics" element={<StatisticsPage />} />
-                <Route path="/watchlist" element={<WatchlistPage />} />
+                <Route path="/watchlist" element={<WatchlistPageContainer />} />
                 <Route path="/discovery" element={<DiscoveryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>

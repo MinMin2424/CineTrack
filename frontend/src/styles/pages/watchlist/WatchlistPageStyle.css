@@ -1,0 +1,41 @@
+/* ===== EMPTY STATE ===== */
+
+.watchlist-empty-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 24px;
+    opacity: 0.7;
+}
+
+/* ===== ERROR STATE ===== */
+
+.watchlist-error {
+    color: var(--color-badge-dropped-bg);
+    text-align: center;
+    padding: 40px;
+    font: 400 16px var(--font-primary);
+}
+
+.watchlist-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 16px;
+    display: flex;
+    gap: 12px;
+    z-index: 3;
+    justify-content: center;
+    align-items: center;
+}
+
+.watchlist-title {
+    color: var(--color-white);
+    font: var(--text-input);
+    line-height: 1.2;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+}
