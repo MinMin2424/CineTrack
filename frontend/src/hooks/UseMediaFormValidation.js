@@ -63,7 +63,8 @@ export const useMediaFormValidation = (formData, rules = []) => {
         }
 
         setFieldErrors(errors);
-    }, [formData.releaseYear, formData.runtime, formData.watchStartDate, formData.watchEndDate, formData.status, formData.season, formData.episodeCount, rules, formData.rating]);
+        // eslint-disable-next-line
+    }, [formData.releaseYear, formData.runtime, formData.watchStartDate, formData.watchEndDate, formData.status, formData.season, formData.episodeCount, formData.rating]);
 
     return {
         fieldErrors,

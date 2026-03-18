@@ -3,10 +3,10 @@
  */
 
 import React, { useState } from "react";
-import { createSeries } from "../../api/MediaApi";
+import { createSeries } from "../../../api/MediaApi";
 import {IoClose} from "react-icons/io5";
-import MediaDetailsForm from "./MediaDetailsForm"
-import "../../styles/components/forms/AddMediaFormStyle.css"
+import MediaDetailsForm from "../MediaDetailsForm"
+import "../../../styles/components/forms/AddMediaFormStyle.css"
 
 const AddSeriesForm = ({ omdbData, onSuccess, onBack, onClose }) => {
 

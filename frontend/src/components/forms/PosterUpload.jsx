@@ -71,7 +71,7 @@ const PosterUpload = ({
 
     return (
         <div className="poster-upload-wrapper">
-            <label className="modal-label">Poster *</label>
+            <label className="modal-label">Poster <span className="required-star"> *</span></label>
             {value ? (
                 <div className="poster-upload-preview">
                     <img src={value} alt="poster preview" className="poster-upload-img" />

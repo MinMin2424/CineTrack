@@ -1,5 +1,6 @@
 .modal-overlay {
     font: var(--font-primary);
+    color: var(--color-primary-dark-blue-bg);
     position: fixed;
     top: 0;
     left: 0;
@@ -303,4 +304,8 @@
 .modal-error {
     color: var(--color-error-red);
     font: 600 16px var(--font-primary);
+}
+
+.required-star {
+    color: var(--color-error-red);
 }

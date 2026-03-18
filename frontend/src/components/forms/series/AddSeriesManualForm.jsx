@@ -5,11 +5,12 @@
 import React, { useState, useEffect } from "react";
 import {IoClose} from "react-icons/io5";
 import {IoIosArrowDown} from "react-icons/io";
-import { createMovieManually, getAllGenres, getAllLanguages, getAllCountries } from "../../api/MediaApi";
-import MultiSelectDropdown from "./MultiSelectDropdown";
-import "../../styles/components/forms/AddMediaFormStyle.css"
-import PosterUpload from "./PosterUpload";
-import { useMediaFormValidation } from "../../hooks/UseMediaFormValidation";
+import { createSeriesManually, getAllGenres, getAllLanguages, getAllCountries } from "../../../api/MediaApi";
+import MultiSelectDropdown from "../MultiSelectDropdown";
+import "../../../styles/components/forms/AddMediaFormStyle.css"
+import PosterUpload from "../PosterUpload";
+import {useMediaFormValidation} from "../../../hooks/UseMediaFormValidation";
+import InputField from "../InputField";
 
 const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },
@@ -19,16 +20,17 @@ const STATUS_OPTIONS = [
     { value: "dropped", label: "Dropped" },
 ];
 
-const AddMovieManualForm = ({
+const AddSeriesManualForm = ({
     onSuccess,
     onBack,
     onClose,
-    onSwitchToSeries,
+    onSwitchToMovie,
 }) => {
     const [formData, setFormData] = useState({
         title: "",
         releaseYear: "",
-        runtime: "",
+        season: "1",
+        episodeCount: "",
         posterUrl: "",
         watchStartDate: "",
         watchEndDate: "",
@@ -45,8 +47,9 @@ const AddMovieManualForm = ({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [submitErrors, setSubmitErrors] = useState({});
-    const {fieldErrors: inlineErrors} = useMediaFormValidation(formData, ["rating", "dates", "releaseYear", "runtime"]);
+    const {fieldErrors: inlineErrors} = useMediaFormValidation(formData, ["rating", "dates", "releaseYear", "season", "episodeCount"]);
     const fieldErrors = {...submitErrors, ...inlineErrors}
+    const isCompleted = formData.status === "completed";
 
     useEffect(() => {
         Promise.all([getAllGenres(), getAllLanguages(), getAllCountries()])
@@ -78,7 +81,8 @@ const AddMovieManualForm = ({
         const e = {};
         if (!formData.title.trim()) e.title = "Title is required";
         if (!formData.releaseYear) e.releaseYear = "Released year is required";
-        if (!formData.runtime) e.runtime = "Runtime is required";
+        if (!formData.season) e.season = "Season is required";
+        if (!formData.episodeCount) e.episodeCount = "Episode count is required";
         if (!formData.posterUrl.trim()) e.posterUrl = "Poster is required";
         if (formData.genre.length === 0) e.genre = "At least one genre is required";
         if (formData.language.length === 0) e.language = "At least one language is required";
@@ -95,10 +99,11 @@ const AddMovieManualForm = ({
         setLoading(true);
         setError(null);
         try {
-            await createMovieManually({
+            await createSeriesManually({
                 title: formData.title,
                 releaseYear: parseInt(formData.releaseYear, 10),
-                runtime: parseInt(formData.runtime, 10),
+                season: parseInt(formData.season, 10),
+                episodeCount: parseInt(formData.episodeCount, 10),
                 posterUrl: formData.posterUrl,
                 watchStartDate: formData.watchStartDate || null,
                 watchEndDate: formData.watchEndDate || null,
@@ -111,7 +116,7 @@ const AddMovieManualForm = ({
             });
             onSuccess();
         } catch (error) {
-            setError(error.response?.data?.error || "Failed to add movie. Please try again.")
+            setError(error.response?.data?.error || "Failed to add TV series. Please try again.")
         } finally {
             setLoading(false);
         }
@@ -133,90 +138,79 @@ const AddMovieManualForm = ({
                     {/* TYPE TOGGLE */}
                     <label className="modal-label">Media Type</label>
                     <div className="modal-type-toggle">
-                        <button className="modal-type-btn active">Movie</button>
-                        <button className="modal-type-btn" onClick={onSwitchToSeries}>Series</button>
+                        <button className="modal-type-btn" onClick={onSwitchToMovie}>Movie</button>
+                        <button className="modal-type-btn active">Series</button>
                     </div>
 
                     {/* TITLE */}
-                    <label className="modal-label">Title *</label>
-                    <input
-                        type="text"
+                    <InputField
+                        label="Title" required autoFocus
                         name="title"
-                        autoFocus
-                        className={`modal-input ${fieldErrors.title ? "input-error" : ""}`}
                         placeholder="Enter movie title"
                         value={formData.title}
                         onChange={handleChange}
+                        error={fieldErrors.title}
                     />
-                    {fieldErrors.title && <p className="field-error">{fieldErrors.title}</p>}
 
-                    {/* RELEASED YEAR + RUNTIME */}
+                    {/* RELEASED YEAR + SEASON + EPISODES */}
                     <div className="modal-row">
-                        <div className="modal-field">
-                            <label className="modal-label">Released year *</label>
-                            <input
-                                type="number"
-                                name="releaseYear"
-                                className={`modal-input ${fieldErrors.releaseYear ? "input-error" : ""}`}
-                                placeholder="2026"
-                                value={formData.releaseYear}
-                                onChange={handleChange}
-                            />
-                            {fieldErrors.releaseYear && <p className="field-error">{fieldErrors.releaseYear}</p>}
-                        </div>
-                        <div className="modal-field">
-                            <label className="modal-label">Runtime *</label>
-                            <input
-                                type="number"
-                                name="runtime"
-                                className={`modal-input ${fieldErrors.runtime ? "input-error" : ""}`}
-                                placeholder="119 min"
-                                value={formData.runtime}
-                                onChange={handleChange}
-                            />
-                            {fieldErrors.runtime && <p className="field-error">{fieldErrors.runtime}</p>}
-                        </div>
+                        <InputField
+                            label="Released year" required
+                            type="number"
+                            name="releaseYear"
+                            placeholder="2026"
+                            value={formData.releaseYear}
+                            onChange={handleChange}
+                            error={fieldErrors.releaseYear}
+                        />
+                        <InputField
+                            label="Season" required
+                            type="number"
+                            name="season"
+                            placeholder="2"
+                            value={formData.season}
+                            onChange={handleChange}
+                            error={fieldErrors.season}
+                        />
+                        <InputField
+                            label="Episode count" required
+                            type="number"
+                            name="episodeCount"
+                            placeholder="24"
+                            value={formData.episodeCount}
+                            onChange={handleChange}
+                            error={fieldErrors.episodeCount}
+                        />
                     </div>
 
                     {/* DATES */}
                     <div className="modal-row">
-                        <div className="modal-field">
-                            <label className="modal-label">
-                                Start watching date{formData.status === "completed" ? "*" : ""}
-                            </label>
-                            <input
-                                type="date"
-                                name="watchStartDate"
-                                className={`modal-input ${fieldErrors.watchStartDate ? "input-error" : ""}`}
-                                value={formData.watchStartDate}
-                                onChange={handleChange}
-                            />
-                            {fieldErrors.watchStartDate && <p className="field-error">{fieldErrors.watchStartDate}</p>}
-                        </div>
-                        <div className="modal-field">
-                            <label className="modal-label">
-                                End watching date{formData.status === "completed" ? "*" : ""}
-                            </label>
-                            <input
-                                type="date"
-                                name="watchEndDate"
-                                className={`modal-input ${fieldErrors.watchEndDate ? "input-error" : ""}`}
-                                value={formData.watchEndDate}
-                                onChange={handleChange}
-                            />
-                            {fieldErrors.watchEndDate && <p className="field-error">{fieldErrors.watchEndDate}</p>}
-                        </div>
+                        <InputField
+                            label={<>Start watching date {isCompleted && <span className="required-star"> *</span>}</>}
+                            type="date"
+                            name="watchStartDate"
+                            value={formData.watchStartDate}
+                            onChange={handleChange}
+                            error={fieldErrors.watchStartDate}
+                        />
+                        <InputField
+                            label={<>End watching date {isCompleted && <span className="required-star"> *</span>}</>}
+                            type="date"
+                            name="watchEndDate"
+                            value={formData.watchEndDate}
+                            onChange={handleChange}
+                            error={fieldErrors.watchEndDate}
+                        />
                     </div>
 
                     {/* STATUS + RATING */}
                     <div className="modal-row">
                         <div className="modal-field">
-                            <label className="modal-label">Watch status *</label>
+                            <label className="modal-label">Watch status <span className="required-star"> *</span></label>
                             <div className="modal-select-wrapper">
-                                <select
+                                <InputField
+                                    type="select"
                                     name="status"
-                                    className="modal-input modal-select"
-                                    value={formData.status}
                                     onChange={handleChange}
                                 >
                                     {STATUS_OPTIONS.map(status => (
@@ -224,42 +218,39 @@ const AddMovieManualForm = ({
                                             {status.label}
                                         </option>
                                     ))}
-                                </select>
+                                </InputField>
                                 <IoIosArrowDown className="modal-select-icon" />
                             </div>
                         </div>
-                        <div className="modal-field">
-                            <label className="modal-label">Rating (out of 10)</label>
-                            <input
-                                type="number"
-                                name="rating"
-                                className={`modal-input ${inlineErrors.rating ? "input-error" : ""}`}
-                                placeholder="8.5"
-                                min="0"
-                                max="10"
-                                step="0.1"
-                                value={formData.rating}
-                                onChange={handleChange}
-                            />
-                            {fieldErrors.rating && <p className="field-error">{fieldErrors.rating}</p>}
-                        </div>
+                        <InputField
+                            label="Rating (out of 10)"
+                            type="number"
+                            name="rating"
+                            placeholder="8.5"
+                            min="0"
+                            max="10"
+                            step="0.1"
+                            value={formData.rating}
+                            onChange={handleChange}
+                            error={fieldErrors.rating}
+                        />
                     </div>
 
                     {/* NOTES */}
-                    <label className="modal-label">Personal notes</label>
-                    <textarea
+                    <InputField
+                        label="Personal notes"
+                        type="textarea"
                         name="notes"
-                        className="modal-input modal-textarea"
-                        placeholder="Add your thoughts, reviews, reminders, ..."
+                        rows={4}
                         value={formData.notes}
                         onChange={handleChange}
-                        rows={4}
+                        placeholder="Add your thoughts, reviews, reminders, ..."
                     />
 
                     {/* GENRES */}
                     <MultiSelectDropdown
-                        label="Genres *"
-                        placeholder="Choose movie genres"
+                        label={<>Genres <span className="required-star"> *</span></>}
+                        placeholder="Choose TV series genres"
                         options={genreOptions}
                         selected={formData.genre}
                         onToggle={val => handleMultiToggle("genre", val)}
@@ -268,8 +259,8 @@ const AddMovieManualForm = ({
 
                     {/* LANGUAGES */}
                     <MultiSelectDropdown
-                        label="Languages *"
-                        placeholder="Choose movie languages"
+                        label={<>Languages <span className="required-star"> *</span></>}
+                        placeholder="Choose TV series languages"
                         options={languageOptions}
                         selected={formData.language}
                         onToggle={val => handleMultiToggle("language", val)}
@@ -278,8 +269,8 @@ const AddMovieManualForm = ({
 
                     {/* COUNTRIES */}
                     <MultiSelectDropdown
-                        label="Countries *"
-                        placeholder="Choose movie countries"
+                        label={<>Countries <span className="required-star"> *</span></>}
+                        placeholder="Choose TV series countries"
                         options={countryOptions}
                         selected={formData.country}
                         onToggle={val => handleMultiToggle("country", val)}
@@ -312,7 +303,7 @@ const AddMovieManualForm = ({
                         onClick={handleSubmit}
                         disabled={loading}
                     >
-                        {loading ? "Adding..." : "Add Movie"}
+                        {loading ? "Adding..." : "Add TV series"}
                     </button>
                 </div>
 
@@ -321,4 +312,4 @@ const AddMovieManualForm = ({
     );
 };
 
-export default AddMovieManualForm;
+export default AddSeriesManualForm;

@@ -2,10 +2,11 @@
  * Created by minmin_tranova on 26.02.2026
  */
 
-import React, {useEffect} from "react";
+import React from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import "../../styles/components/forms/AddMediaFormStyle.css"
 import {useMediaFormValidation} from "../../hooks/UseMediaFormValidation";
+import InputField from "./InputField";
 
 const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },
@@ -31,65 +32,48 @@ const MediaDetailsForm = ({
         if (hasErrors) return;
         onSubmit();
     };
+    const isCompleted = formData.status === "completed";
 
     return (
         <>
             <div className="modal-body">
 
                 {/* TITLE */}
-                <label className="modal-label">Title *</label>
-                <input
-                    type="text"
+                <InputField
+                    label="Title" required readOnly
                     name="title"
-                    className="modal-input"
                     value={formData.title}
                     onChange={onChange}
-                    readOnly
                 />
 
                 {/* START / END DATE */}
                 <div className="modal-row">
-                    <div className="modal-field">
-                        <label className="modal-label">
-                            Start watching date{formData.status === "completed" ? "*" : ""}
-                        </label>
-                        <input
-                            type="date"
-                            name="watchStartDate"
-                            className={`modal-input ${fieldErrors.watchStartDate ? "input-error" : ""}`}
-                            value={formData.watchStartDate || ""}
-                            onChange={onChange}
-                        />
-                        {fieldErrors.watchStartDate && (
-                            <p className="field-error">{fieldErrors.watchStartDate}</p>
-                        )}
-                    </div>
-                    <div className="modal-field">
-                        <label className="modal-label">
-                            End watching date{formData.status === "completed" ? "*" : ""}
-                        </label>
-                        <input
-                            type="date"
-                            name="watchEndDate"
-                            className={`modal-input ${fieldErrors.watchEndDate ? "input-error" : ""}`}
-                            value={formData.watchEndDate || ""}
-                            onChange={onChange}
-                        />
-                        {fieldErrors.watchEndDate && (
-                            <p className="field-error">{fieldErrors.watchEndDate}</p>
-                        )}
-                    </div>
+                    <InputField
+                        label={<>Start watching date {isCompleted && <span className="required-star"> *</span>}</>}
+                        type="date"
+                        name="watchStartDate"
+                        value={formData.watchStartDate || ""}
+                        onChange={onChange}
+                        error={fieldErrors.watchStartDate}
+                    />
+                    <InputField
+                        label={<>End watching date {isCompleted && <span className="required-star"> *</span>}</>}
+                        type="date"
+                        name="watchEndDate"
+                        value={formData.watchEndDate || ""}
+                        onChange={onChange}
+                        error={fieldErrors.watchEndDate}
+                    />
                 </div>
 
                 {/* STATUS + RATING */}
                 <div className="modal-row">
                     <div className="modal-field">
-                        <label className="modal-label">Watch status *</label>
+                        <label className="modal-label">Watch status <span className="required-star"> *</span></label>
                         <div className="modal-select-wrapper">
-                            <select
+                            <InputField
+                                type="select"
                                 name="status"
-                                className="modal-input modal-select"
-                                value={formData.status}
                                 onChange={onChange}
                             >
                                 {STATUS_OPTIONS.map(status => (
@@ -97,39 +81,35 @@ const MediaDetailsForm = ({
                                         {status.label}
                                     </option>
                                 ))}
-                            </select>
+                            </InputField>
                             <IoIosArrowDown className="modal-select-icon" />
                         </div>
                     </div>
-                    <div className="modal-field">
-                        <label className="modal-label">Rating (out of 10)</label>
-                        <input
-                            type="number"
-                            name="rating"
-                            className={`modal-input ${fieldErrors.rating ? "input-error" : ""}`}
-                            placeholder="8.5"
-                            min="0"
-                            max="10"
-                            step="0.1"
-                            value={formData.rating}
-                            onChange={onChange}
-                        />
-                        {fieldErrors.rating && (
-                            <p className="field-error">{fieldErrors.rating}</p>
-                        )}
-                    </div>
+                    <InputField
+                        label="Rating (out of 10)"
+                        type="number"
+                        name="rating"
+                        placeholder="8.5"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        value={formData.rating}
+                        onChange={onChange}
+                        error={fieldErrors.rating}
+                    />
                 </div>
 
                 {/* PERSONAL NOTES */}
-                <label className="modal-label">Personal notes</label>
-                <textarea
+                <InputField
+                    label="Personal notes"
+                    type="textarea"
                     name="notes"
-                    className="modal-input modal-textarea"
-                    placeholder="Add your thoughts, reviews, reminders, ..."
+                    rows={4}
                     value={formData.notes}
                     onChange={onChange}
-                    rows={4}
+                    placeholder="Add your thoughts, reviews, reminders, ..."
                 />
+
                 <div className="modal-error-wrapper">
                     {error && <p className="modal-error">{error}</p>}
                 </div>

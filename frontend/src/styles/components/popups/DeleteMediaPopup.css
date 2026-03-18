@@ -1,0 +1,96 @@
+.delete-popup-overlay {
+    font: var(--font-primary);
+    color: var(--color-primary-dark-blue-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-primary-dark-purple-bg-dropfown);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 1; }
+}
+
+.delete-popup {
+    width: 90%;
+    max-width: 380px;
+    min-height: 160px;
+    background: var(--color-white);
+    border-radius: var(--border-radius-primary);
+    box-shadow: 0 0 20px var(--color-white);
+    animation: slideUp 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 32px;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.delete-popup-title {
+    font: var(--text-popup-label);
+    margin: 0;
+}
+
+.delete-popup-text {
+    font: var(--text-popup-sublabel);
+    color: var(--color-badge-dropped-bg);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.delete-popup-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.delete-popup-cancel {
+    padding: 8px 24px;
+    border-radius: var(--border-radius-primary);
+    border: none;
+    background: var(--color-cancel-btn);
+    font: var(--text-secondary-label);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.delete-popup-cancel:hover {
+    box-shadow: 0 0 10px var(--color-cancel-btn);
+}
+
+.delete-popup-confirm {
+    padding: 8px 24px;
+    border-radius: var(--border-radius-primary);
+    border: none;
+    background: var(--color-error-red);
+    color: var(--color-white);
+    font: var(--text-secondary-label);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.delete-popup-confirm:hover {
+    box-shadow: 0 0 10px var(--color-error-red);
+}

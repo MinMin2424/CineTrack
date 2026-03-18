@@ -10,7 +10,8 @@ import "../../styles/components/layout/TopbarStyle.css"
 const TopBar = ({ onMenuToggle }) => {
     const { user, userProfile } = useAuth();
     const username = userProfile?.profile?.username || user?.username || "User";
-    const avatar = userProfile?.header?.avatar;
+    const rawAvatar = userProfile?.header?.avatar;
+    const avatar = rawAvatar?.startsWith("http") ? rawAvatar : `/${rawAvatar}`;
 
     return (
         <header className="topbar">

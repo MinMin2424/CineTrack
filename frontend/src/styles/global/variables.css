@@ -11,6 +11,8 @@
     --text-title-form: 600 28px var(--font-primary);
     --text-primary-label: 600 16px var(--font-primary);
     --text-secondary-label: 500 16px var(--font-primary);
+    --text-popup-label: 600 18px var(--font-primary);
+    --text-popup-sublabel: 500 14px var(--font-primary);
     --text-subtitle: 500 16px var(--font-primary);
     --text-input: 600 16px var(--font-primary);
     --text-error: 500 14px var(--font-primary);
@@ -49,10 +51,14 @@
     --color-light-blue: #392ABE;
     --color-light-blue-border: #262BA3;
     --color-light-blue-bg: rgba(38, 43, 163, 0.6); /* #262BA3FF */
+    --color-input-bg: rgba(117, 117, 117, 0.2);
+    --color-input-border: rgba(117, 117, 117, 0.3);
+    --color-cancel-btn: rgba(39, 53, 69, 0.2);
 
     --color-primary-pink: #FFA6FE;
     --color-secondary-pink: rgba(212, 129, 211, 0.8); /* #D481D3FF */
     --color-tertiary-pink: #FFD1FE;
+    --color-tertiary-pink-opacity: rgba(255, 209, 254, 0.6); /* #FFD1FE */
     --color-input-pink: #D481D3;
     --color-active-nav-pink: #543E82;
     --color-light-pink: #EB7A96;
