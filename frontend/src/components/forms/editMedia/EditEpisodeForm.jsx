@@ -2,7 +2,7 @@
  * Created by minmin_tranova on 15.03.2026
  */
 
-import React, {use} from "react";
+import React from "react";
 import {IoClose} from "react-icons/io5";
 import {useMediaFormValidation} from "../../../hooks/UseMediaFormValidation";
 import InputField from "../InputField";
