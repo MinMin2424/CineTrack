@@ -13,6 +13,7 @@ import "../../styles/components/layout/SpinnerStyle.css"
 import "../../styles/pages/discovery/DiscoveryPageStyle.css"
 import AddMovieForm from "../../components/forms/movie/AddMovieForm";
 import AddSeriesForm from "../../components/forms/series/AddSeriesForm";
+import Toast from "../../components/layout/Toast";
 
 const StarRating = ({rating}) => {
     const num = parseInt(rating);
@@ -41,12 +42,14 @@ const DiscoveryPageView = ({
     searched,
     showAddForm,
     selectedMedia,
+    toast,
     onQueryChange,
     onKeyDown,
     onSearch,
     onAddClick,
     onAddSuccess,
     onFormClose,
+    onToastClose,
 }) => {
     const showShip = !loading && results.length === 0;
     const showNoResults = !loading && !error && searched && results.length === 0;
@@ -149,16 +152,25 @@ const DiscoveryPageView = ({
                 selectedMedia.Type === "series"
                     ? <AddSeriesForm
                         omdbData={selectedMedia}
-                        onSuccess={() => onAddSuccess(selectedMedia.imdbID)}
+                        onSuccess={() => onAddSuccess(selectedMedia.imdbID, selectedMedia.Title)}
                         onBack={onFormClose}
                         onClose={onFormClose}
                     />
                     : <AddMovieForm
                         omdbData={selectedMedia}
-                        onSuccess={() => onAddSuccess(selectedMedia.imdbID)}
+                        onSuccess={() => onAddSuccess(selectedMedia.imdbID, selectedMedia.Title)}
                         onBack={onFormClose}
                         onClose={onFormClose}
                     />
+            )}
+
+            {/* TOAST */}
+            {toast && (
+                <Toast
+                    key={toast.id}
+                    message={toast.message}
+                    onClose={onToastClose}
+                />
             )}
         </div>
     );

@@ -42,7 +42,7 @@ const AddSeriesForm = ({ omdbData, onSuccess, onBack, onClose }) => {
                 watchStartDate: formData.watchStartDate || null,
                 watchEndDate: formData.watchEndDate || null,
             });
-            onSuccess();
+            onSuccess(formData.title);
         } catch (error) {
             setError(error.response?.data?.error || "Failed to add TV series. Please try again.")
         } finally {

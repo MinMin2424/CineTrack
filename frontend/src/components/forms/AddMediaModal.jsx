@@ -71,8 +71,8 @@ const AddMediaModal = ({ onClose, onMediaAdded }) => {
         setMode("none");
     }
 
-    const handleSuccess = () => {
-        onMediaAdded();
+    const handleSuccess = (title) => {
+        onMediaAdded(title);
         onClose();
     };
 

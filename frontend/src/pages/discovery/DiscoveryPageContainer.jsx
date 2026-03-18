@@ -5,6 +5,7 @@
 import React, { useState, useCallback } from "react";
 import {discoverMedia, getMediaOverview} from "../../api/MediaApi";
 import DiscoveryPageView from "./DiscoveryPageView";
+import {useToast} from "../../hooks/UseToast";
 
 const DiscoveryPageContainer = () => {
     const [query, setQuery] = useState("");
@@ -17,15 +18,7 @@ const DiscoveryPageContainer = () => {
     const [showAddForm, setShowAddForm] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(null);
 
-    // const fetchAddedIds = useCallback(async () => {
-    //     try {
-    //         const data = await getMediaOverview();
-    //         const ids = new Set(data.map(item => item.imdbID).filter(Boolean));
-    //         setAddedIds(ids);
-    //     } catch (error) {
-    //         console.error("Failed to fetch existing media");
-    //     }
-    // }, []);
+    const {toast, showToast, hideToast} = useToast();
 
     const handleSearch = async (searchQuery = query) => {
         if (!searchQuery.trim()) return;
@@ -69,10 +62,11 @@ const DiscoveryPageContainer = () => {
         setShowAddForm(true);
     };
 
-    const handleAddSuccess = (imdbID) => {
+    const handleAddSuccess = (imdbID, title) => {
         setAddedIds(prev => new Set([...prev, imdbID]));
         setShowAddForm(false);
         setSelectedMedia(null);
+        showToast(`${title} has been successfully added to your collection.`)
     };
 
     const handleFormClose = () => {
@@ -90,12 +84,14 @@ const DiscoveryPageContainer = () => {
             searched={searched}
             showAddForm={showAddForm}
             selectedMedia={selectedMedia}
+            toast={toast}
             onQueryChange={handleQueryChange}
             onKeyDown={handleKeyDown}
             onSearch={handleSearch}
             onAddClick={handleAddClick}
             onAddSuccess={handleAddSuccess}
             onFormClose={handleFormClose}
+            onToastClose={hideToast}
         />
     );
 };

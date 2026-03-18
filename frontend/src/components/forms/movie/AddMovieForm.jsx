@@ -43,7 +43,7 @@ const AddMovieForm = ({ omdbData, onSuccess, onBack, onClose}) => {
                 watchStartDate: formData.watchStartDate || null,
                 watchEndDate: formData.watchEndDate || null,
             });
-            onSuccess();
+            onSuccess(formData.title);
         } catch (error) {
             setError(error.response?.data?.error || "Failed to add movie. Please try again.")
         } finally {

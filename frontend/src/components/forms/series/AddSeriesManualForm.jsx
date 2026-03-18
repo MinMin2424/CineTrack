@@ -114,7 +114,7 @@ const AddSeriesManualForm = ({
                 language: formData.language,
                 country: formData.country,
             });
-            onSuccess();
+            onSuccess(formData.title);
         } catch (error) {
             setError(error.response?.data?.error || "Failed to add TV series. Please try again.")
         } finally {
