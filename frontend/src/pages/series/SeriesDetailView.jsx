@@ -47,6 +47,7 @@ const SeriesDetailView = ({
     editLoading,
     editError,
     onBack,
+    onEpisodesClick,
     onStatusToggle,
     onStatusChange,
     onDeleteClick,
@@ -82,7 +83,7 @@ const SeriesDetailView = ({
                 <button className="movie-detail-back-btn" onClick={onBack}>
                     <IoArrowBack />
                 </button>
-                <button className="movie-detail-episodes-btn">
+                <button className="movie-detail-episodes-btn" onClick={onEpisodesClick}>
                     Episodes
                     <IoArrowForward />
                 </button>
