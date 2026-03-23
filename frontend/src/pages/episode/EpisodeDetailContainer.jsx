@@ -2,11 +2,18 @@
  * Created by minmin_tranova on 15.03.2026
  */
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getEpisode, changeEpisodeStatus, editEpisode } from "../../api/EpisodeApi";
 import { getSeries } from "../../api/SeriesApi";
 import EpisodeDetailView from "./EpisodeDetailView";
+
+const STATUS_MAP = {
+    "plan to watch": "PLAN_TO_WATCH",
+    "watching": "WATCHING",
+    "completed": "COMPLETED",
+    "dropped": "DROPPED"
+};
 
 const EpisodeDetailContainer = () => {
     const {seriesId, episodeNumber} = useParams();
@@ -17,15 +24,10 @@ const EpisodeDetailContainer = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [statusOpen, setStatusOpen] = useState(false);
-    const [statusLoading, setStatusLoading] = useState(false);
-
     const [showEditForm, setShowEditForm] = useState(false);
     const [editFormData, setEditFormData] = useState({});
     const [editLoading, setEditLoading] = useState(false);
     const [editError, setEditError] = useState(null);
-
-    const statusRef = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,42 +49,15 @@ const EpisodeDetailContainer = () => {
         fetchData();
     }, [seriesId, episodeNumber]);
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (statusRef.current && !statusRef.current.contains(e.target)) {
-                setStatusOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
-
-    const handleStatusChange = async (newStatus) => {
-        setStatusOpen(false);
-        setStatusLoading(true);
-        try {
-            const updated = await changeEpisodeStatus(seriesId, episodeNumber, newStatus);
-            setEpisode(updated);
-            setSeries(prev => ({
-                ...prev,
-                episodeList: prev.episodeList?.map(ep =>
-                    ep.episode === updated.episode ? {...ep, status: updated.status} : ep
-                ),
-            }))
-        } catch (error) {
-            console.log("Failed to change status", error);
-        } finally {
-            setStatusLoading(false);
-        }
-    };
-
     const handleEpisodeSelect = (num) => {
         navigate(`/series/${seriesId}/episodes/${num}`);
     };
 
     const handleEditOpen = () => {
+        const currentStatus = episode.status?.toLowerCase().replace(/_/g, " ") || "plan to watch";
         setEditFormData({
-            rating: episode.rating != null ? String(episode.rating) : "",
+            status: currentStatus,
+            rating: episode.rating != null && episode.rating > 0 ? String(episode.rating) : "",
             notes: episode.notes || "",
         });
         setEditError(null);
@@ -98,11 +73,23 @@ const EpisodeDetailContainer = () => {
         setEditLoading(true);
         setEditError(null);
         try {
+            const newStatusEnum = STATUS_MAP[editFormData.status || episode.status];
+            if (newStatusEnum !== episode.status) {
+                await changeEpisodeStatus(seriesId, episodeNumber, newStatusEnum);
+            }
             const updated = await editEpisode(seriesId, episodeNumber, {
                 rating: editFormData.rating || null,
                 notes: editFormData.notes || null,
             });
-            setEpisode(updated);
+            setEpisode({...updated, status: newStatusEnum});
+            setSeries(prev => ({
+                ...prev,
+                episodeList: prev.episodeList?.map(ep =>
+                    ep.episode === parseInt(episodeNumber)
+                        ? { ...ep, status: newStatusEnum, rating: updated.rating }
+                        : ep
+                ),
+            }))
             setShowEditForm(false);
         } catch (error) {
             setEditError(error.response?.data?.error || "Failed to save changes.");
@@ -119,9 +106,6 @@ const EpisodeDetailContainer = () => {
             series={series}
             loading={loading}
             error={error}
-            statusOpen={statusOpen}
-            statusLoading={statusLoading}
-            statusRef={statusRef}
             showEditForm={showEditForm}
             editFormData={editFormData}
             editLoading={editLoading}
@@ -129,8 +113,6 @@ const EpisodeDetailContainer = () => {
             currentEpisodeNumber={parseInt(episodeNumber)}
             onBack={handleBack}
             onEpisodeSelect={handleEpisodeSelect}
-            onStatusToggle={() => setStatusOpen(prev => !prev)}
-            onStatusChange={handleStatusChange}
             onEditClick={handleEditOpen}
             onEditChange={handleEditChange}
             onEditSubmit={handleEditSubmit}

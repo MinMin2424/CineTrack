@@ -4,9 +4,17 @@
 
 import React from "react";
 import {IoClose} from "react-icons/io5";
+import {IoIosArrowDown} from "react-icons/io";
 import {useMediaFormValidation} from "../../../hooks/UseMediaFormValidation";
 import InputField from "../InputField";
 import "../../../styles/components/forms/AddMediaFormStyle.css"
+
+const STATUS_OPTIONS = [
+    { value: "plan to watch", label: "Plan to Watch" },
+    { value: "watching", label: "Watching" },
+    { value: "completed", label: "Completed" },
+    { value: "dropped", label: "Dropped" },
+];
 
 const EditEpisodeForm = ({
     formData,
@@ -36,18 +44,39 @@ const EditEpisodeForm = ({
               </div>
               {/* BODY */}
               <div className="modal-body">
-                  <InputField
-                      label="Rating (out of 10)"
-                      type="number"
-                      name="rating"
-                      placeholder="8.5"
-                      min="0"
-                      max="10"
-                      step="0.1"
-                      value={formData.rating ?? ""}
-                      onChange={onChange}
-                      error={fieldErrors.rating}
-                  />
+                  <div className="modal-row">
+                      <div className="modal-field">
+                          <label className="modal-label">
+                              Watch status
+                              <span className="required-star"> *</span>
+                          </label>
+                          <div className="modal-select-wrapper">
+                              <InputField
+                                  type="select"
+                                  name="status"
+                                  value={formData.status || ""}
+                                  onChange={onChange}
+                              >
+                                  {STATUS_OPTIONS.map(s => (
+                                      <option key={s.value} value={s.value}>{s.label}</option>
+                                  ))}
+                              </InputField>
+                              <IoIosArrowDown className="modal-select-icon"/>
+                          </div>
+                      </div>
+                      <InputField
+                          label="Rating (out of 10)"
+                          type="number"
+                          name="rating"
+                          placeholder="8.5"
+                          min="0"
+                          max="10"
+                          step="0.1"
+                          value={formData.rating ?? ""}
+                          onChange={onChange}
+                          error={fieldErrors.rating}
+                      />
+                  </div>
                   <InputField
                       label="Personal notes"
                       type="textarea"

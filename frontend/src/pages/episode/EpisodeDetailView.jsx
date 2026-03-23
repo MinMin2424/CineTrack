@@ -5,12 +5,14 @@
 import React from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { FiEdit2 } from "react-icons/fi";
-import { IoChatboxOutline } from "react-icons/io5";
-import { FaRegStar } from "react-icons/fa";
-import { IoIosArrowDown } from "react-icons/io";
+import {FaRegStar, FaStar} from "react-icons/fa";
 import "../../styles/pages/mediaDetail/EpisodeDetailStyle.css"
 import "../../styles/components/layout/SpinnerStyle.css"
 import EditEpisodeForm from "../../components/forms/editMedia/EditEpisodeForm"
+import { FaRegClock } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa6";
+import { MdClose } from "react-icons/md";
+import { FaRegEye } from "react-icons/fa";
 
 const STATUS_OPTIONS = [
     { value: "WATCHING", label: "Watching" },
@@ -19,14 +21,34 @@ const STATUS_OPTIONS = [
     { value: "DROPPED", label: "Dropped" },
 ];
 
+const STATUS_ICON = {
+    COMPLETED: <FaCheck className="ep-table-status-icon ep-table-status-icon--completed" />,
+    WATCHING: <FaRegEye className="ep-table-status-icon ep-table-status-icon--watching" />,
+    PLAN_TO_WATCH: <FaRegClock className="ep-table-status-icon ep-table-status-icon--planning" />,
+    DROPPED: <MdClose className="ep-table-status-icon ep-table-status-icon--dropped" />,
+};
+
+const StarRating = ({rating}) => {
+    const num = parseFloat(rating);
+    const isValid = !isNaN(num) && num > 0;
+    const filled = isValid ? Math.round(num / 2) : 0;
+    return (
+        <div className="ep-stars">
+            {Array.from({length: 5}, (_, i) => (
+                i < filled
+                    ? <FaStar key={i} className="ep-star ep-star--filled" />
+                    : <FaRegStar key={i} className="ep-star ep-star--empty" />
+            ))}
+            <span className="ep-star-value">({num}/10)</span>
+        </div>
+    );
+};
+
 const EpisodeDetailView = ({
     episode,
     series,
     loading,
     error,
-    statusOpen,
-    statusLoading,
-    statusRef,
     showEditForm,
     editFormData,
     editLoading,
@@ -34,8 +56,6 @@ const EpisodeDetailView = ({
     currentEpisodeNumber,
     onBack,
     onEpisodeSelect,
-    onStatusToggle,
-    onStatusChange,
     onEditClick,
     onEditChange,
     onEditSubmit,
@@ -55,16 +75,10 @@ const EpisodeDetailView = ({
         </div>
     );
     if (!episode || !series) return null;
-    const totalEpisodes = series.episodes || 0;
     const statusLabel = STATUS_OPTIONS.find(s => s.value === episode.status)?.label || episode.status;
     const statusClass = (status) => "status-" + status?.toLowerCase().replace(/_/g, "-");
-
-    const episodeStatuses = {};
-    if (series.episodeList) {
-        series.episodeList.forEach(ep => {
-            episodeStatuses[ep.episode] = ep.status;
-        });
-    }
+    const completedCount = series.episodeList?.filter(ep => ep.status === "COMPLETED").length || 0;
+    const sortedEpisodes = [...(series.episodeList || [])].sort((a,b) => a.episode - b.episode);
 
     return (
         <div className="ep-page">
@@ -74,7 +88,7 @@ const EpisodeDetailView = ({
                 <IoArrowBack />
             </button>
 
-            {/* MAIN CONTENT */}
+            {/* MAIN CARD */}
             <div className="ep-main">
                 {/* POSTER */}
                 <div className="ep-poster-wrapper">
@@ -85,94 +99,100 @@ const EpisodeDetailView = ({
                         onError={(e) => {e.target.src = "/images/placeholder.png";}}
                     />
                 </div>
-                {/* RIGHT SIDE */}
-                <div className="ep-right">
-                    <h1 className="ep-title">{series.title}</h1>
-                    {/* EPISODE BUBBLES*/}
-                    <div className="ep-bubbles">
-                        {Array.from({ length: totalEpisodes }, (_, i) => {
-                            const num = i + 1;
-                            const epStatus = episodeStatuses[num] || "NONE";
-                            const isActive = num === currentEpisodeNumber;
-                            return (
-                                <button
-                                    key={num}
-                                    className={`ep-bubble ${statusClass(epStatus)} ${isActive ? "ep-bubble--active" : ""}`}
-                                    onClick={() => onEpisodeSelect(num)}
-                                >
-                                    {num}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-            {/* EPISODE INFO */}
-            <div className="ep-info">
-                <div className="ep-info-header">
-                    <p className="ep-subtitle">
-                        <span className="ep-title-label">Title: </span>
-                        {episode.title || `Episode ${episode.episode}`}
-                    </p>
-                    <div className="ep-info-actions">
-                        {/* STATUS DROPDOWN */}
-                        <div className="ep-status-wrapper" ref={statusRef}>
-                            <button
-                                className={`ep-status-btn ${statusClass(episode.status)}`}
-                                onClick={onStatusToggle}
-                                disabled={statusLoading}
-                            >
-                                {statusLabel}
-                                <IoIosArrowDown />
-                            </button>
-                            {statusOpen && (
-                                <ul className="ep-status-dropdown">
-                                    {STATUS_OPTIONS.map(opt => (
-                                        <li
-                                            key={opt.value}
-                                            className="ep-status-item"
-                                            data-status={opt.value}
-                                            onClick={() => onStatusChange(opt.value)}
-                                        >
-                                            <span className={`ep-status-dot ${statusClass(opt.value)}`} />
-                                            {opt.label}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                        {/* EDIT */}
-                        <button
-                            className="ep-icon-btn"
-                            onClick={onEditClick}
-                            title="Edit"
-                        >
-                            <FiEdit2 />
+
+                {/* INFO */}
+                <div className="ep-info-block">
+                    {/* SERIES TITLE + EDIT BTN */}
+                    <div className="ep-info-toprow">
+                        <span className="ep-series-label">
+                            {series.title?.toLocaleUpperCase()} • S{String(series.season).padStart(2,"0")}
+                        </span>
+                        <button className="ep-edit-btn" onClick={onEditClick}>
+                            Edit episode <FiEdit2 />
                         </button>
                     </div>
-                </div>
-                {/* RATING + NOTES */}
-                <div className="ep-bottom">
-                    <div className="ep-bottom-left">
-                        <div className="ep-section">
-                            <div className="ep-section-title">
-                                <FaRegStar className="ep-section-icon" />
-                                <span>Rating</span>
+                    {/* EPISODE TITLE */}
+                    <h1 className="ep-episode-title">
+                        <span className="ep-ep-number">
+                            EP{currentEpisodeNumber}:<span> </span>
+                        </span>
+                        {episode.title || `Episode ${episode.episode}`}
+                    </h1>
+                    {/* RATING + NOTES */}
+                    <div className="ep-details-row">
+                        <div className="ep-details-left">
+                            <div className="ep-detail-item">
+                                <span className="ep-detail-label">Rating:</span>
+                                <StarRating rating={episode.rating}/>
                             </div>
-                            <span className="ep-badge">{episode.rating ?? "-"}</span>
+                            <div className="ep-detail-item">
+                                <span className="ep-detail-label">Status:</span>
+                                <button className={`ep-status-badge ${statusClass(episode.status)}`}>
+                                    {statusLabel}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="ep-bottom-right">
-                        <div className="ep-section-title">
-                            <IoChatboxOutline className="ep-section-icon" />
-                            <span>Notes</span>
+                        <div className="ep-details-right">
+                            <span className="ep-detail-label">Notes:</span>
+                            <div className="ep-notes-box">{episode.notes || ""}</div>
                         </div>
-                        <div className="ep-notes">{episode.notes ?? ""}</div>
                     </div>
                 </div>
             </div>
 
-            {/* EDIT FORM */}
+            {/* EPISODE TABLE */}
+            <div className="ep-table-section">
+                <div className="ep-table-header-row">
+                    <h2 className="ep-table-title">Season {series.season} Episodes</h2>
+                    <div className="ep-table-stats">
+                        <span className="ep-table-stat ep-table-stat--total">
+                            Total: {series.episodes} episodes
+                        </span>
+                        <span className="ep-table-stat ep-table-stat--completed">
+                            {completedCount} Completed
+                        </span>
+                    </div>
+                </div>
+                <div className="ep-table-wrapper">
+                    <table className="ep-table">
+                        <thead>
+                            <tr>
+                                <th className="ep-table-th ep-table-th--ep">EP</th>
+                                <th className="ep-table-th ep-table-th--title">Episode title</th>
+                                <th className="ep-table-th ep-table-th--rating">Rating</th>
+                                <th className="ep-table-th ep-table-th--status">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sortedEpisodes.map(ep => {
+                                const isActive = ep.episode === currentEpisodeNumber;
+                                const epStatusLabel = STATUS_OPTIONS.find(s => s.value === ep.status)?.label || "-";
+                                const icon = STATUS_ICON[ep.status] || null;
+                                return (
+                                    <tr
+                                        key={ep.episode}
+                                        className={`ep-table-row ${isActive ? "ep-table-row--active" : ""}`}
+                                        onClick={() => onEpisodeSelect(ep.episode)}
+                                    >
+                                        <td className="ep-table-td ep-table-td--ep">{ep.episode}</td>
+                                        <td className="ep-table-td ep-table-td--title">{ep.title}</td>
+                                        <td className="ep-table-td ep-table-td--rating">
+                                            {ep.rating > 0 ? `${ep.rating}/10` : "-"}
+                                        </td>
+                                        <td className="ep-table-td ep-table-td--status">
+                                            <span className="ep-table-status-cell">
+                                                {icon}
+                                                {epStatusLabel}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             {showEditForm && (
                 <EditEpisodeForm
                     formData={editFormData}
