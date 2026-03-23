@@ -98,6 +98,7 @@ const SeriesDetailView = ({
                         src={series.poster || "/images/placeholder.png"}
                         alt={series.title}
                         className="movie-detail-poster"
+                        onError={(e) => {e.target.src = "/images/placeholder.png";}}
                     />
                 </div>
 

@@ -84,6 +84,7 @@ const EpisodeDetailView = ({
                         src={series.poster || "/images/placeholder.png"}
                         alt={series.title}
                         className="ep-poster"
+                        onError={(e) => {e.target.src = "/images/placeholder.png";}}
                     />
                 </div>
                 {/* RIGHT SIDE */}

@@ -2,7 +2,7 @@
  * Created by minmin_tranova on 18.03.2026
  */
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import {discoverMedia, getMediaOverview} from "../../api/MediaApi";
 import DiscoveryPageView from "./DiscoveryPageView";
 import {useToast} from "../../hooks/UseToast";
@@ -10,7 +10,7 @@ import {useToast} from "../../hooks/UseToast";
 const DiscoveryPageContainer = () => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
-    const [addedIds, setAddedIds] = useState(new Set());
+    const [addedItems, setAddedItems] = useState(new Map());
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searched, setSearched] = useState(false);
@@ -26,17 +26,18 @@ const DiscoveryPageContainer = () => {
         setError(null);
         setSearched(true);
         try {
-            // await fetchAddedIds();
             const [discoverResult, overviewResult] = await Promise.allSettled([
                 discoverMedia(searchQuery, 10),
                 getMediaOverview(),
             ]);
-            const ids = new Set(
+            const itemsMap = new Map(
                 overviewResult.status === "fulfilled" && overviewResult.value
-                    ? overviewResult.value.map(item => item.imdbID).filter(Boolean)
+                    ? overviewResult.value
+                        .filter(item => item.imdbID)
+                        .map(item => [item.imdbID, item])
                     : []
             );
-            setAddedIds(ids);
+            setAddedItems(itemsMap);
             setResults(
                 discoverResult.status === "fulfilled"
                     ? discoverResult.value
@@ -51,6 +52,7 @@ const DiscoveryPageContainer = () => {
 
     const handleQueryChange = (e) => {
         setQuery(e.target.value);
+        setSearched(false);
     };
 
     const handleKeyDown = (e) => {
@@ -63,7 +65,7 @@ const DiscoveryPageContainer = () => {
     };
 
     const handleAddSuccess = (imdbID, title) => {
-        setAddedIds(prev => new Set([...prev, imdbID]));
+        setAddedItems(prev => new Map([...prev, [imdbID, {imdbID, rating: 0}]]));
         setShowAddForm(false);
         setSelectedMedia(null);
         showToast(`${title} has been successfully added to your collection.`)
@@ -78,7 +80,7 @@ const DiscoveryPageContainer = () => {
         <DiscoveryPageView
             query={query}
             results={results}
-            addedIds={addedIds}
+            addedItems={addedItems}
             loading={loading}
             error={error}
             searched={searched}

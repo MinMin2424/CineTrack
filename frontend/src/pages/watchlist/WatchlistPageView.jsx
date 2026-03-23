@@ -59,6 +59,7 @@ const WatchlistPageView = ({
                                 src={item.poster || "/images/placeholder.png"}
                                 alt={item.title}
                                 className="home-media-poster"
+                                onError={(e) => {e.target.src = "/images/placeholder.png";}}
                             />
                             <div className="watchlist-info">
                                 <span className="watchlist-title">{item.title}</span>
