@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import {useNavigate, Link, Navigate} from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAuthFormValidation } from "../../hooks/UseAuthFormValidation";
 import "../../styles/pages/auth/RegisterPageStyle.css"
@@ -11,6 +11,7 @@ import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
 
 const RegisterPage = () => {
+    const {isAuthenticated, loading} = useAuth();
     const navigate = useNavigate();
     const { register } = useAuth();
     const { errors, validateRegisterForm, setErrors } = useAuthFormValidation();
@@ -68,6 +69,9 @@ const RegisterPage = () => {
             setIsSubmitting(false);
         }
     };
+
+    if (loading) return null;
+    if (isAuthenticated) return <Navigate to="/" replace />;
 
     return (
         <div className="register-page">

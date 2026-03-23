@@ -6,13 +6,14 @@
 import React from 'react';
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import "../../styles/components/layout/SpinnerStyle.css"
 
 const ProtectedRoute = () => {
     const { isAuthenticated, loading } = useAuth();
     if (loading) {
         return (
-            <div>
-                Loading...
+            <div className="loading">
+                <div className="spinner"/>
             </div>
         );
     }
