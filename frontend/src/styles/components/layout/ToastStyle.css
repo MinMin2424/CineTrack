@@ -1,0 +1,24 @@
+.toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--color-tertiary-pink);
+    color: var(--color-primary-dark-blue-bg);
+    padding: 16px 24px;
+    border-radius: var(--border-radius-primary);
+    font: var(--text-popup-sublabel);
+    box-shadow: 0 0 20px var(--color-badge-planning-bg);
+    z-index: 1000;
+    max-width: 400px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast--hidden {
+    opacity: 0;
+    transform: translateY(12px);
+}

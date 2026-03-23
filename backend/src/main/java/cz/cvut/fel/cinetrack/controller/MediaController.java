@@ -97,6 +97,22 @@ public class MediaController {
         }
     }
 
+    @GetMapping("/discover")
+    public ResponseEntity<?> discoverMedia(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "5") int limit
+    ) {
+        try {
+            List<OMDBResponseDTO> results = mediaService.discover(query, limit);
+            return ResponseEntity.ok(results);
+        } catch (RequestFailedException e) {
+            return ResponseEntity.ok(List.of());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
+        }
+    }
+
     @GetMapping("/autocomplete")
     public ResponseEntity<List<String>> autocompleteTitles(
             @RequestParam String query,

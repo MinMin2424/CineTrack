@@ -8,6 +8,8 @@ import cz.cvut.fel.cinetrack.config.OMDBConfig;
 import cz.cvut.fel.cinetrack.dto.media.EpisodeInfoDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBEpisodeResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBResponseDTO;
+import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBSearchItemDTO;
+import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBSearchResultDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBSeasonResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.SeasonInfoDTO;
 import cz.cvut.fel.cinetrack.exception.media.notFoundObj.MediaNotFoundException;
@@ -25,6 +27,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class OMDBService {
@@ -61,6 +66,44 @@ public class OMDBService {
             throw new RequestFailedException("OMDB API error: " + e.getMessage());
         } catch (Exception e) {
             throw new RequestFailedException("Failed to search media: " + e.getMessage());
+        }
+    }
+
+    public List<OMDBResponseDTO> searchMediaList(String query, int limit) {
+        String url = String.format(
+                "https://www.omdbapi.com/?apikey=%s&s=%s",
+                apiKey, encode(query)
+        );
+        try {
+            OMDBSearchResultDTO searchResult = restTemplate.getForObject(url, OMDBSearchResultDTO.class);
+            if (searchResult == null || searchResult.getSearch() == null || "False".equalsIgnoreCase(searchResult.getResponse())) {
+                return List.of();
+            }
+            List<OMDBSearchItemDTO> items = searchResult.getSearch()
+                    .stream()
+                    .limit(limit)
+                    .toList();
+            List<CompletableFuture<OMDBResponseDTO>> futures = items.stream()
+                    .map(item -> CompletableFuture.supplyAsync(() -> fetchDetailById(item.getImdbID())))
+                    .toList();
+            return futures.stream()
+                    .map(CompletableFuture::join)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RequestFailedException("Failed to search media list: " + e.getMessage());
+        }
+    }
+
+    private OMDBResponseDTO fetchDetailById(String imdbID) {
+        try {
+            String url = String.format(
+                    "https://www.omdbapi.com/?apikey=%s&i=%s",
+                    apiKey, imdbID
+            );
+            return restTemplate.getForObject(url, OMDBResponseDTO.class);
+        } catch (Exception e) {
+            return null;
         }
     }
 

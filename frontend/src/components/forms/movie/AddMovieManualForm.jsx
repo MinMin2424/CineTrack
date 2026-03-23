@@ -111,7 +111,7 @@ const AddMovieManualForm = ({
                 language: formData.language,
                 country: formData.country,
             });
-            onSuccess();
+            onSuccess(formData.title);
         } catch (error) {
             setError(error.response?.data?.error || "Failed to add movie. Please try again.")
         } finally {

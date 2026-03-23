@@ -7,6 +7,8 @@ import { getMediaOverview, getFilterOptions, autocompleteTitles } from "../../ap
 import HomePageView from "./HomePageView";
 import AddMediaModal from "../../components/forms/AddMediaModal"
 import {FaLongArrowAltDown, FaLongArrowAltUp} from "react-icons/fa";
+import Toast from "../../components/layout/Toast";
+import {useToast} from "../../hooks/UseToast";
 
 const SORT_OPTIONS = [
     { value: "CREATED_AT_ASC", label: "Oldest", arrow: FaLongArrowAltUp},
@@ -52,6 +54,8 @@ const HomePage = () => {
     });
 
     const [showAddModal, setShowAddModal] = useState(false);
+
+    const {toast, showToast, hideToast} = useToast();
 
     const fetchMedia = useCallback(async () => {
         setLoading(true);
@@ -150,8 +154,9 @@ const HomePage = () => {
         )
         : mediaItems;
 
-    const handleMediaAdded = () => {
+    const handleMediaAdded = (title) => {
         fetchMedia();
+        showToast(`${title} has been successfully added to your collection.`)
     };
 
     return (
@@ -182,6 +187,13 @@ const HomePage = () => {
                 <AddMediaModal
                     onClose={() => setShowAddModal(false)}
                     onMediaAdded={handleMediaAdded}
+                />
+            )}
+            {toast && (
+                <Toast
+                    key={toast.id}
+                    message={toast.message}
+                    onClose={hideToast}
                 />
             )}
         </>

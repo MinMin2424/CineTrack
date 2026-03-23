@@ -109,6 +109,10 @@ public class MediaService {
         return response;
     }
 
+    public List<OMDBResponseDTO> discover(String query, int limit) {
+        return omdbService.searchMediaList(query, limit);
+    }
+
     public List<String> autocompleteTitles(Long userId, String query, int limit) {
         if (query == null || query.trim().isEmpty()) {
             return new ArrayList<>();

@@ -19,6 +19,7 @@ import java.util.List;
 public class MediaItemDTO {
 
     private Long id;
+    private String imdbID;
     private MediaType type;
     private String title;
     private int releaseYear;
@@ -42,6 +43,7 @@ public class MediaItemDTO {
 
     public MediaItemDTO(Movie movie) {
         this.id = movie.getId();
+        this.imdbID = movie.getImdbId();
         this.type = MediaType.MOVIE;
         this.title = movie.getTitle();
         this.releaseYear = movie.getReleaseYear();
@@ -66,6 +68,7 @@ public class MediaItemDTO {
 
     public MediaItemDTO(Series series) {
         this.id = series.getId();
+        this.imdbID = series.getImdbId();
         this.type = MediaType.SERIES;
         this.title = series.getTitle();
         this.releaseYear = series.getReleaseYear();
@@ -95,6 +98,14 @@ public class MediaItemDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getImdbID() {
+        return imdbID;
+    }
+
+    public void setImdbID(String imdbID) {
+        this.imdbID = imdbID;
     }
 
     public MediaType getType() {
