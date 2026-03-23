@@ -310,6 +310,7 @@ const HomePageView = ({
                                 src={item.poster || '/images/placeholder.png'}
                                 alt={item.title}
                                 className="home-media-poster"
+                                onError={(e) => {e.target.src = "/images/placeholder.png";}}
                             />
                             <span className={`home-media-badge home-badge-${item.status?.toLowerCase()}`}>
                                     {STATUS_LABELS[item.status] || item.status}
