@@ -8,6 +8,5 @@ public enum EpisodeStatusEnum {
     COMPLETED,
     DROPPED,
     WATCHING,
-    PLAN_TO_WATCH,
-    NONE
+    PLAN_TO_WATCH
 }

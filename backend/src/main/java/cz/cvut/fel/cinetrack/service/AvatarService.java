@@ -31,7 +31,21 @@ public class AvatarService {
                 "static/avatars/Avatar03.png",
                 "static/avatars/Avatar04.png",
                 "static/avatars/Avatar05.png",
-                "static/avatars/Avatar06.png"
+                "static/avatars/Avatar06.png",
+                "static/avatars/Avatar07.png",
+                "static/avatars/Avatar08.png",
+                "static/avatars/Avatar09.png",
+                "static/avatars/Avatar10.png",
+                "static/avatars/Avatar11.png",
+                "static/avatars/Avatar12.png",
+                "static/avatars/Avatar13.png",
+                "static/avatars/Avatar14.png",
+                "static/avatars/Avatar15.png",
+                "static/avatars/Avatar16.png",
+                "static/avatars/Avatar17.png",
+                "static/avatars/Avatar18.png",
+                "static/avatars/Avatar19.png",
+                "static/avatars/Avatar21.png"
         );
     }
 

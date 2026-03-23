@@ -251,7 +251,7 @@ public class MediaService {
         if (series.getStatus() == StatusEnum.COMPLETED) {
             episode.setStatus(EpisodeStatusEnum.COMPLETED);
         } else {
-            episode.setStatus(EpisodeStatusEnum.NONE);
+            episode.setStatus(EpisodeStatusEnum.PLAN_TO_WATCH);
         }
 
         episode.setRating(0);
@@ -266,7 +266,7 @@ public class MediaService {
             Episode episode = new Episode();
             episode.setTitle("Episode :" + i);
             episode.setEpisode(i);
-            episode.setStatus(series.getStatus() == StatusEnum.COMPLETED ? EpisodeStatusEnum.COMPLETED : EpisodeStatusEnum.NONE);
+            episode.setStatus(series.getStatus() == StatusEnum.COMPLETED ? EpisodeStatusEnum.COMPLETED : EpisodeStatusEnum.PLAN_TO_WATCH);
             episode.setRating(0);
             episode.setNotes("");
             episode.setSeries(series);

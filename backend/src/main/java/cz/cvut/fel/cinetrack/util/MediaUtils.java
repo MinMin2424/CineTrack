@@ -83,7 +83,7 @@ public class MediaUtils {
             case "watching" -> EpisodeStatusEnum.WATCHING;
             case "plan to watch" -> EpisodeStatusEnum.PLAN_TO_WATCH;
             case "dropped" -> EpisodeStatusEnum.DROPPED;
-            default -> EpisodeStatusEnum.NONE;
+            default -> EpisodeStatusEnum.PLAN_TO_WATCH;
         };
     }
 
