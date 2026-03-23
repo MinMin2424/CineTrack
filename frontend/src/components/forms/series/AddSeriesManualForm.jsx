@@ -16,7 +16,6 @@ const STATUS_OPTIONS = [
     { value: "plan to watch", label: "Plan to Watch" },
     { value: "watching", label: "Watching" },
     { value: "completed", label: "Completed" },
-    { value: "paused", label: "Paused" },
     { value: "dropped", label: "Dropped" },
 ];
 

@@ -132,12 +132,6 @@
     box-shadow: 0 0 10px var(--color-badge-watching-bg);
 }
 
-.movie-detail-status-btn.status-paused {
-    background: var(--color-badge-paused-bg);
-    color: var(--color-badge-paused-text);
-    box-shadow: 0 0 10px var(--color-badge-paused-bg);
-}
-
 .movie-detail-status-btn.status-plan-to-watch {
     background: var(--color-badge-planning-bg);
     color: var(--color-badge-planning-text);
@@ -189,10 +183,6 @@
 
 .movie-detail-status-dot.status-watching {
     background: var(--color-badge-watching-bg);
-}
-
-.movie-detail-status-dot.status-paused {
-    background: var(--color-badge-paused-bg);
 }
 
 .movie-detail-status-dot.status-plan-to-watch {

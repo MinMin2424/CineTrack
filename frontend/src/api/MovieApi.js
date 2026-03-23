@@ -27,7 +27,6 @@ export const editMovie = async (movieId, data) => {
 
 const STATUS_MAP = {
     WATCHING: "watching",
-    PAUSED: "paused",
     COMPLETED: "completed",
     DROPPED: "dropped",
     PLAN_TO_WATCH: "plan to watch"

@@ -6,7 +6,6 @@ package cz.cvut.fel.cinetrack.model.enums;
 
 public enum StatusEnum {
     COMPLETED,
-    PAUSED,
     DROPPED,
     WATCHING,
     PLAN_TO_WATCH

@@ -93,11 +93,6 @@
     color: var(--color-badge-watching-text);
 }
 
-.ep-bubble.status-paused {
-    background: var(--color-badge-paused-bg);
-    color: var(--color-badge-paused-text);
-}
-
 .ep-bubble.status-plan-to-watch {
     background: var(--color-badge-planning-bg);
     color: var(--color-badge-planning-text);
@@ -169,12 +164,6 @@
     box-shadow: 0 0 10px var(--color-badge-watching-bg);
 }
 
-.ep-status-btn.status-paused {
-    background: var(--color-badge-paused-bg);
-    color: var(--color-badge-paused-text);
-    box-shadow: 0 0 10px var(--color-badge-paused-bg);
-}
-
 .ep-status-btn.status-plan-to-watch {
     background: var(--color-badge-planning-bg);
     color: var(--color-badge-planning-text);
@@ -226,10 +215,6 @@
 
 .ep-status-dot.status-watching {
     background: var(--color-badge-watching-bg);
-}
-
-.ep-status-dot.status-paused {
-    background: var(--color-badge-paused-bg);
 }
 
 .ep-status-dot.status-plan-to-watch {

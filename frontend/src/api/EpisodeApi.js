@@ -17,7 +17,6 @@ export const getEpisode = async (seriesId, episodeNumber) => {
 
 const STATUS_MAP = {
     WATCHING: "watching",
-    PAUSED: "paused",
     COMPLETED: "completed",
     DROPPED: "dropped",
     PLAN_TO_WATCH: "plan to watch",

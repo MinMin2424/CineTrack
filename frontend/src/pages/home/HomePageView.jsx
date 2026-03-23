@@ -15,7 +15,6 @@ import {useNavigate} from "react-router-dom";
 
 const STATUS_LABELS = {
     COMPLETED: "Completed",
-    PAUSED: "Paused",
     DROPPED: "Dropped",
     WATCHING: "Watching",
     PLAN_TO_WATCH: "Plan to watch",

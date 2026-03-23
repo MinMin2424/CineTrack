@@ -118,13 +118,6 @@
     color: var(--color-badge-completed-text);
 }
 
-.home-badge-paused {
-    background: var(--color-badge-paused-bg);
-    border: 1px solid var(--color-badge-paused-bg);
-    box-shadow: 0 0 10px var(--color-badge-paused-bg);
-    color: var(--color-badge-paused-text);
-}
-
 .home-badge-plan_to_watch {
     background: var(--color-badge-planning-bg);
     border: 1px solid var(--color-badge-planning-bg);

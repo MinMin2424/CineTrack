@@ -73,7 +73,6 @@ public class MediaUtils {
             case "watching" -> StatusEnum.WATCHING;
             case "plan to watch" -> StatusEnum.PLAN_TO_WATCH;
             case "dropped" -> StatusEnum.DROPPED;
-            case "paused" -> StatusEnum.PAUSED;
             default -> null;
         };
     }
@@ -84,7 +83,6 @@ public class MediaUtils {
             case "watching" -> EpisodeStatusEnum.WATCHING;
             case "plan to watch" -> EpisodeStatusEnum.PLAN_TO_WATCH;
             case "dropped" -> EpisodeStatusEnum.DROPPED;
-            case "paused" -> EpisodeStatusEnum.PAUSED;
             default -> EpisodeStatusEnum.NONE;
         };
     }
