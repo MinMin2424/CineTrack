@@ -9,12 +9,15 @@ import cz.cvut.fel.cinetrack.dto.media.request.EditMediaRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.SeriesResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.notFoundObj.SeriesNotFoundException;
 import cz.cvut.fel.cinetrack.model.Series;
+import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.repository.SeriesRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStatus;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStringToFloat;
@@ -38,6 +41,9 @@ public class SeriesService {
     public SeriesResponseDTO changeSeriesStatus(Long seriesId, Long userId, ChangeStatusRequestDTO request) {
         Series series = checkSeriesExistence(seriesId, userId);
         series.setStatus(parseStatus(request.getStatus()));
+        if (Objects.equals(request.getStatus(), StatusEnum.COMPLETED.name())) {
+            series.setWatchEndDate(LocalDate.now());
+        }
         Series savedSeries = seriesRepository.save(series);
         return new SeriesResponseDTO(savedSeries);
     }

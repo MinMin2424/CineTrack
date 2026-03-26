@@ -9,12 +9,15 @@ import cz.cvut.fel.cinetrack.dto.media.request.EditMediaRequestDTO;
 import cz.cvut.fel.cinetrack.dto.media.response.MovieResponseDTO;
 import cz.cvut.fel.cinetrack.exception.media.notFoundObj.MovieNotFoundException;
 import cz.cvut.fel.cinetrack.model.Movie;
+import cz.cvut.fel.cinetrack.model.enums.StatusEnum;
 import cz.cvut.fel.cinetrack.repository.MovieRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStatus;
 import static cz.cvut.fel.cinetrack.util.MediaUtils.parseStringToFloat;
@@ -38,6 +41,9 @@ public class MovieService {
     public MovieResponseDTO changeMovieStatus(Long movieId, Long userId, ChangeStatusRequestDTO request) {
         Movie movie = checkMovieExistence(movieId, userId);
         movie.setStatus(parseStatus(request.getStatus()));
+        if (Objects.equals(request.getStatus(), StatusEnum.COMPLETED.name())) {
+            movie.setWatchEndDate(LocalDate.now());
+        }
         Movie savedMovie = movieRepository.save(movie);
         return new MovieResponseDTO(savedMovie);
     }

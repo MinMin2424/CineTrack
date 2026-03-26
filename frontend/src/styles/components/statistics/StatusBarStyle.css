@@ -1,0 +1,25 @@
+.stat-bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--color-grey-bar-bg);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.stat-bar-track--left {
+    transform: scaleX(-1);
+}
+
+.stat-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.stat-bar-fill--left {
+    background: linear-gradient(90deg, var(--color-dark-pink-bar-movie), var(--color-light-pink-bar-movie));
+}
+
+.stat-bar-fill--right {
+    background: linear-gradient(90deg, var(--color-dark-blue-bar-series), var(--color-dark-pink-bar-series));
+}

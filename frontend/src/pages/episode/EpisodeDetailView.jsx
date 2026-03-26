@@ -5,14 +5,14 @@
 import React from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { FiEdit2 } from "react-icons/fi";
-import {FaRegStar, FaStar} from "react-icons/fa";
 import "../../styles/pages/mediaDetail/EpisodeDetailStyle.css"
 import "../../styles/components/layout/SpinnerStyle.css"
 import EditEpisodeForm from "../../components/forms/editMedia/EditEpisodeForm"
 import { FaRegClock } from "react-icons/fa6";
-import { FaCheck } from "react-icons/fa6";
-import { MdClose } from "react-icons/md";
-import { FaRegEye } from "react-icons/fa";
+import { FiCheckCircle } from "react-icons/fi";
+import { SlClose } from "react-icons/sl";
+import { FaRegCirclePlay } from "react-icons/fa6";
+import StarRating from "../../components/layout/StarRating";
 
 const STATUS_OPTIONS = [
     { value: "WATCHING", label: "Watching" },
@@ -22,26 +22,10 @@ const STATUS_OPTIONS = [
 ];
 
 const STATUS_ICON = {
-    COMPLETED: <FaCheck className="ep-table-status-icon ep-table-status-icon--completed" />,
-    WATCHING: <FaRegEye className="ep-table-status-icon ep-table-status-icon--watching" />,
+    COMPLETED: <FiCheckCircle className="ep-table-status-icon ep-table-status-icon--completed" />,
+    WATCHING: <FaRegCirclePlay className="ep-table-status-icon ep-table-status-icon--watching" />,
     PLAN_TO_WATCH: <FaRegClock className="ep-table-status-icon ep-table-status-icon--planning" />,
-    DROPPED: <MdClose className="ep-table-status-icon ep-table-status-icon--dropped" />,
-};
-
-const StarRating = ({rating}) => {
-    const num = parseFloat(rating);
-    const isValid = !isNaN(num) && num > 0;
-    const filled = isValid ? Math.round(num / 2) : 0;
-    return (
-        <div className="ep-stars">
-            {Array.from({length: 5}, (_, i) => (
-                i < filled
-                    ? <FaStar key={i} className="ep-star ep-star--filled" />
-                    : <FaRegStar key={i} className="ep-star ep-star--empty" />
-            ))}
-            <span className="ep-star-value">({num}/10)</span>
-        </div>
-    );
+    DROPPED: <SlClose className="ep-table-status-icon ep-table-status-icon--dropped" />,
 };
 
 const EpisodeDetailView = ({

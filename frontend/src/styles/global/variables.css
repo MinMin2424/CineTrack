@@ -21,6 +21,9 @@
     --text-nav: 400 18px var(--font-primary);
     --text-dropdown: 400px 16px var(--font-primary);
     --text-nav-logout: 400 16px var(--font-primary);
+    --text-stats-primary-label: 600 24px var(--font-primary);
+    --text-stats-secondary-label: 400 12px var(--font-primary);
+    --text-stats-tertiary-label: 400 14px var(--font-primary);
     --icon: 20px;
 
     /* ===== BORDER RADIUS ===== */
@@ -54,6 +57,7 @@
     --color-input-bg: rgba(117, 117, 117, 0.2);
     --color-input-border: rgba(117, 117, 117, 0.3);
     --color-cancel-btn: rgba(39, 53, 69, 0.2);
+    --color-grey-bg: rgba(217, 217, 217, 0.1);
 
     --color-primary-pink: #FFA6FE;
     --color-primary-pink-shadow: rgba(255, 166, 254, 0.4);
@@ -65,12 +69,22 @@
     --color-light-pink: #EB7A96;
     --color-medium-pink: #E3008C;
 
+    --color-light-pink-bar-movie: #FFD2AC;
+    --color-dark-pink-bar-movie: #F70559;
+    --color-dark-pink-bar-series: #FB076A;
+    --color-dark-blue-bar-series: #2925F5;
+    --color-dark-purple-bar-genre: #950DCF;
+    --color-light-blue-bar-genre: #40FFCB;
+    --color-yellow-icon-funfacts: #FFD700;
+    --color-orange-icon-funfacts: #FC4700;
+
     --color-error-extra-red: #6e0000;
     --color-error-red: #ff5b5b;
 
     --color-white: #ffffff;
     --color-light-white: rgba(255, 255, 255, 0.8);
     --color-grey: #828991;
+    --color-grey-bar-bg: rgba(130, 137, 145, 0.2);
     --color-grey-border: rgba(117, 117, 117, 0.3);
     --color-grey-bg-input: rgba(102, 111, 121, 0.1);
 
