@@ -11,10 +11,9 @@ import "../../styles/pages/statistics/StatisticsPageStyle.css"
 import {FiCheckCircle} from "react-icons/fi";
 import {FaRegCirclePlay, FaRegClock} from "react-icons/fa6";
 import {SlClose} from "react-icons/sl";
-import {FaAward, FaRegStar} from "react-icons/fa";
+import {FaAward} from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
 import { FaArrowDown } from "react-icons/fa";
-import { FaStar } from "react-icons/fa";
 import StatusBar from "../../components/statistics/StatusBar";
 import DonutChart from "../../components/statistics/DonutChart";
 import GenreBar from "../../components/statistics/GenreBar";

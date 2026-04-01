@@ -10,6 +10,7 @@ import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.response.CombinedUserProfileResponseDTO;
 import cz.cvut.fel.cinetrack.dto.user.response.UserProfileHeaderResponseDTO;
 import cz.cvut.fel.cinetrack.dto.user.response.UserProfileResponseDTO;
+import cz.cvut.fel.cinetrack.exception.InvalidCredentialException;
 import cz.cvut.fel.cinetrack.exception.user.UserNotFoundException;
 import cz.cvut.fel.cinetrack.exception.user.existingData.EmailAlreadyExistsException;
 import cz.cvut.fel.cinetrack.exception.user.existingData.UsernameAlreadyExistsException;
@@ -100,6 +101,9 @@ public class UserService {
     @Transactional
     public void changeUserPassword(ChangeUserPasswordRequestDTO request) {
         User currentUser = getCurrentUserNotDeleted();
+        if (!passwordEncoder.matches(request.getCurrentPassword(), currentUser.getPassword())) {
+            throw new InvalidCredentialException("Current password is incorrect");
+        }
         userValidator.validateUserPassword(request);
         currentUser.setPassword(passwordEncoder.encode(request.getPassword()));
         currentUser.setLastModified(LocalDateTime.now());

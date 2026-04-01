@@ -12,8 +12,7 @@ import EpisodeDetailContainer from "./pages/episode/EpisodeDetailContainer";
 import WatchlistPageContainer from "./pages/watchlist/WatchlistPageContainer";
 import DiscoveryPageContainer from "./pages/discovery/DiscoveryPageContainer";
 import StatisticsPageContainer from "./pages/statistics/StatisticsPageContainer";
-
-const SettingsPage = () => <div>Settings - TODO</div>
+import SettingsPageContainer from "./pages/settings/SettingsPageContainer";
 
 function App() {
   return (
@@ -32,7 +31,7 @@ function App() {
                 <Route path="/statistics" element={<StatisticsPageContainer />} />
                 <Route path="/watchlist" element={<WatchlistPageContainer />} />
                 <Route path="/discovery" element={<DiscoveryPageContainer />} />
-                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/settings" element={<SettingsPageContainer />} />
               </Route>
             </Route>
 

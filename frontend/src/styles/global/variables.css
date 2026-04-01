@@ -80,6 +80,7 @@
 
     --color-error-extra-red: #6e0000;
     --color-error-red: #ff5b5b;
+    --color-red-bg: rgba(255, 164, 165, 0.5);
 
     --color-white: #ffffff;
     --color-light-white: rgba(255, 255, 255, 0.8);

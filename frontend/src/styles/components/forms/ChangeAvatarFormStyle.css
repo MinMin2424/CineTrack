@@ -1,0 +1,31 @@
+.sp-avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    gap: 20px;
+    padding: 8px 0 4px;
+}
+
+.sp-avatar-option {
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    padding: 0;
+}
+
+.sp-avatar-option img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.sp-avatar-option:hover {
+    transform: scale(1.07);
+}
+
+.sp-avatar-option--selected {
+    box-shadow: 0 0 20px var(--color-orange-icon-funfacts);
+}

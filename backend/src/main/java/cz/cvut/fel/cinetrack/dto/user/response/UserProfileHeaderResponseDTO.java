@@ -6,13 +6,13 @@ package cz.cvut.fel.cinetrack.dto.user.response;
 
 import java.time.LocalDate;
 
-public class UserProfileHeaderResponseDTO {
+        public class UserProfileHeaderResponseDTO {
 
-    private String username;
-    private String firstname;
-    private String lastname;
-    private LocalDate creationDate;
-    private String avatar;
+            private String username;
+            private String firstname;
+            private String lastname;
+            private LocalDate creationDate;
+            private String avatar;
 
     public UserProfileHeaderResponseDTO(String username,
                                         String firstname,

@@ -1,0 +1,253 @@
+.sp-page {
+    color: var(--color-white);
+    width: 100%;
+    min-height: calc(100% - 80px);
+    box-sizing: border-box;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 20px;
+}
+
+.sp-left {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+}
+
+.sp-right {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    align-items: flex-start;
+    height: 50vh;
+}
+
+.sp-card {
+    border: 2px solid var(--color-primary-dark-purple-sidebar);
+    border-radius: var(--border-radius-secondary);
+    background: linear-gradient(
+            180deg,
+            rgba(13, 27, 42, 0.2) 50%,
+            rgba(167, 134, 245, 0.2) 100%
+    );
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.sp-avatar-card {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.sp-fullname {
+    margin: 0;
+}
+
+.sp-avatar-wrap {
+    width: 100%;
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sp-avatar-img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+    image-rendering: smooth;
+}
+
+.sp-avatar-edit-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 30%;
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--color-badge-paused-bg);
+    color: var(--color-badge-paused-bg);
+    background: var(--color-primary-dark-purple-sidebar);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.sp-danger-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sp-danger-title {
+    margin: 0;
+}
+
+.sp-danger-inner {
+    background: rgba(217, 217, 217, 0.1);
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius-secondary);
+    padding: 15px;
+}
+
+.sp-danger-heading {
+    margin: 0;
+    font-weight: 600;
+}
+
+.sp-danger-decs {
+    font: var(--text-stats-tertiary-label);
+    color: var(--color-tertiary-pink);
+    line-height: 1.6;
+}
+
+.sp-danger-btn {
+    width: fit-content;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-radius: var(--border-radius-secondary);
+    border: none;
+    background: var(--color-dark-pink-bar-movie);
+    color: var(--color-white);
+    font: var(--text-popup-sublabel);
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+.sp-bio-pass {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.sp-bio-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sp-password-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sp-password-img {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.sp-password-img img {
+    width: 120px;
+    height: 120px;
+}
+
+.sp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sp-card-title {
+    margin: 0;
+}
+
+.sp-card-edit-btn,
+.sp-lock-icon{
+    background: transparent;
+    border: none;
+    color: var(--color-medium-pink);
+    font-size: 20px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.sp-bio-list {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0;
+}
+
+.sp-bio-item {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.sp-bio-item-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font: var(--text-stats-tertiary-label);
+}
+
+.sp-bio-icon {
+    color: var(--color-medium-pink);
+}
+
+.sp-bio-label {
+    color: var(--color-tertiary-pink);
+}
+
+.sp-stats-row {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.sp-stat-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sp-stat-number {
+    font: 500 20px var(--font-primary);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.sp-fire-icon {
+    color: var(--color-dark-pink-bar-movie);
+}
+
+.sp-stat-label {
+    font: var(--text-stats-tertiary-label);
+}
