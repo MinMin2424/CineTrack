@@ -17,9 +17,9 @@
 }
 
 .stat-bar-fill--left {
-    background: linear-gradient(90deg, var(--color-dark-pink-bar-movie), var(--color-light-pink-bar-movie));
+    background: linear-gradient(90deg, var(--color-movie), var(--color-light-pink-bar-movie));
 }
 
 .stat-bar-fill--right {
-    background: linear-gradient(90deg, var(--color-dark-blue-bar-series), var(--color-dark-pink-bar-series));
+    background: linear-gradient(90deg, var(--color-series), var(--color-series-lighter));
 }

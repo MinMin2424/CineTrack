@@ -82,6 +82,11 @@
     --color-error-red: #ff5b5b;
     --color-red-bg: rgba(255, 164, 165, 0.5);
 
+    --color-movie: #F7E741;
+    --color-movie-lighter: #FFD2AC;
+    --color-series: #BC1BE6;
+    --color-series-lighter: #d49adf;
+
     --color-white: #ffffff;
     --color-light-white: rgba(255, 255, 255, 0.8);
     --color-grey: #828991;

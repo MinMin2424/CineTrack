@@ -102,29 +102,6 @@ const StatisticsPageView = ({
 
                 <div className="statistics-left">
 
-                    {/* STATUS BREAKDOWN */}
-                    <div className="status-breakdown">
-                        <div className="status-breakdown-header">
-                            <label className="status-breakdown-label">Movie</label>
-                            <label className="status-breakdown-label">TV Series</label>
-                        </div>
-                        <div className="status-breakdown-rows">
-                            {statuses.map((status) => {
-                                const data = statusOverview[status.key];
-                                if (!data) return null;
-                                return (
-                                    <div key={status.key} className="status-breakdown-row">
-                                        <div className="status-breakdown-count">{data?.movies ?? 0}</div>
-                                        <StatusBar count={data?.movies ?? 0} maxCount={maxMovies} side="left"/>
-                                        <div className="status-breakdown-name">{status.name}</div>
-                                        <StatusBar count={data?.series ?? 0} maxCount={maxSeries} side="right"/>
-                                        <div className="status-breakdown-count">{data?.series ?? 0}</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
                     <div className="genres-countries">
 
                         {/* TOP GENRES */}
@@ -158,28 +135,51 @@ const StatisticsPageView = ({
                                     <YAxis tick={{fill: "#ccc", fontSize: 12}} axisLine={false} tickLine={false} allowDecimals={false} />
                                     <Tooltip contentStyle={{background: "#1E1A35", border: "1px solid #3A3560", borderRadius: 8}} labelStyle={{color: "#FFF"}} itemStyle={{color: "#CCC"}} />
                                     <Legend wrapperStyle={{paddingTop: 16, color: "#CCC", fontSize: 13}} />
-                                    <Bar dataKey="Movie" radius={[6, 6, 0, 0]} maxBarSize={32} fill="#FB025C">
+                                    <Bar dataKey="Movie" radius={[6, 6, 0, 0]} maxBarSize={32} fill="#F7E741">
                                         {countriesChartData.map((_,i) => (
                                             <Cell key={i} fill="url(#gradMovie2)" />
                                         ))}
                                     </Bar>
-                                    <Bar dataKey="Series" radius={[6, 6, 0, 0]} maxBarSize={32} fill="#FACD1A">
+                                    <Bar dataKey="Series" radius={[6, 6, 0, 0]} maxBarSize={32} fill="#BC1BE6">
                                         {countriesChartData.map((_,i) => (
                                             <Cell key={i} fill="url(#gradSeries2)" />
                                         ))}
                                     </Bar>
                                     <defs>
                                         <linearGradient id="gradMovie2" x1="0%" y1="0%" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#FFA1C3"/>
-                                            <stop offset="100%" stopColor="#FB025C"/>
+                                            <stop offset="0%" stopColor="#FFD2AC"/>
+                                            <stop offset="100%" stopColor="#F7E741"/>
                                         </linearGradient>
                                         <linearGradient id="gradSeries2" x1="0%" y1="0%" x2="0" y2="1">
-                                            <stop offset="0%" stopColor="#FFEB9E"/>
-                                            <stop offset="100%" stopColor="#FACD1A"/>
+                                            <stop offset="0%" stopColor="#c977e1"/>
+                                            <stop offset="100%" stopColor="#BC1BE6"/>
                                         </linearGradient>
                                     </defs>
                                 </BarChart>
                             </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    {/* STATUS BREAKDOWN */}
+                    <div className="status-breakdown">
+                        <div className="status-breakdown-header">
+                            <label className="status-breakdown-label">Movie</label>
+                            <label className="status-breakdown-label">TV Series</label>
+                        </div>
+                        <div className="status-breakdown-rows">
+                            {statuses.map((status) => {
+                                const data = statusOverview[status.key];
+                                if (!data) return null;
+                                return (
+                                    <div key={status.key} className="status-breakdown-row">
+                                        <div className="status-breakdown-count">{data?.movies ?? 0}</div>
+                                        <StatusBar count={data?.movies ?? 0} maxCount={maxMovies} side="left"/>
+                                        <div className="status-breakdown-name">{status.name}</div>
+                                        <StatusBar count={data?.series ?? 0} maxCount={maxSeries} side="right"/>
+                                        <div className="status-breakdown-count">{data?.series ?? 0}</div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 
