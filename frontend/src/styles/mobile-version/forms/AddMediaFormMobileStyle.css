@@ -1,0 +1,44 @@
+@media (max-width: 650px) {
+    .modal-container {
+        height: 50vh;
+    }
+    .modal-row {
+        align-items: flex-end;
+    }
+    .modal-title {
+        font: var(--text-title-form-mobile);
+    }
+    .modal-type-btn {
+        height: 45px;
+        font: var(--text-input-mobile);
+    }
+    .modal-input {
+        height: 45px;
+        font: var(--text-placeholder-mobile);
+        padding: 15px;
+    }
+    .modal-continue-btn {
+        height: 45px;
+        font: var(--text-input-mobile);
+    }
+    .modal-search-dropdown {
+        max-height: 80px;
+    }
+    .modal-search-item {
+        padding: 8px 16px;
+        font: var(--text-placeholder-mobile);
+    }
+    .modal-cancel-btn,
+    .modal-submit-btn{
+        height: 45px;
+        font: var(--text-input-mobile);
+    }
+    .manual-multiselect-item {
+        padding: 8px 18px;
+        font: var(--text-placeholder-mobile);
+    }
+    .manual-multiselect-item input[type="checkbox"] {
+        width: 12px;
+        height: 12px;
+    }
+}

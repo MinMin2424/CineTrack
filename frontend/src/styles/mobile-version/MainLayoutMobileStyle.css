@@ -1,0 +1,8 @@
+@media (max-width: 650px) {
+    .main-layout-main {
+        padding: 24px 12px;
+    }
+    .main-layout-main::-webkit-scrollbar {
+        width: 8px;
+    }
+}

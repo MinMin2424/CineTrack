@@ -7,6 +7,7 @@ import {useNavigate, Link, Navigate} from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useAuthFormValidation } from "../../hooks/UseAuthFormValidation";
 import '../../styles/pages/auth/LoginPageStyle.css';
+import "../../styles/mobile-version/LoginMobileStyle.css"
 import { FiUser } from "react-icons/fi";
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";

@@ -10,6 +10,7 @@ import AddMovieManualForm from "./movie/AddMovieManualForm";
 import AddSeriesManualForm from "./series/AddSeriesManualForm";
 import { IoClose } from "react-icons/io5";
 import "../../styles/components/forms/AddMediaFormStyle.css"
+import "../../styles/mobile-version/forms/AddMediaFormMobileStyle.css"
 
 const AddMediaModal = ({ onClose, onMediaAdded }) => {
     const [mediaType, setMediaType] = useState("movie");

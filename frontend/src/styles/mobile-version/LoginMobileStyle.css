@@ -1,0 +1,37 @@
+@media (max-width: 650px) {
+    .login-card {
+        max-width: 350px;
+        margin: 0 30px;
+        padding: 43px 30px 39px;
+    }
+    .login-image-spiderman,
+    .login-image-studio_ghibli_login {
+        display: none;
+    }
+    .login-image-wall_e {
+        width: 50px;
+    }
+    .login-title {
+        font: var(--text-title-mobile);
+    }
+    .login-subtitle {
+        font: var(--text-subtitle-mobile);
+    }
+    .login-input {
+        padding: 10px 45px 10px 17px;
+        font: var(--text-input-mobile);
+    }
+    .login-input::placeholder {
+        font: var(--text-placeholder-mobile);
+    }
+    .login-forgot-link {
+        font: var(--text-link-mobile);
+    }
+    .login-submit-button {
+        font: var(--text-placeholder-mobile);
+        padding: 9px;
+    }
+    .login-switch-text {
+        font: var(--text-link-mobile);
+    }
+}

@@ -11,6 +11,7 @@ import "../../styles/pages/home/HomeSearchStyle.css"
 import "../../styles/pages/home/HomeSortStyle.css"
 import "../../styles/pages/home/HomeFilterStyle.css"
 import "../../styles/components/layout/SpinnerStyle.css"
+import "../../styles/mobile-version/HomeMobileStyle.css"
 import {useNavigate} from "react-router-dom";
 
 const STATUS_LABELS = {

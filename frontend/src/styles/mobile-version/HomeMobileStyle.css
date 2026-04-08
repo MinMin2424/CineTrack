@@ -1,0 +1,92 @@
+@media (max-width: 650px) {
+    /* search input */
+    .home-search-section {
+        margin-bottom: 24px;
+    }
+    .home-search-input {
+        padding: 0 15px 0 45px;
+        font: var(--text-input-mobile);
+        height: 50px;
+    }
+    .home-search-icon {
+        font-size: 16px;
+    }
+    /* sort icon */
+    .home-sort-button {
+        width: 40px;
+        height: 40px;
+    }
+    .home-sort-icon {
+        width: 32px;
+        height: 32px;
+    }
+    /* filters */
+    .home-filters-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        width: 100%;
+        margin-bottom: 24px;
+        box-sizing: border-box;
+    }
+    .home-filter-dropdown-wrapper {
+        flex: unset;
+        min-width: 0;
+        width: 100%;
+        position: relative;
+    }
+    .home-filter-btn {
+        width: 100%;
+        padding: 10px 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font: var(--text-placeholder-mobile);
+    }
+    /* media cards */
+    .home-media-card::after {
+        background: linear-gradient(
+                180deg,
+                rgba(20, 7, 40, 0) 30%,
+                #000000 100%
+        );
+    }
+    .home-empty-state-icon {
+        width: 50px;
+        height: 50px;
+    }
+    .home-empty-state h2 {
+        font: 600 20px var(--font-primary);
+    }
+    .home-empty-state p {
+        font: 400 14px var(--font-primary);
+    }
+    .home-add-btn {
+        padding: 10px 26px;
+        font: var(--text-input-mobile);
+    }
+    .home-media-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .home-media-badge {
+        padding: 3px 10px;
+        font: var(--text-input-mobile);
+    }
+    .home-media-type-icon {
+        width: 24px;
+        height: 24px;
+    }
+    .home-media-type-img {
+        width: 22px;
+        height: 22px;
+    }
+    .home-media-title {
+        font: var(--text-input-mobile);
+    }
+    .home-media-year {
+        display: none;
+    }
+}

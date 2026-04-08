@@ -1,0 +1,37 @@
+@media (max-width: 650px) {
+    .register-card {
+        max-width: 350px;
+        margin: 0 30px;
+        padding: 43px 30px 39px;
+    }
+    .register-image-minions {
+        display: none;
+    }
+    .register-image-toroto {
+        width: 180px;
+        z-index: 100;
+        bottom: 0;
+        left: 0;
+    }
+    .register-title {
+        font: var(--text-title-mobile);
+    }
+    .register-input {
+        padding: 10px 45px 10px 17px;
+        font: var(--text-input-mobile);
+    }
+    .register-input::placeholder {
+        font: var(--text-placeholder-mobile);
+    }
+    .register-submit-button {
+        font: var(--text-placeholder-mobile);
+        padding: 9px;
+    }
+    .register-switch-text {
+        font: var(--text-link-mobile);
+    }
+    .register-error-text {
+        padding-top: 5px;
+        margin-bottom: -20px;
+    }
+}

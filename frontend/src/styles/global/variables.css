@@ -26,6 +26,13 @@
     --text-stats-tertiary-label: 400 14px var(--font-primary);
     --icon: 20px;
 
+    --text-title-mobile: 600 28px var(--font-primary);
+    --text-subtitle-mobile: 500 14px var(--font-primary);
+    --text-input-mobile: 400 14px var(--font-primary);
+    --text-placeholder-mobile: 400 14px var(--font-primary);
+    --text-link-mobile: 500 12px var(--font-primary);
+    --text-title-form-mobile: 600 24px var(--font-primary);
+
     /* ===== BORDER RADIUS ===== */
     --border-radius-primary: 20px;
     --border-radius-secondary: 10px;
