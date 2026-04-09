@@ -221,7 +221,7 @@ public class MediaServiceTest {
         return Stream.of(
                 Arguments.of(StatusEnum.WATCHING, 1, StatusEnum.WATCHING),
                 Arguments.of(StatusEnum.COMPLETED, 1, StatusEnum.COMPLETED),
-                Arguments.of(StatusEnum.PAUSED, 0, null),
+//                Arguments.of(StatusEnum.PAUSED, 0, null),
                 Arguments.of(StatusEnum.DROPPED, 0, null),
                 Arguments.of(StatusEnum.PLAN_TO_WATCH, 0, null)
         );
@@ -504,7 +504,7 @@ public class MediaServiceTest {
         assertTrue(options.getTypes().contains(MediaType.SERIES));
 
         // statuses
-        assertEquals(5, options.getStatuses().size());
+        assertEquals(4, options.getStatuses().size());
 
         // genres
         assertEquals(2, options.getGenres().size());
@@ -528,7 +528,7 @@ public class MediaServiceTest {
 
         assertNotNull(options);
         assertEquals(2, options.getTypes().size());
-        assertEquals(5, options.getStatuses().size());
+        assertEquals(4, options.getStatuses().size());
 
         assertTrue(options.getGenres().isEmpty());
         assertTrue(options.getReleaseYears().isEmpty());

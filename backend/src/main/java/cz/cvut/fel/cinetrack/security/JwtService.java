@@ -64,18 +64,6 @@ public class JwtService {
         return extractClaims(token, claims -> claims.get("role", String.class));
     }
 
-    public Long extractUserId(String token) {
-        return extractClaims(token, claims -> claims.get("userId", Long.class));
-    }
-
-    public String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
-
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -100,17 +88,6 @@ public class JwtService {
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
-        }
-    }
-
-    public boolean isTokenExpiringSoon(String token) {
-        try {
-            Claims claims = extractAllClaims(token);
-            Date expiration = claims.getExpiration();
-            long timeUntilExpiration = expiration.getTime() - System.currentTimeMillis();
-            return timeUntilExpiration <= 15 * 60 * 1000; // 15 min
-        } catch (JwtException | IllegalArgumentException e) {
-            return true;
         }
     }
 

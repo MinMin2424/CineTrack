@@ -112,7 +112,6 @@ public class EpisodeServiceTest {
             "watching, WATCHING",
             "plan to watch, PLAN_TO_WATCH",
             "dropped, DROPPED",
-            "paused, PAUSED"
     })
     void changeEpisodeStatus_WhenValidRequest_UpdateStatus(
             String statusInput, EpisodeStatusEnum expectedStatus

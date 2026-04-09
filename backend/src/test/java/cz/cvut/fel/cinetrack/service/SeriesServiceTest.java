@@ -102,7 +102,6 @@ public class SeriesServiceTest {
             "watching, WATCHING",
             "plan to watch, PLAN_TO_WATCH",
             "dropped, DROPPED",
-            "paused, PAUSED"
     })
     void changeSeriesStatus_WithDifferentStatus_UpdateStatus(
             String statusInput, StatusEnum expectedStatus

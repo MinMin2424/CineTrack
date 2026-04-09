@@ -102,7 +102,6 @@ public class MovieServiceTest {
             "watching, WATCHING",
             "plan to watch, PLAN_TO_WATCH",
             "dropped, DROPPED",
-            "paused, PAUSED"
     })
     void changeMovieStatus_WithDifferentStatuses_UpdateStatus(
             String statusInput, StatusEnum expectedStatus

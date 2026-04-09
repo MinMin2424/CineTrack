@@ -12,6 +12,7 @@ import { FaRegStar } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import "../../styles/pages/mediaDetail/MovieDetailStyle.css"
 import "../../styles//components/layout/SpinnerStyle.css"
+import "../../styles/mobile-version/MovieDetailMobileStyle.css"
 import DeleteMediaPopup from "../../components/popup/DeleteMediaPopup";
 import EditMediaForm from "../../components/forms/editMedia/EditMediaForm";
 
