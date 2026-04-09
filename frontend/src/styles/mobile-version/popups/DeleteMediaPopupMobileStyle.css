@@ -1,0 +1,6 @@
+@media (max-width: 650px) {
+    .delete-popup {
+        margin: 0 24px;
+        padding: 36px 24px;
+    }
+}

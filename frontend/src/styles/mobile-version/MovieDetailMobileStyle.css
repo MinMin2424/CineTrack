@@ -1,0 +1,75 @@
+@media (max-width: 650px) {
+    .movie-detail-page {
+        padding: 10px 24px;
+    }
+    .movie-detail-back-btn {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+    .movie-detail-episodes-btn {
+        margin-bottom: 24px;
+        border-radius: 15px;
+        padding: 6px 10px;
+        font: var(--text-placeholder-mobile);
+    }
+    .movie-detail-content {
+        flex-direction: column;
+        gap: 24px;
+    }
+    .movie-detail-poster-wrapper {
+        flex-shrink: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .movie-detail-poster {
+        width: 200px;
+        height: 300px;
+    }
+    .movie-detail-header {
+        flex-direction: column;
+        gap: 24px;
+    }
+    .movie-detail-title {
+        font: var(--text-title-mobile);
+        text-align: center;
+    }
+    .movie-detail-actions {
+        width: 100%;
+    }
+    .movie-detail-status-btn {
+        padding: 6px 10px;
+        font: var(--text-placeholder-mobile);
+    }
+    .movie-detail-icon-btn {
+        border-radius: 15px;
+        padding: 6px;
+        font-size: 14px;
+    }
+    .movie-detail-meta {
+        gap: 10px;
+    }
+    .movie-detail-meta p {
+        line-height: 1.5;
+    }
+    .movie-detail-bottom {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .movie-detail-bottom-left {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        width: 100%;
+    }
+    .movie-detail-section-icon {
+        font-size: 24px;
+    }
+    .movie-detail-date-badge {
+        margin-left: 30px;
+    }
+    .movie-detail-notes {
+        margin-left: 30px;
+        width: 100%;
+    }
+}
