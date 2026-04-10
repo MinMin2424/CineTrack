@@ -4,6 +4,7 @@
 
 import React from "react";
 import "../../styles/components/popups/DeleteMediaPopup.css"
+import "../../styles/mobile-version/popups/DeleteMediaPopupMobileStyle.css"
 
 const DeleteMediaPopup = ({
     title,

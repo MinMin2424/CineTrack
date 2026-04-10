@@ -10,6 +10,7 @@ import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa";
 import "../../styles/components/layout/SpinnerStyle.css"
 import "../../styles/pages/discovery/DiscoveryPageStyle.css"
+import "../../styles/mobile-version/DiscoveryMobileStyle.css"
 import AddMovieForm from "../../components/forms/movie/AddMovieForm";
 import AddSeriesForm from "../../components/forms/series/AddSeriesForm";
 import Toast from "../../components/layout/Toast";

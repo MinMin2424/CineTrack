@@ -361,3 +361,8 @@
     font: var(--text-secondary-label);
     color: var(--color-tertiary-pink);
 }
+
+.stat-monthly-olaf {
+    width: 125px;
+    align-self: flex-end;
+}

@@ -7,6 +7,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { FiEdit2 } from "react-icons/fi";
 import "../../styles/pages/mediaDetail/EpisodeDetailStyle.css"
 import "../../styles/components/layout/SpinnerStyle.css"
+import "../../styles/mobile-version/EpisodeDetailMobileStyle.css"
 import EditEpisodeForm from "../../components/forms/editMedia/EditEpisodeForm"
 import { FaRegClock } from "react-icons/fa6";
 import { FiCheckCircle } from "react-icons/fi";

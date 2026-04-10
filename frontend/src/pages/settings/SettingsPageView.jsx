@@ -7,6 +7,7 @@ import { MdEdit } from "react-icons/md";
 import "../../styles/pages/settings/SettingsPageStyle.css"
 import "../../styles/components/layout/SpinnerStyle.css"
 import "../../styles/components/forms/AddMediaFormStyle.css"
+import "../../styles/mobile-version/SettingsMobileStyle.css"
 import {FaCalendar, FaTrash} from "react-icons/fa";
 import { FaRegEdit } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
@@ -65,124 +66,129 @@ const SettingsPageView = ({
     return (
         <div className="sp-page">
 
-            {/* LEFT COLUMN */}
-            <div className="sp-left">
+            <img src="/images/ice-age.png" alt="ice age" className="sp-ice-age"/>
+            <img src="/images/ice-age-2.png" alt="ice age" className="sp-ice-age-2"/>
 
-                {/* AVATAR CARD */}
-                <div className="sp-card sp-avatar-card">
-                    <h2 className="sp-fullname">{fullname}</h2>
-                    <div className="sp-avatar-wrap">
-                        <img src={avatar} alt="avatar" className="sp-avatar-img" />
-                        <button
-                            className="sp-avatar-edit-btn"
-                            onClick={onOpenAvatar}
-                            aria-label="Change avatar"
-                        >
-                            <MdEdit />
-                        </button>
+            <div className="sp-top">
+                {/* LEFT COLUMN */}
+                <div className="sp-left">
+
+                    {/* AVATAR CARD */}
+                    <div className="sp-card sp-avatar-card">
+                        <h2 className="sp-fullname">{fullname}</h2>
+                        <div className="sp-avatar-wrap">
+                            <img src={avatar} alt="avatar" className="sp-avatar-img" />
+                            <button
+                                className="sp-avatar-edit-btn"
+                                onClick={onOpenAvatar}
+                                aria-label="Change avatar"
+                            >
+                                <MdEdit />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {/* DANGER ZONE */}
-                <div className="sp-card sp-danger-card">
-                    <h3 className="sp-danger-title">Danger zone</h3>
-                    <div className="sp-danger-inner">
-                        <div className="sp-danger-content">
-                            <p className="sp-danger-heading">Delete personal account</p>
-                            <p className="sp-danger-decs">
-                                Permanently remove your Personal Account and all of its
-                                contents from the CineTrack platform. This action is not
-                                reversible, so please continue with caution.
-                            </p>
+                {/* RIGHT COLUMN */}
+                <div className="sp-right">
+
+                    <div className="sp-bio-pass">
+                        {/* BIO CARD */}
+                        <div className="sp-card sp-bio-card">
+                            <div className="sp-card-header">
+                                <h3 className="sp-card-title">Bio & other details</h3>
+                                <button
+                                    className="sp-card-edit-btn"
+                                    onClick={onOpenEdit}
+                                    aria-label="Edit profile"
+                                >
+                                    <FaRegEdit />
+                                </button>
+                            </div>
+                            <ul className="sp-bio-list">
+                                <li className="sp-bio-item">
+                                    <FaUser className="sp-bio-icon" />
+                                    <div className="sp-bio-item-inner">
+                                        <span className="sp-bio-label">Username</span>
+                                        <span className="sp-bio-value">{prof.username || "-"}</span>
+                                    </div>
+                                </li>
+                                <li className="sp-bio-item">
+                                    <FaCalendar className="sp-bio-icon" />
+                                    <div className="sp-bio-item-inner">
+                                        <span className="sp-bio-label">Joined on</span>
+                                        <span className="sp-bio-value">{formatDate(header.creationDate)}</span>
+                                    </div>
+                                </li>
+                                <li className="sp-bio-item">
+                                    <MdEmail className="sp-bio-icon" />
+                                    <div className="sp-bio-item-inner">
+                                        <span className="sp-bio-label">Email</span>
+                                        <span className="sp-bio-value">{prof.email || "-"}</span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                        <button
-                            className="sp-danger-btn"
-                            onClick={onOpenDelete}
+
+                        {/* PASSWORD CHANGE CARD */}
+                        <div className="sp-card sp-password-card"
+                             onClick={onOpenPassword}
+                             role="button"
+                             tabIndex={0}
+                             onKeyDown={(e) => e.key === "Enter" && onOpenPassword()}
                         >
-                            <FaTrash /> Delete account
-                        </button>
+                            <div className="sp-card-header">
+                                <h3 className="sp-card-title">Change password</h3>
+                                <FaLock className="sp-lock-icon" />
+                            </div>
+                            <div className="sp-password-img">
+                                <img src="/images/mouse.png" alt="mouse" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* STATS CARDS */}
+                    <div className="sp-stats-row">
+                        <div className="sp-card sp-stat-card">
+                            <div className="sp-stat-number">
+                                {summary?.movies ?? 0}
+                                {movieIsMore && (
+                                    <BsFire className="sp-fire-icon" />
+                                )}
+                            </div>
+                            <span className="sp-stat-label"> Total added movies</span>
+                        </div>
+                        <div className="sp-card sp-stat-card">
+                            <div className="sp-stat-number">
+                                {summary?.series ?? 0}
+                                {!movieIsMore && (
+                                    <BsFire className="sp-fire-icon" />
+                                )}
+                            </div>
+                            <span className="sp-stat-label"> Total added series</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* RIGHT COLUMN */}
-            <div className="sp-right">
-
-                <div className="sp-bio-pass">
-                    {/* BIO CARD */}
-                    <div className="sp-card sp-bio-card">
-                        <div className="sp-card-header">
-                            <h3 className="sp-card-title">Bio & other details</h3>
-                            <button
-                                className="sp-card-edit-btn"
-                                onClick={onOpenEdit}
-                                aria-label="Edit profile"
-                            >
-                                <FaRegEdit />
-                            </button>
-                        </div>
-                        <ul className="sp-bio-list">
-                            <li className="sp-bio-item">
-                                <FaUser className="sp-bio-icon" />
-                                <div className="sp-bio-item-inner">
-                                    <span className="sp-bio-label">Username</span>
-                                    <span className="sp-bio-value">{prof.username || "-"}</span>
-                                </div>
-                            </li>
-                            <li className="sp-bio-item">
-                                <FaCalendar className="sp-bio-icon" />
-                                <div className="sp-bio-item-inner">
-                                    <span className="sp-bio-label">Joined on</span>
-                                    <span className="sp-bio-value">{formatDate(header.creationDate)}</span>
-                                </div>
-                            </li>
-                            <li className="sp-bio-item">
-                                <MdEmail className="sp-bio-icon" />
-                                <div className="sp-bio-item-inner">
-                                    <span className="sp-bio-label">Email</span>
-                                    <span className="sp-bio-value">{prof.email || "-"}</span>
-                                </div>
-                            </li>
-                        </ul>
+            {/* DANGER ZONE */}
+            <div className="sp-card sp-danger-card">
+                <h3 className="sp-danger-title">Danger zone</h3>
+                <div className="sp-danger-inner">
+                    <div className="sp-danger-content">
+                        <p className="sp-danger-heading">Delete personal account</p>
+                        <p className="sp-danger-decs">
+                            Permanently remove your Personal Account and all of its
+                            contents from the CineTrack platform. This action is not
+                            reversible, so please continue with caution.
+                        </p>
                     </div>
-
-                    {/* PASSWORD CHANGE CARD */}
-                    <div className="sp-card sp-password-card"
-                         onClick={onOpenPassword}
-                         role="button"
-                         tabIndex={0}
-                         onKeyDown={(e) => e.key === "Enter" && onOpenPassword()}
+                    <button
+                        className="sp-danger-btn"
+                        onClick={onOpenDelete}
                     >
-                        <div className="sp-card-header">
-                            <h3 className="sp-card-title">Change password</h3>
-                            <FaLock className="sp-lock-icon" />
-                        </div>
-                        <div className="sp-password-img">
-                            <img src="/images/mouse.png" alt="mouse" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* STATS CARDS */}
-                <div className="sp-stats-row">
-                    <div className="sp-card sp-stat-card">
-                        <div className="sp-stat-number">
-                            {summary?.movies ?? 0}
-                            {movieIsMore && (
-                                <BsFire className="sp-fire-icon" />
-                            )}
-                        </div>
-                        <span className="sp-stat-label"> Total added movies</span>
-                    </div>
-                    <div className="sp-card sp-stat-card">
-                        <div className="sp-stat-number">
-                            {summary?.series ?? 0}
-                            {!movieIsMore && (
-                                <BsFire className="sp-fire-icon" />
-                            )}
-                        </div>
-                        <span className="sp-stat-label"> Total added series</span>
-                    </div>
+                        <FaTrash /> Delete account
+                    </button>
                 </div>
             </div>
 
@@ -237,7 +243,7 @@ const SettingsPageView = ({
                     <div className="modal-container" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2 className="modal-title">Change password</h2>
-                            <button className="modal-close-btn" onClick={onCloseEdit}>
+                            <button className="modal-close-btn" onClick={onClosePassword}>
                                 <IoClose />
                             </button>
                         </div>

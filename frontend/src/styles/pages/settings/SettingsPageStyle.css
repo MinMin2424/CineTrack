@@ -5,11 +5,17 @@
     box-sizing: border-box;
     margin: 0 auto;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: flex-start;
     gap: 24px;
     padding: 20px;
+}
+
+.sp-top {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 24px;
 }
 
 .sp-left {
@@ -93,6 +99,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 39.5%;
 }
 
 .sp-danger-title {
@@ -250,4 +257,24 @@
 
 .sp-stat-label {
     font: var(--text-stats-tertiary-label);
+}
+
+.sp-ice-age {
+    width: 200px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+}
+
+.sp-ice-age-2 {
+    width: 200px;
+    position: fixed;
+    bottom: 0;
+    right: 550px;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
 }

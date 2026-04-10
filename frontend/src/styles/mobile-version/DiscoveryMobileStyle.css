@@ -1,0 +1,35 @@
+@media (max-width: 650px) {
+    .disc-page {
+        padding: 10px 24px;
+    }
+    .disc-ship-wrapper {
+        align-items: center;
+    }
+    .disc-ship {
+        width: 240px;
+    }
+    .disc-jack {
+        display: none;
+    }
+    .disc-error,
+    .disc-no-result{
+        margin-left: 0;
+        text-align: center;
+    }
+    .disc-results {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .disc-card {
+        box-sizing: border-box;
+        flex-direction: column;
+    }
+    .disc-card-info {
+        width: 100%;
+    }
+    .disc-ratings {
+        display: flex;
+        justify-content: space-between;
+        gap: 0;
+    }
+}

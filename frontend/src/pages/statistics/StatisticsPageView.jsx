@@ -8,6 +8,8 @@ import {
     ResponsiveContainer, Cell
 } from "recharts";
 import "../../styles/pages/statistics/StatisticsPageStyle.css"
+import "../../styles/mobile-version/StatisticsMobileStyle.css"
+import "../../styles/components/layout/SpinnerStyle.css"
 import {FiCheckCircle} from "react-icons/fi";
 import {FaRegCirclePlay, FaRegClock} from "react-icons/fa6";
 import {SlClose} from "react-icons/sl";
@@ -128,7 +130,7 @@ const StatisticsPageView = ({
                                     data={countriesChartData}
                                     barCategoryGap="30%"
                                     barGap={4}
-                                    margin={{top: 10, right: 10, left: -10, bottom: 20}}
+                                    margin={{top: 10, right: 10, left: -30, bottom: 20}}
                                 >
                                     <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
                                     <XAxis dataKey="name" tick={{fill: "#ccc", fontSize: 12}} axisLine={false} tickLine={false} interval={0} />
@@ -298,6 +300,7 @@ const StatisticsPageView = ({
                         <div className="stat-monthly-compare">
                             than {prevYear}-{String(prevMonth).padStart(2,"0")}
                         </div>
+                        <img src="/images/olaf.png" alt="olaf" className="stat-monthly-olaf" />
                     </div>
 
                 </div>

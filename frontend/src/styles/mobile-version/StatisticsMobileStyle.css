@@ -1,0 +1,55 @@
+@media (max-width: 650px) {
+    .statistics-page {
+        padding: 10px 12px;
+    }
+    /* status cards and other card */
+    .statistics-cards-grid {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .status-card {
+        height: fit-content;
+        width: 50%;
+    }
+    .statistics-cards-main {
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+    .stat-others-wrapper {
+        width: 100%;
+    }
+    /* top genres and countries cards */
+    .statistics-left {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .genres-countries {
+        flex-direction: column;
+    }
+    .stat-genre-label {
+        width: 80px;
+    }
+    .stat-genre-xaxis {
+        margin-left: 92px;
+    }
+    .stat-chart-countries {
+        height: 100%;
+        padding: 24px 12px 0 12px;
+    }
+    .status-breakdown {
+        padding: 24px 12px;
+    }
+    .status-breakdown-rows {
+        padding: 0;
+    }
+    .status-breakdown-row {
+        gap: 12px;
+    }
+    .funfacts-toprated {
+        flex-direction: column;
+    }
+    .stat-funfacts-list li,
+    .stat-top-rated-label {
+        line-height: 1.5;
+    }
+}

@@ -47,6 +47,13 @@
         width: 100%;
         gap: 8px;
     }
+    .ep-table-wrapper {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    .ep-table {
+        min-width: 600px;
+    }
     .ep-table-header-row {
         flex-direction: column;
         justify-content: flex-start;
@@ -63,6 +70,9 @@
     }
     .ep-table-th--ep {
         width: 15px;
+    }
+    .ep-table-th--title {
+        width: 200px;
     }
     .ep-table-td {
         padding: 12px 24px;

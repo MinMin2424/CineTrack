@@ -1,0 +1,38 @@
+@media (max-width: 650px) {
+    .disc-page {
+        padding: 10px 24px;
+    }
+    .sp-card {
+        padding: 30px 20px;
+    }
+    .sp-top {
+        flex-direction: column;
+    }
+    .sp-left {
+        width: 100%;
+    }
+    .sp-avatar-card {
+        height: 40vh;
+    }
+    .sp-avatar-img {
+        width: 70%;
+        height: 85%;
+    }
+    .sp-avatar-edit-btn {
+        right: 25%;
+    }
+    .sp-right {
+        width: 100%;
+        height: auto;
+    }
+    .sp-bio-pass {
+        flex-direction: column;
+    }
+    .sp-danger-card {
+        width: 100%;
+    }
+    .sp-ice-age,
+    .sp-ice-age-2 {
+        display: none;
+    }
+}
