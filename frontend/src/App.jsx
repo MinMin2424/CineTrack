@@ -13,6 +13,7 @@ import WatchlistPageContainer from "./pages/watchlist/WatchlistPageContainer";
 import DiscoveryPageContainer from "./pages/discovery/DiscoveryPageContainer";
 import StatisticsPageContainer from "./pages/statistics/StatisticsPageContainer";
 import SettingsPageContainer from "./pages/settings/SettingsPageContainer";
+import GoodbyePage from "./pages/goodbye/GoodbyePage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Routes>
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/register" element={<RegisterPage />} />
+            <Route path="/goodbye" element={<GoodbyePage />} />
 
             <Route element={<ProtectedRoute />} >
               <Route element={<MainLayout />} >

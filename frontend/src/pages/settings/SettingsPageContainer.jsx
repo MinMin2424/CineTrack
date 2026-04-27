@@ -239,13 +239,15 @@ const SettingsPageContainer = () => {
         setDeleteApiError("");
         try {
             await deleteCurrentUser();
-            logout();
-            navigate("/goodbye");
         } catch (err) {
             setDeleteApiError(err?.response?.data?.message || "Failed to delete the current user");
-        } finally {
             setDeleteLoading(false);
+            return;
         }
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("expiresAt");
+        navigate("/goodbye", {replace: true});
     };
 
     return (

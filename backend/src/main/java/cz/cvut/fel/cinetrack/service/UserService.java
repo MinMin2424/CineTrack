@@ -124,6 +124,7 @@ public class UserService {
         User currentUser = getCurrentUserNotDeleted();
         currentUser.setDeleted(true);
         currentUser.setDeletionDate(LocalDateTime.now());
+        currentUser.setLogoutDate(LocalDateTime.now());
         userRepository.save(currentUser);
     }
 

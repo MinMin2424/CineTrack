@@ -1,0 +1,30 @@
+@media (max-width: 650px) {
+    .goodbye-card {
+        max-width: 350px;
+        margin: 0 30px;
+        padding: 43px 30px 39px;
+    }
+    .goodbye-walle {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 280px;
+        height: auto;
+        z-index: 1;
+    }
+
+    .goodbye-boot {
+        position: absolute;
+        bottom: 0;
+        left: 250px;
+        width: 100px;
+        height: auto;
+        z-index: 1;
+    }
+    .goodbye-title {
+        font: var(--text-title-mobile);
+    }
+    .goodbye-text {
+        font: var(--text-subtitle-mobile);
+    }
+}
