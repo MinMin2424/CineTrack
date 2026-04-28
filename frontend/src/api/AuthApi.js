@@ -43,3 +43,21 @@ export const refreshToken = async (refreshToken) => {
     });
     return response.data;
 };
+
+/**
+ * POST /auth/forgot-password/verify
+ * @param data
+ * @returns {Promise<void>}
+ */
+export const verifyUserForReset = async (data) => {
+    await axiosConfig.post('/auth/forgot-password/verify', data);
+}
+
+/**
+ * POST /auth/forgot-password/reset
+ * @param data
+ * @returns {Promise<void>}
+ */
+export const resetPassword = async (data) => {
+    await axiosConfig.post('/auth/forgot-password/reset', data);
+}

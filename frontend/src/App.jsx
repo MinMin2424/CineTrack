@@ -14,6 +14,7 @@ import DiscoveryPageContainer from "./pages/discovery/DiscoveryPageContainer";
 import StatisticsPageContainer from "./pages/statistics/StatisticsPageContainer";
 import SettingsPageContainer from "./pages/settings/SettingsPageContainer";
 import GoodbyePage from "./pages/goodbye/GoodbyePage";
+import ForgotPasswordPageContainer from "./pages/auth/ForgotPasswordPageContainer";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/register" element={<RegisterPage />} />
             <Route path="/goodbye" element={<GoodbyePage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPageContainer />} />
 
             <Route element={<ProtectedRoute />} >
               <Route element={<MainLayout />} >

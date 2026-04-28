@@ -14,6 +14,7 @@ import {
     deleteCurrentUser
 } from "../../api/UserApi";
 import {getSummary} from "../../api/StatisticsApi";
+import {validatePasswordStrength} from "../../utils/ValidatePasswordStrength";
 
 const AVATAR_LIST = [
     "static/avatars/Avatar01.png",
@@ -174,8 +175,8 @@ const SettingsPageContainer = () => {
     const validatePassword = () => {
         const errs = {};
         if (!passwordForm.currentPassword) errs.currentPassword = "Current password is required.";
-        if (!passwordForm.password) errs.password = "New password is required.";
-        else if (passwordForm.password.length < 6) errs.password = "Password must be at least 6 characters.";
+        const passwordError = validatePasswordStrength(passwordForm.password);
+        if (passwordError) errs.password = passwordError;
         if (!passwordForm.confirmPassword) errs.confirmPassword = "Please confirm your new password.";
         else if (passwordForm.password !== passwordForm.confirmPassword) errs.confirmPassword = "Passwords do not match.";
         return errs;

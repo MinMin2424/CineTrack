@@ -6,6 +6,7 @@ package cz.cvut.fel.cinetrack.validator;
 
 import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
 import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
+import cz.cvut.fel.cinetrack.dto.auth.ResetPasswordRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequestDTO;
@@ -56,6 +57,10 @@ public class UserValidator {
 
     public void validateUserPassword(ChangeUserPasswordRequestDTO changeUserPasswordRequestDTO) {
         validatePasswordStrength(changeUserPasswordRequestDTO.getPassword());
+    }
+
+    public void validateUserPassword(ResetPasswordRequestDTO resetPasswordRequestDTO) {
+        validatePasswordStrength(resetPasswordRequestDTO.getPassword());
     }
 
     public void validateUserAvatar(ChangeUserAvatarRequestDTO changeUserAvatarRequestDTO) {

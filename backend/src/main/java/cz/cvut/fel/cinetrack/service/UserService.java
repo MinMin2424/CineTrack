@@ -4,6 +4,8 @@
 
 package cz.cvut.fel.cinetrack.service;
 
+import cz.cvut.fel.cinetrack.dto.auth.ResetPasswordRequestDTO;
+import cz.cvut.fel.cinetrack.dto.auth.VerifyUserRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserAvatarRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.request.ChangeUserPasswordRequestDTO;
 import cz.cvut.fel.cinetrack.dto.user.request.EditUserProfileRequestDTO;
@@ -126,6 +128,31 @@ public class UserService {
         currentUser.setDeletionDate(LocalDateTime.now());
         currentUser.setLogoutDate(LocalDateTime.now());
         userRepository.save(currentUser);
+    }
+
+    @Transactional(readOnly = true)
+    public void verifyUserForPasswordReset(VerifyUserRequestDTO request) {
+        userRepository
+                .findByEmailAndUsernameAndNotDeleted(request.getEmail(), request.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "No account found with the provided email and username."
+                ));
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequestDTO request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+        User user = userRepository
+                .findByEmailAndUsernameAndNotDeleted(request.getEmail(), request.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "No account found with the provided email and username."
+                ));
+        userValidator.validateUserPassword(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setLastModified(LocalDateTime.now());
+        userRepository.save(user);
     }
 
     private void validateUniqueness(EditUserProfileRequestDTO request, Long currentUserId) {

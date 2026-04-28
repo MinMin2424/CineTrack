@@ -6,12 +6,16 @@ package cz.cvut.fel.cinetrack.controller;
 
 import cz.cvut.fel.cinetrack.dto.auth.LoginRequest;
 import cz.cvut.fel.cinetrack.dto.auth.RegisterRequest;
+import cz.cvut.fel.cinetrack.dto.auth.ResetPasswordRequestDTO;
+import cz.cvut.fel.cinetrack.dto.auth.VerifyUserRequestDTO;
+import cz.cvut.fel.cinetrack.exception.user.UserNotFoundException;
 import cz.cvut.fel.cinetrack.model.User;
 import cz.cvut.fel.cinetrack.security.AuthenticationResponse;
 import cz.cvut.fel.cinetrack.security.JwtService;
 import cz.cvut.fel.cinetrack.service.AuthService;
 import cz.cvut.fel.cinetrack.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,5 +83,34 @@ public class AuthController {
                 newRefreshToken,
                 jwtService.getExpirationTime(newAccessToken)
         ));
+    }
+
+    @PostMapping("/forgot-password/verify")
+    public ResponseEntity<?> verifyUserForReset(
+            @Valid @RequestBody VerifyUserRequestDTO request
+    ) {
+        try {
+            userService.verifyUserForPasswordReset(request);
+            return ResponseEntity.ok().build();
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/forgot-password/reset")
+    public ResponseEntity<?> resetPassword(
+            @Valid @RequestBody ResetPasswordRequestDTO request
+    ) {
+        try {
+            userService.resetPassword(request);
+            return ResponseEntity.ok().build();
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", e.getMessage()));
+        }
     }
 }
