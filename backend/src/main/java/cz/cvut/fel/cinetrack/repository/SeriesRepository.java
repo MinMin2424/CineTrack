@@ -21,6 +21,7 @@ public interface SeriesRepository extends JpaRepository<Series, Long> {
     boolean existsByTitleAndUserId(String title, Long userId);
     List<Series> findByUserId(Long userId);
     Optional<Series> findByIdAndUserId(Long id, Long userId);
+    Series findSeriesById(Long id);
 
     @Query("SELECT s FROM Series s WHERE s.id = :id AND s.user.id = :userId AND s.deleted = false")
     Optional<Series> findByIdAndUserIdAndNotDeleted(Long id, Long userId);

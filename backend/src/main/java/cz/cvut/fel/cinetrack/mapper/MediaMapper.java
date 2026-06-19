@@ -61,7 +61,7 @@ public class MediaMapper {
         validateRating(rating);
 
         series.setImdbId(dto.getImdbID());
-        series.setTitle(dto.getTitle() + " " + parseStringToInt(dto.getSeason()));
+        series.setTitle(dto.getTitle());
         //series.setReleaseYear(parseYear(dto.getYear()));
         series.setPoster(dto.getPoster());
         series.setSeason(parseStringToInt(dto.getSeason()));

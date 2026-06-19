@@ -14,6 +14,7 @@ import cz.cvut.fel.cinetrack.dto.media.response.omdb.OMDBSeasonResponseDTO;
 import cz.cvut.fel.cinetrack.dto.media.SeasonInfoDTO;
 import cz.cvut.fel.cinetrack.exception.media.notFoundObj.MediaNotFoundException;
 import cz.cvut.fel.cinetrack.exception.media.RequestFailedException;
+import io.jsonwebtoken.security.Request;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +61,43 @@ public class OMDBService {
             }
             if (responseBody.getImdbID() == null) {
                 throw new MediaNotFoundException(String.format("Media with title %s not found!", title));
+            }
+            return responseBody;
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            throw new RequestFailedException("OMDB API error: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RequestFailedException("Failed to search media: " + e.getMessage());
+        }
+    }
+
+    public OMDBResponseDTO searchMediaByImdbId(String imdbId) {
+        if (imdbId == null || imdbId.trim().isEmpty()) {
+            throw new MediaNotFoundException("IMDB ID cannot be null or empty");
+        }
+        if (!imdbId.matches("^tt\\d+$")) {
+            throw new MediaNotFoundException(String.format(
+                    "Invalid IMDB ID format: %s. IMDB ID should start with 'tt' followed by numbers.",
+                    imdbId
+            ));
+        }
+        String url = String.format(
+                "https://www.omdbapi.com/?apikey=%s&i=%s",
+                apiKey, imdbId
+        );
+        try {
+            ResponseEntity<OMDBResponseDTO> response = restTemplate.getForEntity(url, OMDBResponseDTO.class);
+            if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
+                throw new RequestFailedException(String.format("OMDB API request failed with status %s ", response.getStatusCode()));
+            }
+            OMDBResponseDTO responseBody = response.getBody();
+            if (responseBody.getResponse() != null && "False".equalsIgnoreCase(responseBody.getResponse())) {
+                throw new MediaNotFoundException(String.format("Media with IMDB ID %s not found!", imdbId));
+            }
+            if (responseBody.getImdbID() == null || responseBody.getImdbID().trim().isEmpty()) {
+                throw new MediaNotFoundException(String.format("Media with IMDB ID %s not found - Missing IMDB ID!", imdbId));
+            }
+            if (!imdbId.equals(responseBody.getImdbID())) {
+                throw new MediaNotFoundException(String.format("IMDB ID %s not found or mismatched", imdbId));
             }
             return responseBody;
         } catch (HttpClientErrorException | HttpServerErrorException e) {

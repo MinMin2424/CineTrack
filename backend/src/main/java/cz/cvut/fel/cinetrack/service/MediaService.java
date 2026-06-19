@@ -101,6 +101,10 @@ public class MediaService {
         return mediaItems;
     }
 
+    public OMDBResponseDTO searchMediaByImdbId(String imdbId) {
+        return omdbService.searchMediaByImdbId(imdbId);
+    }
+
     public OMDBResponseDTO searchMediaFromAPI(SearchRequestDTO request) {
         OMDBResponseDTO response = omdbService.searchMedia(request.getTitle());
         if (!"movie".equalsIgnoreCase(request.getType())) {

@@ -103,14 +103,27 @@ public class MediaController {
             @RequestParam(defaultValue = "5") int limit
     ) {
         try {
-            List<OMDBResponseDTO> results = mediaService.discover(query, limit);
-            return ResponseEntity.ok(results);
+            String trimmedQuery = query != null ? query.trim() : "";
+            if (isValidImdbId(trimmedQuery)) {
+                OMDBResponseDTO result = mediaService.searchMediaByImdbId(trimmedQuery);
+                return ResponseEntity.ok(List.of(result));
+            } else {
+                List<OMDBResponseDTO> results = mediaService.discover(query, limit);
+                return ResponseEntity.ok(results);
+            }
         } catch (RequestFailedException e) {
             return ResponseEntity.ok(List.of());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+
+    private boolean isValidImdbId(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return false;
+        }
+        return input.matches("^tt\\d+$");
     }
 
     @GetMapping("/autocomplete")

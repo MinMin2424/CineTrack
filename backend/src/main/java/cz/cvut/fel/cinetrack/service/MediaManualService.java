@@ -107,7 +107,7 @@ public class MediaManualService {
     private Series createSeries(SeriesManualRequestDTO request) {
         Series series = new Series();
         series.setImdbId(null);
-        series.setTitle(request.getTitle() + " " + request.getSeason());
+        series.setTitle(request.getTitle());
         series.setSeason(request.getSeason());
         series.setEpisodes(request.getEpisodeCount());
         series.setReleaseYear(request.getReleaseYear());
