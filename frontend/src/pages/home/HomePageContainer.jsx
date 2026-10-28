@@ -2,13 +2,15 @@
  * Created by minmin_tranova on 24.02.2026
  */
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {useState, useEffect, useCallback, useRef} from "react";
 import { getMediaOverview, getFilterOptions, autocompleteTitles } from "../../api/MediaApi";
 import HomePageView from "./HomePageView";
 import AddMediaModal from "../../components/forms/AddMediaModal"
 import {FaLongArrowAltDown, FaLongArrowAltUp} from "react-icons/fa";
 import Toast from "../../components/layout/Toast";
 import {useToast} from "../../hooks/UseToast";
+import {restoreScroll} from "../../utils/scrollUtils";
+import {useOutletContext} from "react-router-dom";
 
 const SORT_OPTIONS = [
     { value: "CREATED_AT_ASC", label: "Oldest", arrow: FaLongArrowAltUp},
@@ -20,10 +22,14 @@ const SORT_OPTIONS = [
 ];
 
 const HomePage = () => {
+    const {
+        homeFilters: selectedFilters, setHomeFilters: setSelectedFilters,
+        homeSortBy: sortBy, setHomeSortBy: setSortBy,
+        homeSearchQuery: searchQuery, setHomeSearchQuery: setSearchQuery,
+    } = useOutletContext();
     const [mediaItems, setMediaItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [sortBy, setSortBy] = useState("CREATED_AT_DESC");
     const [sortOpen, setSortOpen] = useState(false);
     const [filterOptions, setFilterOptions] = useState({
         types: [],
@@ -32,15 +38,7 @@ const HomePage = () => {
         releaseYears: [],
         countries: []
     });
-    const [selectedFilters, setSelectedFilters] = useState({
-        types: [],
-        statuses: [],
-        genreIds: [],
-        releaseYears: [],
-        countryIds: []
-    });
     const [openFilter, setOpenFilter] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const debounceTimer = useRef(null);
 
@@ -69,6 +67,8 @@ const HomePage = () => {
             setLoading(false);
         }
     }, [sortBy, selectedFilters]);
+
+    const restoredRef = useRef(false);
 
     useEffect(() => {
         fetchMedia();
@@ -126,6 +126,14 @@ const HomePage = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [openFilter]);
+
+    useEffect(() => {
+        if (loading || restoredRef.current || mediaItems.length === 0) return;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => restoreScroll());
+        })
+        restoredRef.current = true;
+    }, [loading, mediaItems])
 
     const handleFilterChange = (filterKey, value) => {
         setSelectedFilters(prev => {

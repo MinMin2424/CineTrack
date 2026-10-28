@@ -101,10 +101,13 @@ public class MediaUtils {
                     .sorted(Comparator.comparing(MediaItemDTO::getTitle, String.CASE_INSENSITIVE_ORDER).reversed())
                     .toList();
             case "RELEASE_YEAR_ASC" -> mediaItems.stream()
-                    .sorted(Comparator.comparing(MediaItemDTO::getReleaseYear))
+                    .sorted(Comparator.comparing(MediaItemDTO::getReleaseYear)
+                            .thenComparing(Comparator.comparing(MediaItemDTO::getCreatedAt).reversed()))
                     .toList();
             case "RELEASE_YEAR_DESC" -> mediaItems.stream()
-                    .sorted(Comparator.comparing(MediaItemDTO::getReleaseYear).reversed())
+                    .sorted(Comparator.comparing(MediaItemDTO::getReleaseYear)
+                            .reversed()
+                            .thenComparing(Comparator.comparing(MediaItemDTO::getCreatedAt).reversed()))
                     .toList();
             case "CREATED_AT_ASC" -> mediaItems.stream()
                     .sorted(Comparator.comparing(MediaItemDTO::getCreatedAt))

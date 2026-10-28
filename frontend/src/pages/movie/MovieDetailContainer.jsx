@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMovie, editMovie, changeMovieStatus, deleteMovie } from "../../api/MovieApi";
 import MovieDetailView from "./MovieDetailView";
+import {resetContentScroll} from "../../utils/scrollUtils";
 
 const MovieDetailContainer = () => {
     const {movieId} = useParams();
@@ -113,7 +114,14 @@ const MovieDetailContainer = () => {
         }
     };
 
-    const handleBack = () => navigate("/");
+    useEffect(() => {
+        resetContentScroll();
+    }, [movieId]);
+
+    const handleBack = () => {
+        if (window.history.state?.idx > 0) navigate(-1);
+        else navigate("/", {replace: true});
+    }
 
     return (
         <MovieDetailView

@@ -13,6 +13,7 @@ import "../../styles/pages/home/HomeFilterStyle.css"
 import "../../styles/components/layout/SpinnerStyle.css"
 import "../../styles/mobile-version/HomeMobileStyle.css"
 import {useNavigate} from "react-router-dom";
+import {saveScroll} from "../../utils/scrollUtils";
 
 const STATUS_LABELS = {
     COMPLETED: "Completed",
@@ -50,6 +51,7 @@ const HomePageView = ({
 }) => {
     const navigate = useNavigate();
     const handleCardClick = (item) => {
+        saveScroll();
         if (item.type === "MOVIE") {
             navigate(`/movies/${item.id}`);
         }
@@ -326,7 +328,14 @@ const HomePageView = ({
                                 </div>
                                 <div className="home-media-info-right">
                                     <span className="home-media-title">{item.title}</span>
-                                    <span className="home-media-year">{item.releaseYear}</span>
+                                    <div className="home-media-year-runtime-eps">
+                                        <span className="home-media-year">{item.releaseYear}</span>
+                                        {item.type === 'MOVIE'
+                                            ? <span className="home-media-year">{item.runtime}</span>
+                                            : <span className="home-media-year">{item.episodes} eps</span>
+                                        }
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

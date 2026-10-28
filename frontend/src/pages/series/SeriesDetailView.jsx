@@ -82,10 +82,10 @@ const SeriesDetailView = ({
                 <button className="movie-detail-back-btn" onClick={onBack}>
                     <IoArrowBack />
                 </button>
-                <button className="movie-detail-episodes-btn" onClick={onEpisodesClick}>
-                    Episodes
-                    <IoArrowForward />
-                </button>
+                {/*<button className="movie-detail-episodes-btn" onClick={onEpisodesClick}>*/}
+                {/*    Episodes*/}
+                {/*    <IoArrowForward />*/}
+                {/*</button>*/}
             </div>
 
             {/* MAIN CONTENT */}
@@ -156,6 +156,10 @@ const SeriesDetailView = ({
                         <p>
                             <span className="movie-detail-meta-label">Released Year: </span>
                             {series.releaseYear}
+                        </p>
+                        <p>
+                            <span className="movie-detail-meta-label">Episodes: </span>
+                            {series.episodes}
                         </p>
                         <p>
                             <span className="movie-detail-meta-label">Season: </span>

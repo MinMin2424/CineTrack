@@ -214,18 +214,18 @@ const StatisticsPageView = ({
                         )}
                         {/* TOP RATED */}
                         <div className="stat-top-rated">
-                            <label className="status-breakdown-label">Your Highest Rated Movie / TV Series</label>
+                            <label className="status-breakdown-label">Your Highest Rated Movie / TV Series This Month</label>
                             <div className="stat-top-rated-content">
                                 <div className="stat-top-rated-label">
-                                    Your most loved movie is {topRated?.movie?.title}
+                                    {topRated?.movie?.title ? `Your most loved movie is ${topRated.movie.title}` : "Not rated yet"}
                                 </div>
-                                <StarRating rating={topRated?.movie?.rating} className="stat-top-rated-stars" />
+                                <StarRating rating={topRated?.movie?.rating || 0} className="stat-top-rated-stars" />
                             </div>
                             <div className="stat-top-rated-content">
                                 <div className="stat-top-rated-label">
-                                    Your most loved series is {topRated?.series?.title}
+                                    {topRated?.series?.title ? `Your most loved series is ${topRated.series.title}` : "Not rated yet"}
                                 </div>
-                                <StarRating rating={topRated?.series?.rating} className="stat-top-rated-stars" />
+                                <StarRating rating={topRated?.series?.rating || 0} className="stat-top-rated-stars" />
                             </div>
                         </div>
                     </div>

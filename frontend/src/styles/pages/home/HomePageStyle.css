@@ -191,6 +191,12 @@
     font: var(--text-input);
 }
 
+.home-media-year-runtime-eps {
+    display: flex;
+    justify-content: space-between;
+    margin-right: 5px;
+}
+
 /* ===== ADD MEDIA BTN ===== */
 .home-add-btn-primary {
     position: fixed;

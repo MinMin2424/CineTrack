@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.print.attribute.standard.MediaSize;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -225,12 +226,15 @@ public class StatisticsService {
     public TopRatedDTO getTopRated(Long userId) {
         List<Movie> movies = getListMovies(userId);
         List<Series> series = getListSeries(userId);
+        YearMonth currentMonth = YearMonth.now();
 
         Optional<Movie> topMovie = movies.stream()
                 .filter(m -> m.getRating() > 0)
+                .filter(m -> YearMonth.from(m.getCreatedAt()).equals(currentMonth))
                 .max(Comparator.comparingDouble(Movie::getRating));
         Optional<Series> topSeries = series.stream()
                 .filter(s -> s.getRating() > 0)
+                .filter(s -> YearMonth.from(s.getCreatedAt()).equals(currentMonth))
                 .max(Comparator.comparingDouble(Series::getRating));
 
         return new TopRatedDTO(

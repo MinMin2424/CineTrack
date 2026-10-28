@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getSeries, editSeries, changeSeriesStatus, deleteSeries } from "../../api/SeriesApi";
 import SeriesDetailView from "./SeriesDetailView";
+import {resetContentScroll} from "../../utils/scrollUtils";
 
 const SeriesDetailContainer = () => {
     const {seriesId} = useParams();
@@ -113,7 +114,14 @@ const SeriesDetailContainer = () => {
         }
     };
 
-    const handleBack = () => navigate("/");
+    useEffect(() => {
+        resetContentScroll();
+    }, [seriesId])
+
+    const handleBack = () => {
+        if (window.history.state?.idx > 0) navigate(-1);
+        else navigate("/", {replace: true});
+    }
 
     const handleEpisodesClick = () => navigate(`/series/${seriesId}/episodes/1`)
 
